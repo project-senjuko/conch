@@ -6,6 +6,8 @@ pub struct HeadData {
     pub tag: u8,
 }
 
+pub const ZERO_HEAD: HeadData = HeadData { r#type: 0, tag: 0 };
+
 impl HeadData {
     pub fn parse(b: &mut Bytes) -> HeadData {
         let f = b.get_u8();
@@ -31,8 +33,9 @@ impl HeadData {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
     use super::HeadData;
+
+    use bytes::Bytes;
 
     const A: HeadData = HeadData { r#type: 0, tag: 0 };
     const B: HeadData = HeadData { r#type: 1, tag: 0 };
