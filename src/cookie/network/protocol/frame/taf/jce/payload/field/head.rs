@@ -2,12 +2,12 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 
 #[derive(PartialEq, Debug)]
 pub struct HeadData {
-    r#type: u8,
-    tag: u8,
+    pub r#type: u8,
+    pub tag: u8,
 }
 
 impl HeadData {
-    pub fn parse(mut b: Bytes) -> HeadData {
+    pub fn parse(b: &mut Bytes) -> HeadData {
         let f = b.get_u8();
         let mut t = (f & 240) >> 4;
 
@@ -41,19 +41,19 @@ mod tests {
     const E: HeadData = HeadData { r#type: 4, tag: 24 };
 
     #[test]
-    fn parse0() { assert_eq!(HeadData::parse(Bytes::from(vec![0])), A); }
+    fn parse0() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![0])), A); }
 
     #[test]
-    fn parse1() { assert_eq!(HeadData::parse(Bytes::from(vec![1])), B); }
+    fn parse1() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![1])), B); }
 
     #[test]
-    fn parse33() { assert_eq!(HeadData::parse(Bytes::from(vec![33])), C); }
+    fn parse33() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![33])), C); }
 
     #[test]
-    fn parse130() { assert_eq!(HeadData::parse(Bytes::from(vec![130])), D); }
+    fn parse130() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![130])), D); }
 
     #[test]
-    fn parse24424() { assert_eq!(HeadData::parse(Bytes::from(vec![244, 24])), E); }
+    fn parse24424() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![244, 24])), E); }
 
     #[test]
     fn format00() { assert_eq!(A.format().to_vec(), vec![0]); }
