@@ -13,10 +13,9 @@ pub struct Field<T> {
 }
 
 trait FieldBuild<T> {
-    fn new() -> Field<T>;
-    fn with_tag(tag: u8) -> Field<T>;
-    fn with_tv(tag: u8, value: T) -> Field<T>;
-    fn from_bytes(tag: u8, b: &mut Bytes) -> Field<T>;
+    fn new(h: HeadData) -> Field<T>;
+    fn with_value(h: HeadData, value: T) -> Field<T>;
+    fn from_bytes(h: HeadData, b: &mut Bytes) -> Field<T>;
 }
 
 trait FieldReader {
