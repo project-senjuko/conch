@@ -22,7 +22,7 @@ impl FieldReader for Field<i16> { fn parse(&mut self, b: &mut Bytes) { self.valu
 
 impl FieldWriter for Field<i16> {
     fn format(&self) -> BytesMut {
-        let mut b = BytesMut::with_capacity(3);
+        let mut b = BytesMut::with_capacity(4);
         b.put(self.key.format());
         b.put_i16(self.value);
         b
