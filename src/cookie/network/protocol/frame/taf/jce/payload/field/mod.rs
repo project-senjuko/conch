@@ -18,10 +18,6 @@ trait FieldBuild<T> {
     fn from_bytes(h: HeadData, b: &mut Bytes) -> Field<T>;
 }
 
-trait FieldReader {
-    fn parse(&mut self, b: &mut Bytes);
-}
+trait FieldReader { fn parse(&mut self, b: &mut Bytes); }
 
-trait FieldWriter {
-    fn format(&self) -> BytesMut;
-}
+trait FieldWriter { fn format(&self) -> BytesMut; }

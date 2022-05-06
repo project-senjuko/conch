@@ -1,7 +1,7 @@
 use crate::cookie::network::protocol::frame::taf::jce::payload::field::{Field, FieldBuild, FieldReader, FieldWriter};
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::{HeadData, ZERO_HEAD};
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::HeadData;
 
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{BufMut, Bytes, BytesMut};
 use crate::cookie::network::protocol::frame::taf::jce::payload::field::r#type::{STRING1, STRING4};
 
 impl FieldBuild<String> for Field<String> {
