@@ -4,19 +4,23 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 pub struct HeadData {
     pub r#type: u8,
     pub tag: u8,
+    pub length: u32,
 }
 
 pub const ZERO_HEAD: HeadData = HeadData { r#type: 0, tag: 0 };
+pub const ZERO_HEAD: HeadData = HeadData { r#type: 0, tag: 0, length: 0 };
 
 impl HeadData {
     pub fn parse(b: &mut Bytes) -> HeadData {
         let f = b.get_u8();
+        let r#type = f & 15;
         let mut t = (f & 240) >> 4;
 
         if t == 15 {
             t = b.get_u8() & 255;
         }
-        HeadData { r#type: f & 15, tag: t }
+
+        HeadData { r#type, tag: t, length: Self::length(r#type, b) }
     }
 
     pub fn format(&self) -> BytesMut {
@@ -37,11 +41,11 @@ mod tests {
 
     use bytes::Bytes;
 
-    const A: HeadData = HeadData { r#type: 0, tag: 0 };
-    const B: HeadData = HeadData { r#type: 1, tag: 0 };
-    const C: HeadData = HeadData { r#type: 1, tag: 2 };
-    const D: HeadData = HeadData { r#type: 2, tag: 8 };
-    const E: HeadData = HeadData { r#type: 4, tag: 24 };
+    const A: HeadData = HeadData { r#type: 0, tag: 0, length: 0 };
+    const B: HeadData = HeadData { r#type: 1, tag: 0, length: 0 };
+    const C: HeadData = HeadData { r#type: 1, tag: 2, length: 0 };
+    const D: HeadData = HeadData { r#type: 2, tag: 8, length: 0 };
+    const E: HeadData = HeadData { r#type: 4, tag: 24, length: 0 };
 
     #[test]
     fn parse0() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![0])), A); }

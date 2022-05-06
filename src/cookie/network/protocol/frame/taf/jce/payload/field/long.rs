@@ -6,11 +6,11 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 
 impl FieldBuild<i64> for Field<i64> {
     fn new(HeadData { tag, .. }: HeadData) -> Field<i64> {
-        Field { key: HeadData { r#type: LONG, tag }, value: 0i64 }
+        Field { key: HeadData { r#type: LONG, tag, length: 8 }, value: 0i64 }
     }
 
     fn with_value(HeadData { tag, .. }: HeadData, value: i64) -> Field<i64> {
-        Field { key: HeadData { r#type: LONG, tag }, value }
+        Field { key: HeadData { r#type: LONG, tag, length: 8 }, value }
     }
 
     fn from_bytes(h: HeadData, b: &mut Bytes) -> Field<i64> {
@@ -53,6 +53,6 @@ mod tests {
             ZERO_HEAD,
             &mut Bytes::from(vec![0, 0, 1, 10, 159, 199, 0, 66]),
         );
-        assert_eq!(a, Field { key: HeadData { r#type: LONG, tag: 0 }, value: 1145141919810_i64 });
+        assert_eq!(a, Field { key: HeadData { r#type: LONG, tag: 0, length: 8 }, value: 1145141919810_i64 });
     }
 }
