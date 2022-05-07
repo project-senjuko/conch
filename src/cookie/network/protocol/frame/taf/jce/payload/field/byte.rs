@@ -4,29 +4,29 @@ use crate::cookie::network::protocol::frame::taf::jce::payload::field::r#type::B
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-impl FieldBuild<u8> for Field<u8> {
-    fn new(HeadData { tag, .. }: HeadData) -> Field<u8> {
-        Field { key: HeadData { r#type: BYTE, tag, length: 1 }, value: 0u8 }
+impl FieldBuild<i8> for Field<i8> {
+    fn new(HeadData { tag, .. }: HeadData) -> Field<i8> {
+        Field { key: HeadData { r#type: BYTE, tag, length: 1 }, value: 0i8 }
     }
 
-    fn with_value(HeadData { tag, .. }: HeadData, value: u8) -> Field<u8> {
+    fn with_value(HeadData { tag, .. }: HeadData, value: i8) -> Field<i8> {
         Field { key: HeadData { r#type: BYTE, tag, length: 1 }, value }
     }
 
-    fn from_bytes(h: HeadData, b: &mut Bytes) -> Field<u8> {
-        let mut a: Field<u8> = Field::new(h);
+    fn from_bytes(h: HeadData, b: &mut Bytes) -> Field<i8> {
+        let mut a: Field<i8> = Field::new(h);
         a.parse(b);
         a
     }
 }
 
-impl FieldReader for Field<u8> { fn parse(&mut self, b: &mut Bytes) { self.value = b.get_u8(); } }
+impl FieldReader for Field<i8> { fn parse(&mut self, b: &mut Bytes) { self.value = b.get_i8(); } }
 
-impl FieldWriter for Field<u8> {
+impl FieldWriter for Field<i8> {
     fn format(&self) -> BytesMut {
         let mut b = BytesMut::with_capacity(3);
         b.put(self.key.format());
-        b.put_u8(self.value);
+        b.put_i8(self.value);
         b
     }
 }
@@ -42,14 +42,14 @@ mod tests {
     #[test]
     fn to_bytes() {
         assert_eq!(
-            Field::with_value(ZERO_HEAD, 114_u8).format().to_vec(),
+            Field::with_value(ZERO_HEAD, 114_i8).format().to_vec(),
             vec![0, 114],
         );
     }
 
     #[test]
     fn from_bytes() {
-        let a: Field<u8> = Field::from_bytes(ZERO_HEAD, &mut Bytes::from(vec![114]));
-        assert_eq!(a, Field { key: HeadData { r#type: BYTE, tag: 0, length: 1 }, value: 114_u8 });
+        let a: Field<i8> = Field::from_bytes(ZERO_HEAD, &mut Bytes::from(vec![114]));
+        assert_eq!(a, Field { key: HeadData { r#type: BYTE, tag: 0, length: 1 }, value: 114_i8 });
     }
 }
