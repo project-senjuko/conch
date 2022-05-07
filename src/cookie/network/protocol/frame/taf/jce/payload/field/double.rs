@@ -24,7 +24,7 @@ impl FieldReader for Field<f64> { fn parse(&mut self, b: &mut Bytes) { self.valu
 
 impl FieldWriter for Field<f64> {
     fn format(&self) -> BytesMut {
-        let mut b = BytesMut::with_capacity(6);
+        let mut b = BytesMut::with_capacity(10);
         b.put(self.key.format());
         b.put_f64(self.value);
         b
