@@ -7,7 +7,7 @@ pub struct HeadData {
     pub length: u32,
 }
 
-pub const ZERO_HEAD: HeadData = HeadData { r#type: 0, tag: 0, length: 0 };
+pub const ZERO_HEAD: &HeadData = &HeadData { r#type: 0, tag: 0, length: 0 };
 
 impl HeadData {
     pub fn parse(b: &mut Bytes) -> HeadData {

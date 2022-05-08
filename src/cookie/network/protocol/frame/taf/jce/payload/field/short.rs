@@ -5,15 +5,15 @@ use crate::cookie::network::protocol::frame::taf::jce::payload::field::r#type::S
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
 impl FieldBuild<i16> for Field<i16> {
-    fn new(HeadData { tag, .. }: HeadData) -> Field<i16> {
+    fn new(&HeadData { tag, .. }: &HeadData) -> Field<i16> {
         Field { key: HeadData { r#type: SHORT, tag, length: 2 }, value: 0i16 }
     }
 
-    fn with_value(HeadData { tag, .. }: HeadData, value: i16) -> Field<i16> {
+    fn with_value(&HeadData { tag, .. }: &HeadData, value: i16) -> Field<i16> {
         Field { key: HeadData { r#type: SHORT, tag, length: 2 }, value }
     }
 
-    fn from_bytes(h: HeadData, b: &mut Bytes) -> Field<i16> {
+    fn from_bytes(h: &HeadData, b: &mut Bytes) -> Field<i16> {
         let mut a: Field<i16> = Field::new(h);
         a.parse(b);
         a
