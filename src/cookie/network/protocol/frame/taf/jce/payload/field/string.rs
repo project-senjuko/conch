@@ -9,6 +9,8 @@ impl FieldBuild<String> for Field<String> {
         Field { key: HeadData { r#type, tag, length: 0 }, value: String::new() }
     }
 
+    fn with_head(h: &HeadData) -> Field<String> { Field { key: h.clone(), value: String::new() } }
+
     fn with_value(&HeadData { r#type, tag, .. }: &HeadData, value: String) -> Field<String> {
         Field { key: HeadData { r#type, tag, length: value.len() as u32 }, value }
     }

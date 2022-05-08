@@ -9,6 +9,8 @@ impl FieldBuild<i8> for Field<i8> {
         Field { key: HeadData { r#type: BYTE, tag, length: 1 }, value: 0i8 }
     }
 
+    fn with_head(h: &HeadData) -> Field<i8> { Field { key: h.clone(), value: 0i8 } }
+
     fn with_value(&HeadData { tag, .. }: &HeadData, value: i8) -> Field<i8> {
         Field { key: HeadData { r#type: BYTE, tag, length: 1 }, value }
     }

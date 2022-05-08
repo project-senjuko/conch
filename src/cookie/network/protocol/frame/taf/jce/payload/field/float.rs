@@ -9,6 +9,8 @@ impl FieldBuild<f32> for Field<f32> {
         Field { key: HeadData { r#type: FLOAT, tag, length: 4 }, value: 0f32 }
     }
 
+    fn with_head(h: &HeadData) -> Field<f32> { Field { key: h.clone(), value: 0f32 } }
+
     fn with_value(&HeadData { tag, .. }: &HeadData, value: f32) -> Field<f32> {
         Field { key: HeadData { r#type: FLOAT, tag, length: 4 }, value }
     }

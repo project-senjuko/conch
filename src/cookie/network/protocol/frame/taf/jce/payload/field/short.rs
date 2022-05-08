@@ -9,6 +9,8 @@ impl FieldBuild<i16> for Field<i16> {
         Field { key: HeadData { r#type: SHORT, tag, length: 2 }, value: 0i16 }
     }
 
+    fn with_head(h: &HeadData) -> Field<i16> { Field { key: h.clone(), value: 0i16 } }
+
     fn with_value(&HeadData { tag, .. }: &HeadData, value: i16) -> Field<i16> {
         Field { key: HeadData { r#type: SHORT, tag, length: 2 }, value }
     }
