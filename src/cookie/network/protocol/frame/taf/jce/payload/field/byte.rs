@@ -1,6 +1,5 @@
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{Field, FieldBuild, FieldReader, FieldWriter};
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::HeadData;
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::r#type::BYTE;
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::{Field, FieldBuild, FieldReader, FieldWriter, HeadData, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::r#type::{BYTE, ZERO_TAG};
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
@@ -16,8 +15,12 @@ impl FieldBuild<i8> for Field<i8> {
     }
 
     fn from_bytes(h: &HeadData, b: &mut Bytes) -> Field<i8> {
-        let mut a: Field<i8> = Field::new(h);
-        a.parse(b);
+        let mut a: Field<i8> = Field::with_head(h);
+        match h.r#type {
+            BYTE => a.parse(b),
+            ZERO_TAG => {}
+            _ => panic!("{}", TYPE_ERR),
+        }
         a
     }
 }
@@ -26,18 +29,24 @@ impl FieldReader for Field<i8> { fn parse(&mut self, b: &mut Bytes) { self.value
 
 impl FieldWriter for Field<i8> {
     fn format(&self) -> BytesMut {
-        let mut b = BytesMut::with_capacity(3);
-        b.put(self.key.format());
-        b.put_i8(self.value);
+        let mut b = BytesMut::new();
+        if self.value == 0 { // ZERO_TAG
+            b.reserve(2);
+            b.put(HeadData { r#type: ZERO_TAG, tag: self.key.tag, length: 0 }.format());
+        } else { // BYTE
+            b.reserve(3);
+            b.put(self.key.format());
+            b.put_i8(self.value);
+        }
         b
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::{Field, FieldBuild, FieldWriter};
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::{HeadData, ZERO_HEAD};
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::r#type::BYTE;
+    use crate::cookie::network::protocol::frame::taf::jce::payload::field::{Field, FieldBuild, FieldWriter, HeadData};
+    use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::ZERO_HEAD;
+    use crate::cookie::network::protocol::frame::taf::jce::payload::field::r#type::{BYTE, ZERO_TAG};
 
     use bytes::Bytes;
 
@@ -51,7 +60,24 @@ mod tests {
 
     #[test]
     fn from_bytes() {
-        let a: Field<i8> = Field::from_bytes(ZERO_HEAD, &mut Bytes::from(vec![114]));
-        assert_eq!(a, Field { key: HeadData { r#type: BYTE, tag: 0, length: 1 }, value: 114_i8 });
+        const H: HeadData = HeadData { r#type: BYTE, tag: 0, length: 1 };
+
+        let a: Field<i8> = Field::from_bytes(&H, &mut Bytes::from(vec![114]));
+        assert_eq!(a, Field { key: H, value: 114_i8 });
+    }
+
+    #[test]
+    fn to_bytes_zero() {
+        assert_eq!(
+            Field::with_value(ZERO_HEAD, 0_i8).format().to_vec(), vec![12],
+        );
+    }
+
+    #[test]
+    fn from_bytes_zero() {
+        const H: HeadData = HeadData { r#type: ZERO_TAG, tag: 0, length: 0 };
+
+        let a: Field<i8> = Field::from_bytes(&H, &mut Bytes::from(vec![]));
+        assert_eq!(a, Field { key: H, value: 0_i8 });
     }
 }

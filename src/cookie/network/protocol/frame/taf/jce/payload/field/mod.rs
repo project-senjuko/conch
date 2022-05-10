@@ -22,3 +22,5 @@ trait FieldBuild<T> {
 trait FieldReader { fn parse(&mut self, b: &mut Bytes); }
 
 trait FieldWriter { fn format(&self) -> BytesMut; }
+
+const TYPE_ERR: &str = "Jce 实际类型与欲输出类型不符合";
