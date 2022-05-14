@@ -1,26 +1,60 @@
-mod head;
-mod r#type;
-
-
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::HeadData;
+use std::collections::HashMap;
 
 use bytes::{Bytes, BytesMut};
 
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::HeadData;
+
+mod head;
+
+mod byte;
+mod short;
+mod int;
+mod long;
+mod float;
+mod double;
+mod string;
+mod map;
+
+
+pub type JByte = i8;
+pub type JShort = i16;
+pub type JInt = i32;
+pub type JLong = i64;
+pub type JFloat = f32;
+pub type JDouble = f64;
+pub type JString = String;
+pub type JMap<T, U> = HashMap<T, U>;
+pub type JList<T> = Vec<T>;
+
+pub const BYTE: u8 = 0;
+pub const SHORT: u8 = 1;
+pub const INT: u8 = 2;
+pub const LONG: u8 = 3;
+pub const FLOAT: u8 = 4;
+pub const DOUBLE: u8 = 5;
+pub const STRING1: u8 = 6;
+pub const STRING4: u8 = 7;
+pub const MAP: u8 = 8;
+pub const LIST: u8 = 9;
+pub const STRUCT_BEGIN: u8 = 10;
+pub const STRUCT_END: u8 = 11;
+pub const ZERO_TAG: u8 = 12;
+pub const SIMPLE_LIST: u8 = 13;
+
+
 #[derive(PartialEq, Debug)]
-pub struct Field<T> {
+pub struct Field<T: JceType<T>> {
     pub key: HeadData,
     pub value: T,
 }
 
-trait FieldBuild<T> {
-    fn new(h: &HeadData) -> Field<T>;
-    fn with_head(h: &HeadData) -> Field<T>;
-    fn with_value(h: &HeadData, value: T) -> Field<T>;
-    fn from_bytes(h: &HeadData, b: &mut Bytes) -> Field<T>;
+/// 标准 Jce 类型必须具备的特征
+pub trait JceType<T> {
+    /// 将支持的类型格式化为字节流
+    fn to_bytes(&self, tag: u8) -> BytesMut;
+    /// 从字节流中解读支持的类型
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> T;
 }
 
-trait FieldReader { fn parse(&mut self, b: &mut Bytes); }
-
-trait FieldWriter { fn format(&self) -> BytesMut; }
 
 const TYPE_ERR: &str = "Jce 实际类型与欲输出类型不符合";

@@ -7,8 +7,6 @@ pub struct HeadData {
     pub length: u32,
 }
 
-pub const ZERO_HEAD: &HeadData = &HeadData { r#type: 0, tag: 0, length: 0 };
-
 impl HeadData {
     pub fn build(r#type: u8, tag: u8, length: u32) -> HeadData { HeadData { r#type, tag, length } }
 
@@ -25,7 +23,7 @@ impl HeadData {
     }
 
     pub fn format(&self) -> BytesMut {
-        let mut b = BytesMut::with_capacity(2);
+        let mut b = BytesMut::with_capacity((2 + self.length) as usize);
         if self.tag <= 14 {
             b.put_u8(self.r#type | (self.tag << 4));
         } else {
@@ -38,9 +36,9 @@ impl HeadData {
 
 #[cfg(test)]
 mod tests {
-    use super::HeadData;
-
     use bytes::Bytes;
+
+    use super::HeadData;
 
     const A: HeadData = HeadData { r#type: 0, tag: 0, length: 0 };
     const B: HeadData = HeadData { r#type: 1, tag: 0, length: 0 };
