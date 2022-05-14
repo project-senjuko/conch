@@ -10,6 +10,8 @@ pub struct HeadData {
 pub const ZERO_HEAD: &HeadData = &HeadData { r#type: 0, tag: 0, length: 0 };
 
 impl HeadData {
+    pub fn build(r#type: u8, tag: u8, length: u32) -> HeadData { HeadData { r#type, tag, length } }
+
     pub fn parse(b: &mut Bytes) -> HeadData {
         let f = b.get_u8();
         let r#type = f & 15;
@@ -19,7 +21,7 @@ impl HeadData {
             t = b.get_u8() & 255;
         }
 
-        HeadData { r#type, tag: t, length: Self::length(r#type, b) }
+        HeadData { r#type, tag: t, length: 0 }
     }
 
     pub fn format(&self) -> BytesMut {
