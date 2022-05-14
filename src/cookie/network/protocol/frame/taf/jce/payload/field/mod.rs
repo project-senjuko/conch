@@ -7,6 +7,7 @@ use crate::cookie::network::protocol::frame::taf::jce::payload::field::head::Hea
 mod head;
 
 mod byte;
+mod bool;
 mod short;
 mod int;
 mod long;
@@ -17,6 +18,7 @@ mod map;
 
 
 pub type JByte = i8;
+pub type JBool = bool;
 pub type JShort = i16;
 pub type JInt = i32;
 pub type JLong = i64;
@@ -27,6 +29,7 @@ pub type JMap<T, U> = HashMap<T, U>;
 pub type JList<T> = Vec<T>;
 
 pub const BYTE: u8 = 0;
+pub const BOOL: u8 = 0;
 pub const SHORT: u8 = 1;
 pub const INT: u8 = 2;
 pub const LONG: u8 = 3;
