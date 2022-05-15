@@ -1,15 +1,15 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{FLOAT, HeadData, JceType, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::{FLOAT, HeadData, JceType, JFloat, TYPE_ERR};
 
-impl JceType<f32> for f32 {
+impl JceType<JFloat> for JFloat {
     fn to_bytes(&self, tag: u8) -> BytesMut {
         let mut b = HeadData::build(FLOAT, tag, 4).format();
         b.put_f32(*self);
         b
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> f32 {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> JFloat {
         match r#type {
             FLOAT => b.get_f32(),
             _ => panic!("{}", TYPE_ERR),

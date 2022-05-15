@@ -1,15 +1,15 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{DOUBLE, HeadData, JceType, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::{DOUBLE, HeadData, JceType, JDouble, TYPE_ERR};
 
-impl JceType<f64> for f64 {
+impl JceType<JDouble> for JDouble {
     fn to_bytes(&self, tag: u8) -> BytesMut {
         let mut b = HeadData::build(DOUBLE, tag, 8).format();
         b.put_f64(*self);
         b
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> f64 {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> JDouble {
         match r#type {
             DOUBLE => b.get_f64(),
             _ => panic!("{}", TYPE_ERR),

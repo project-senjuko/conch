@@ -1,8 +1,8 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceType, STRING1, STRING4, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceType, JString, STRING1, STRING4, TYPE_ERR};
 
-impl JceType<String> for String {
+impl JceType<JString> for JString {
     fn to_bytes(&self, tag: u8) -> BytesMut {
         let l = self.len();
         let mut b = if l <= 255 {
@@ -18,7 +18,7 @@ impl JceType<String> for String {
         b
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> String {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> JString {
         let len = match r#type {
             STRING1 => b.get_u8() as usize,
             STRING4 => b.get_i32() as usize,

@@ -1,8 +1,8 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{BYTE, HeadData, INT, JceType, SHORT, TYPE_ERR, ZERO_TAG};
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::{BYTE, HeadData, INT, JceType, JInt, SHORT, TYPE_ERR, ZERO_TAG};
 
-impl JceType<i32> for i32 {
+impl JceType<JInt> for JInt {
     fn to_bytes(&self, tag: u8) -> BytesMut {
         if *self < 32768 && *self >= -32768 { return (*self as i16).to_bytes(tag); }
         let mut b = HeadData::build(INT, tag, 4).format();
@@ -10,7 +10,7 @@ impl JceType<i32> for i32 {
         b
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> i32 {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> JInt {
         match r#type {
             BYTE => b.get_i8() as i32,
             SHORT => b.get_i16() as i32,
