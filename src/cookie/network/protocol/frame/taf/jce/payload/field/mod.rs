@@ -15,6 +15,7 @@ mod float;
 mod double;
 mod string;
 mod map;
+mod list;
 
 
 pub type JByte = i8;
