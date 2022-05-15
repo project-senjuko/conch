@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{BYTE, HeadData, INT, JByte, JceType, JInt, JMap, JShort, MAP, SHORT, TYPE_ERR, ZERO_TAG};
+use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceType, JInt, JMap, MAP, TYPE_ERR};
 
 impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -20,15 +20,9 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
         let len = {
             let head = HeadData::parse(b);
             if head.tag != 0 { panic!("{}", TYPE_ERR) }
-            match head.r#type {
-                BYTE => { JByte::from_bytes(b, BYTE) as u32 }
-                SHORT => { JShort::from_bytes(b, SHORT) as u32 }
-                INT => { JInt::from_bytes(b, INT) as u32 }
-                ZERO_TAG => 0,
-                _ => panic!("{}", TYPE_ERR),
-            }
+            JInt::from_bytes(b, head.r#type) as u32
         };
-        let mut map: HashMap<T, U> = HashMap::new();
+        let mut map: HashMap<T, U> = HashMap::with_capacity(b.remaining());
         {
             let mut i = 0;
             while i < len {

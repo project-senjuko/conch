@@ -1,4 +1,4 @@
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{Buf, BufMut, Bytes, BytesMut};
 
 use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceType, JInt, JList, LIST, TYPE_ERR};
 
@@ -16,7 +16,7 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
             if head.tag != 0 { panic!("{}", TYPE_ERR) }
             JInt::from_bytes(b, head.r#type) as u32
         };
-        let mut vec: Vec<T> = Vec::new();
+        let mut vec: Vec<T> = Vec::with_capacity(b.remaining());
         {
             let mut i = 0;
             while i < len {
