@@ -28,7 +28,7 @@ mod tests {
     use crate::cookie::network::protocol::frame::taf::jce::payload::field::{INT, JceType, JInt, SHORT};
 
     #[test]
-    fn to_bytes() { assert_eq!(114514_i32.to_bytes(0).to_vec(), vec![2, 0, 1, 191, 82]); }
+    fn to_bytes() { assert_eq!(114514_i32.to_bytes(0), vec![2, 0, 1, 191, 82]); }
 
     #[test]
     fn from_bytes() {
@@ -39,7 +39,7 @@ mod tests {
     }
 
     #[test]
-    fn to_bytes_short() { assert_eq!(1919_i32.to_bytes(0).to_vec(), vec![1, 7, 127]); }
+    fn to_bytes_short() { assert_eq!(1919_i32.to_bytes(0), vec![1, 7, 127]); }
 
     #[test]
     fn from_bytes_short() {

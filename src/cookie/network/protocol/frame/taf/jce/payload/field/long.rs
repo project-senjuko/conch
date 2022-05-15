@@ -30,7 +30,7 @@ mod tests {
 
     #[test]
     fn to_bytes() {
-        assert_eq!(1145141919810_i64.to_bytes(0).to_vec(), vec![3, 0, 0, 1, 10, 159, 199, 0, 66]);
+        assert_eq!(1145141919810_i64.to_bytes(0), vec![3, 0, 0, 1, 10, 159, 199, 0, 66]);
     }
 
     #[test]
@@ -42,7 +42,7 @@ mod tests {
     }
 
     #[test]
-    fn to_bytes_int() { assert_eq!(114514_i64.to_bytes(0).to_vec(), vec![2, 0, 1, 191, 82]); }
+    fn to_bytes_int() { assert_eq!(114514_i64.to_bytes(0), vec![2, 0, 1, 191, 82]); }
 
     #[test]
     fn from_bytes_int() {

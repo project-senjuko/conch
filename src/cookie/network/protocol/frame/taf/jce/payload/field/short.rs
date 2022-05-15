@@ -27,24 +27,18 @@ mod tests {
     use crate::cookie::network::protocol::frame::taf::jce::payload::field::{BYTE, JceType, JShort, SHORT};
 
     #[test]
-    fn to_bytes() { assert_eq!(1919_i16.to_bytes(0).to_vec(), vec![1, 7, 127]); }
+    fn to_bytes() { assert_eq!(1919_i16.to_bytes(0), vec![1, 7, 127]); }
 
     #[test]
     fn from_bytes() {
-        assert_eq!(
-            JShort::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT),
-            1919_i16,
-        );
+        assert_eq!(JShort::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT), 1919_i16);
     }
 
     #[test]
-    fn to_bytes_byte() { assert_eq!(114_i16.to_bytes(0).to_vec(), vec![0, 114]); }
+    fn to_bytes_byte() { assert_eq!(114_i16.to_bytes(0), vec![0, 114]); }
 
     #[test]
     fn from_bytes_byte() {
-        assert_eq!(
-            JShort::from_bytes(&mut Bytes::from(vec![114]), BYTE),
-            114_i16,
-        );
+        assert_eq!(JShort::from_bytes(&mut Bytes::from(vec![114]), BYTE), 114_i16);
     }
 }

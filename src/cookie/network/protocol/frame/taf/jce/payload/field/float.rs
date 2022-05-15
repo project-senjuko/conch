@@ -24,7 +24,7 @@ mod tests {
     use crate::cookie::network::protocol::frame::taf::jce::payload::field::{FLOAT, JceType, JFloat};
 
     #[test]
-    fn to_bytes() { assert_eq!(11.4_f32.to_bytes(0).to_vec(), vec![4, 65, 54, 102, 102]); }
+    fn to_bytes() { assert_eq!(11.4_f32.to_bytes(0), vec![4, 65, 54, 102, 102]); }
 
     #[test]
     fn from_bytes() {
