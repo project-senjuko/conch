@@ -16,6 +16,7 @@ mod double;
 mod string;
 mod map;
 mod list;
+mod jslist;
 
 
 pub type JByte = i8;
@@ -28,6 +29,7 @@ pub type JDouble = f64;
 pub type JString = String;
 pub type JMap<T, U> = HashMap<T, U>;
 pub type JList<T> = Vec<T>;
+pub type JSList = Bytes;
 
 pub const BYTE: u8 = 0;
 pub const BOOL: u8 = 0;
