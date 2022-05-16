@@ -21,7 +21,9 @@ impl JceType<JSList> for JSList {
             if head.tag != 0 { panic!("{}", TYPE_ERR) }
             JInt::from_bytes(b, head.r#type) as usize
         };
-        b.slice(..len)
+        let a = b.slice(..len);
+        b.advance(len);
+        a
     }
 }
 
