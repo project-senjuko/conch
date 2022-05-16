@@ -46,6 +46,6 @@ mod tests {
         assert_eq!(
             JSList::from_bytes(&mut Bytes::from(vec![0, 0, 6, 1, 1, 4, 5, 1, 4]), SIMPLE_LIST),
             Bytes::from(vec![1, 1, 4, 5, 1, 4]),
-        )
+        );
     }
 }

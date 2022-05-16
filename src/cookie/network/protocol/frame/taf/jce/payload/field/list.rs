@@ -46,6 +46,6 @@ mod tests {
     #[test]
     fn from_bytes() {
         let a: JList<String> = JList::from_bytes(&mut Bytes::from(vec![0, 2, 6, 6, 229, 141, 131, 230, 169, 152, 6, 6, 233, 155, 171, 233, 156, 158]), LIST);
-        assert_eq!(a, vec![String::from("千橘"), String::from("雫霞")])
+        assert_eq!(a, vec![String::from("千橘"), String::from("雫霞")]);
     }
 }
