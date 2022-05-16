@@ -16,6 +16,7 @@ mod double;
 mod string;
 mod map;
 mod list;
+mod jstruct;
 mod jslist;
 
 
@@ -60,6 +61,15 @@ pub trait JceType<T> {
     fn to_bytes(&self, tag: u8) -> BytesMut;
     /// 从字节流中解读支持的类型
     fn from_bytes(b: &mut Bytes, r#type: u8) -> T;
+}
+
+pub trait JceStruct<T> {
+    /// 将支持的结构体格式化为字节流
+    fn s_to_bytes(&self) -> BytesMut;
+    /// 从字节流中解读支持的结构体
+    fn s_from_bytes(self, b: &mut Bytes) -> T;
+    /// 初始化结构体
+    fn init() -> T;
 }
 
 
