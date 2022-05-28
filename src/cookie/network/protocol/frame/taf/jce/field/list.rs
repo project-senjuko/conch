@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType, JInt, JList, LIST, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType, JList, LIST};
 
 impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -11,11 +11,7 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> JList<T> {
-        let len = {
-            let head = HeadData::parse(b);
-            if head.tag != 0 { panic!("{}", TYPE_ERR) }
-            JInt::from_bytes(b, head.r#type) as u32
-        };
+        let (_, len) = HeadData::parse_ttl4(b);
         let mut vec: Vec<T> = Vec::with_capacity(b.remaining());
         {
             let mut i = 0;

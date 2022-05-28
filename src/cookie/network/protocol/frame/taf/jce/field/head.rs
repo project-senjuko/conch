@@ -1,5 +1,7 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
+use crate::cookie::network::protocol::frame::taf::jce::field::{JceType, JInt, TYPE_ERR};
+
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub struct HeadData {
     pub r#type: u8,
@@ -20,6 +22,12 @@ impl HeadData {
         }
 
         HeadData { r#type, tag: t, length: 0 }
+    }
+
+    pub fn parse_ttl4(b: &mut Bytes) -> (HeadData, usize) {
+        let head = HeadData::parse(b);
+        if head.tag != 0 { panic!("{}", TYPE_ERR) }
+        (head, JInt::from_bytes(b, head.r#type) as usize)
     }
 
     pub fn format(&self) -> BytesMut {

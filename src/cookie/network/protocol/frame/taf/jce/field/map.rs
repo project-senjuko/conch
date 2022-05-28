@@ -3,7 +3,7 @@ use std::hash::Hash;
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType, JInt, JMap, MAP, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType, JMap, MAP};
 
 impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -17,11 +17,7 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> JMap<T, U> {
-        let len = {
-            let head = HeadData::parse(b);
-            if head.tag != 0 { panic!("{}", TYPE_ERR) }
-            JInt::from_bytes(b, head.r#type) as u32
-        };
+        let (_, len) = HeadData::parse_ttl4(b);
         let mut map: HashMap<T, U> = HashMap::with_capacity(b.remaining());
         {
             let mut i = 0;

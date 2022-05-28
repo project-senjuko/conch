@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, JceType, JInt, JSList, SIMPLE_LIST, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, JceType, JSList, SIMPLE_LIST, TYPE_ERR};
 
 impl JceType<JSList> for JSList {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -16,11 +16,7 @@ impl JceType<JSList> for JSList {
             let head = HeadData::parse(b);
             if head.tag != 0 || head.r#type != 0 { panic!("{}", TYPE_ERR) }
         }
-        let len = {
-            let head = HeadData::parse(b);
-            if head.tag != 0 { panic!("{}", TYPE_ERR) }
-            JInt::from_bytes(b, head.r#type) as usize
-        };
+        let (_, len) = HeadData::parse_ttl4(b);
         let a = b.slice(..len);
         b.advance(len);
         a
