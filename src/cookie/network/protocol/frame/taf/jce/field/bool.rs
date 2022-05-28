@@ -1,6 +1,6 @@
 use bytes::{Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, JBool, JceType, TYPE_ERR, ZERO_TAG};
+use crate::cookie::network::protocol::frame::taf::jce::field::{BOOL, JBool, JceType, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JBool> for JBool {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -10,7 +10,7 @@ impl JceType<JBool> for JBool {
 
     fn from_bytes(_: &mut Bytes, r#type: u8) -> JBool {
         match r#type {
-            BYTE => true,
+            BOOL => true,
             ZERO_TAG => false,
             _ => panic!("{}", TYPE_ERR)
         }
