@@ -1,6 +1,6 @@
 use bytes::{BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
 
 impl<T: JceStruct<T>> JceType<T> for T {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -24,7 +24,7 @@ impl<T: JceStruct<T>> JceType<T> for T {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceStruct, JceType, STRING1, STRUCT_BEGIN};
+    use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceStruct, JceType, STRING1, STRUCT_BEGIN};
 
     #[derive(PartialEq, Debug)]
     struct Q {

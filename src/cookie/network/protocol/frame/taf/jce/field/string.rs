@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceType, JString, STRING1, STRING4, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType, JString, STRING1, STRING4, TYPE_ERR};
 
 impl JceType<JString> for JString {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -34,7 +34,7 @@ impl JceType<JString> for JString {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::{JceType, JString, STRING1, STRING4};
+    use crate::cookie::network::protocol::frame::taf::jce::field::{JceType, JString, STRING1, STRING4};
 
     #[test]
     fn to_bytes1() {

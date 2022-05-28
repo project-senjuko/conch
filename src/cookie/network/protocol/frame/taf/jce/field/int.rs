@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{BYTE, HeadData, INT, JceType, JInt, SHORT, TYPE_ERR, ZERO_TAG};
+use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, INT, JceType, JInt, SHORT, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JInt> for JInt {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -25,7 +25,7 @@ impl JceType<JInt> for JInt {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::{INT, JceType, JInt, SHORT};
+    use crate::cookie::network::protocol::frame::taf::jce::field::{INT, JceType, JInt, SHORT};
 
     #[test]
     fn to_bytes() { assert_eq!(114514_i32.to_bytes(0), vec![2, 0, 1, 191, 82]); }

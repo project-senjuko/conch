@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{BYTE, HeadData, JceType, JShort, SHORT, TYPE_ERR, ZERO_TAG};
+use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, JceType, JShort, SHORT, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JShort> for JShort {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -24,7 +24,7 @@ impl JceType<JShort> for JShort {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::{BYTE, JceType, JShort, SHORT};
+    use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, JceType, JShort, SHORT};
 
     #[test]
     fn to_bytes() { assert_eq!(1919_i16.to_bytes(0), vec![1, 7, 127]); }

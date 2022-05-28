@@ -3,7 +3,7 @@ use std::hash::Hash;
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::payload::field::{HeadData, JceType, JInt, JMap, MAP, TYPE_ERR};
+use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType, JInt, JMap, MAP, TYPE_ERR};
 
 impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -42,7 +42,7 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::payload::field::{JceType, JMap, MAP};
+    use crate::cookie::network::protocol::frame::taf::jce::field::{JceType, JMap, MAP};
 
     #[test]
     fn to_bytes() {
