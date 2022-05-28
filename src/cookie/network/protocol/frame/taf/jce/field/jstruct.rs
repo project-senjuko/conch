@@ -4,9 +4,9 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceStru
 
 impl<T: JceStruct<T>> JceType<T> for T {
     fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::build(STRUCT_BEGIN, tag, 0).format();
+        let mut b = HeadData::new(STRUCT_BEGIN, tag, 0).format();
         b.put(self.s_to_bytes());
-        b.put(HeadData::build(STRUCT_END, 0, 0).format());
+        b.put(HeadData::new(STRUCT_END, 0, 0).format());
         b
     }
 

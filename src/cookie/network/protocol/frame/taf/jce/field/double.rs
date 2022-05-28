@@ -4,7 +4,7 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{DOUBLE, HeadData,
 
 impl JceType<JDouble> for JDouble {
     fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::build(DOUBLE, tag, 8).format();
+        let mut b = HeadData::new(DOUBLE, tag, 8).format();
         b.put_f64(*self);
         b
     }

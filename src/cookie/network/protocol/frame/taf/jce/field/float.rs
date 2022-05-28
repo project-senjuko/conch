@@ -4,7 +4,7 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{FLOAT, HeadData, 
 
 impl JceType<JFloat> for JFloat {
     fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::build(FLOAT, tag, 4).format();
+        let mut b = HeadData::new(FLOAT, tag, 4).format();
         b.put_f32(*self);
         b
     }

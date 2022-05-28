@@ -7,7 +7,7 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType
 
 impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
     fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::build(MAP, tag, self.capacity() as u32).format();
+        let mut b = HeadData::new(MAP, tag, self.capacity() as u32).format();
         b.put((self.len() as i32).to_bytes(0));
         for (k, v) in self.iter() {
             b.put(k.to_bytes(0));

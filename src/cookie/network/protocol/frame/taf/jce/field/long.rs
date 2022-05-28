@@ -5,7 +5,7 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, I
 impl JceType<JLong> for JLong {
     fn to_bytes(&self, tag: u8) -> BytesMut {
         if *self < 2147483648 && *self >= -2147483648 { return (*self as i32).to_bytes(tag); }
-        let mut b = HeadData::build(LONG, tag, 8).format();
+        let mut b = HeadData::new(LONG, tag, 8).format();
         b.put_i64(*self);
         b
     }

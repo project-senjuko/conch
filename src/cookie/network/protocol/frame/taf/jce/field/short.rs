@@ -5,7 +5,7 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, J
 impl JceType<JShort> for JShort {
     fn to_bytes(&self, tag: u8) -> BytesMut {
         if *self < 128 && *self >= -128 { return (*self as i8).to_bytes(tag); }
-        let mut b = HeadData::build(SHORT, tag, 2).format();
+        let mut b = HeadData::new(SHORT, tag, 2).format();
         b.put_i16(*self);
         b
     }

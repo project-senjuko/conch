@@ -8,7 +8,7 @@ pub struct HeadData {
 }
 
 impl HeadData {
-    pub fn build(r#type: u8, tag: u8, length: u32) -> HeadData { HeadData { r#type, tag, length } }
+    pub fn new(r#type: u8, tag: u8, length: u32) -> HeadData { HeadData { r#type, tag, length } }
 
     pub fn parse(b: &mut Bytes) -> HeadData {
         let f = b.get_u8();

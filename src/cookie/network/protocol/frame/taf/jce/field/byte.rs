@@ -4,8 +4,8 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, J
 
 impl JceType<JByte> for JByte {
     fn to_bytes(&self, tag: u8) -> BytesMut {
-        if *self == 0 { return HeadData::build(ZERO_TAG, tag, 0).format(); }
-        let mut b = HeadData::build(BYTE, tag, 1).format();
+        if *self == 0 { return HeadData::new(ZERO_TAG, tag, 0).format(); }
+        let mut b = HeadData::new(BYTE, tag, 1).format();
         b.put_i8(*self);
         b
     }

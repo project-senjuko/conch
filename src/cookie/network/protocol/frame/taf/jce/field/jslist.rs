@@ -4,8 +4,8 @@ use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, J
 
 impl JceType<JSList> for JSList {
     fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::build(SIMPLE_LIST, tag, self.remaining() as u32).format();
-        b.put(HeadData::build(BYTE, tag, 0).format());
+        let mut b = HeadData::new(SIMPLE_LIST, tag, self.remaining() as u32).format();
+        b.put(HeadData::new(BYTE, tag, 0).format());
         b.put((self.remaining() as i32).to_bytes(0));
         b.put(self.slice(..));
         b
