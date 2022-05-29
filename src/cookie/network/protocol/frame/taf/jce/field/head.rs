@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{JceType, JInt, TYPE_ERR};
+use super::{JceType, JInt, TYPE_ERR};
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub struct HeadData {

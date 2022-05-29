@@ -1,6 +1,6 @@
 use bytes::{BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString, MAP, SIMPLE_LIST};
+use super::field::{HeadData, JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString, MAP, SIMPLE_LIST};
 
 /// ## 版本控制信息
 /// struct-from | com.qq.taf.RequestPacket

@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, JByte, JceType, TYPE_ERR, ZERO_TAG};
+use super::{BYTE, HeadData, JByte, JceType, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JByte> for JByte {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -23,7 +23,7 @@ impl JceType<JByte> for JByte {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, JByte, JceType, ZERO_TAG};
+    use super::{BYTE, JByte, JceType, ZERO_TAG};
 
     #[test]
     fn to_bytes() { assert_eq!(114_i8.to_bytes(0), vec![0, 114]); }

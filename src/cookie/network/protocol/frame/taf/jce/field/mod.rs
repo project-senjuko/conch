@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use bytes::{Bytes, BytesMut};
 
-pub use crate::cookie::network::protocol::frame::taf::jce::field::head::HeadData;
+pub use self::head::HeadData;
 
 mod head;
 

@@ -25,7 +25,7 @@ impl QCBChaining {
         let mut bm = BytesMut::with_capacity(b.remaining());
         let (mut iv, mut av) = (0, 0);
         while b.remaining() > 0 {
-            let after = b.get_u64() ^ av;// ct ^ av
+            let after = b.get_u64() ^ av; // ct ^ av
             av = self.c.decrypt(after) ^ iv; // before ^ iv = pt
             iv = after;
             bm.put_u64(av);

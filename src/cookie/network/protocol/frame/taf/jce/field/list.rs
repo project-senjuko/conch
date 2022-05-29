@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{HeadData, JceType, JList, LIST};
+use super::{HeadData, JceType, JList, LIST};
 
 impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -29,7 +29,7 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::field::{JceType, JList, LIST};
+    use super::{JceType, JList, LIST};
 
     #[test]
     fn to_bytes() {

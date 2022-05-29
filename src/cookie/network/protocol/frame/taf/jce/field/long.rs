@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{BYTE, HeadData, INT, JceType, JLong, LONG, SHORT, TYPE_ERR, ZERO_TAG};
+use super::{BYTE, HeadData, INT, JceType, JLong, LONG, SHORT, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JLong> for JLong {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -26,7 +26,7 @@ impl JceType<JLong> for JLong {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::field::{INT, JceType, JLong, LONG};
+    use super::{INT, JceType, JLong, LONG};
 
     #[test]
     fn to_bytes() {

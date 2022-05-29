@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{FLOAT, HeadData, JceType, JFloat, TYPE_ERR};
+use super::{FLOAT, HeadData, JceType, JFloat, TYPE_ERR};
 
 impl JceType<JFloat> for JFloat {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -21,7 +21,7 @@ impl JceType<JFloat> for JFloat {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::field::{FLOAT, JceType, JFloat};
+    use super::{FLOAT, JceType, JFloat};
 
     #[test]
     fn to_bytes() { assert_eq!(11.4_f32.to_bytes(0), vec![4, 65, 54, 102, 102]); }

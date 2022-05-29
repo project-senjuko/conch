@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use crate::cookie::network::protocol::frame::taf::jce::field::{DOUBLE, HeadData, JceType, JDouble, TYPE_ERR};
+use super::{DOUBLE, HeadData, JceType, JDouble, TYPE_ERR};
 
 impl JceType<JDouble> for JDouble {
     fn to_bytes(&self, tag: u8) -> BytesMut {
@@ -21,7 +21,7 @@ impl JceType<JDouble> for JDouble {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::taf::jce::field::{DOUBLE, JceType, JDouble};
+    use super::{DOUBLE, JceType, JDouble};
 
     #[test]
     fn to_bytes() {
