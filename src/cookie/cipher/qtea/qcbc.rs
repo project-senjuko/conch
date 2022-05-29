@@ -40,14 +40,12 @@ mod tests {
 
     use super::{QCBChaining, TeaCipher};
 
+    const C: QCBChaining = QCBChaining { c: TeaCipher { key: [114, 514, 1919, 810] } };
+
     #[test]
     fn encrypt() {
         assert_eq!(
-            QCBChaining {
-                c: TeaCipher { key: [114, 514, 1919, 810] }
-            }.encrypt(
-                &mut Bytes::from(vec![2, 0, 2, 2, 2, 2, 0, 2, 5, 2, 0, 1, 3, 1, 4, 0]),
-            ),
+            C.encrypt(&mut Bytes::from(vec![2, 0, 2, 2, 2, 2, 0, 2, 5, 2, 0, 1, 3, 1, 4, 0])),
             vec![244, 123, 62, 197, 118, 127, 124, 229, 24, 107, 105, 26, 152, 90, 161, 238],
         );
     }
@@ -55,11 +53,7 @@ mod tests {
     #[test]
     fn decrypt() {
         assert_eq!(
-            QCBChaining {
-                c: TeaCipher { key: [114, 514, 1919, 810] }
-            }.decrypt(
-                &mut Bytes::from(vec![244, 123, 62, 197, 118, 127, 124, 229, 24, 107, 105, 26, 152, 90, 161, 238]),
-            ),
+            C.decrypt(&mut Bytes::from(vec![244, 123, 62, 197, 118, 127, 124, 229, 24, 107, 105, 26, 152, 90, 161, 238])),
             vec![2, 0, 2, 2, 2, 2, 0, 2, 5, 2, 0, 1, 3, 1, 4, 0],
         );
     }
