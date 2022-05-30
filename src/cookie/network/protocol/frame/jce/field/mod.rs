@@ -73,4 +73,4 @@ pub trait JceStruct<T> {
 }
 
 
-const TYPE_ERR: &str = "Jce 实际类型与欲输出类型不符合";
+const TYPE_ERR: &str = "Jce 类型不符";
