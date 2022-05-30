@@ -1,2 +1,2 @@
-mod field;
-mod packet;
+pub mod field;
+pub mod packet;
