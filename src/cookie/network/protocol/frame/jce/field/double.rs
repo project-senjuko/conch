@@ -8,12 +8,7 @@ impl JceType<JDouble> for JDouble {
         b.put_f64(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> JDouble {
-        match r#type {
-            DOUBLE => b.get_f64(),
-            _ => panic!("{}", TYPE_ERR),
-        }
-    }
+    fn from_bytes(b: &mut Bytes, _: u8) -> JDouble { b.get_f64() }
 }
 
 #[cfg(test)]

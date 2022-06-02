@@ -8,12 +8,7 @@ impl JceType<JFloat> for JFloat {
         b.put_f32(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> JFloat {
-        match r#type {
-            FLOAT => b.get_f32(),
-            _ => panic!("{}", TYPE_ERR),
-        }
-    }
+    fn from_bytes(b: &mut Bytes, _: u8) -> JFloat { b.get_f32() }
 }
 
 #[cfg(test)]
