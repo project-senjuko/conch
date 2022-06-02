@@ -1,4 +1,4 @@
-use bytes::{Bytes, BytesMut};
+use bytes::{Buf, Bytes, BytesMut};
 
 use super::{BOOL, JBool, JceType, TYPE_ERR, ZERO_TAG};
 
@@ -8,9 +8,12 @@ impl JceType<JBool> for JBool {
         0i8.to_bytes(b, tag);
     }
 
-    fn from_bytes(_: &mut Bytes, r#type: u8) -> JBool {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> JBool {
         match r#type {
-            BOOL => true,
+            BOOL => {
+                b.advance(1);
+                true
+            }
             ZERO_TAG => false,
             _ => panic!("{}", TYPE_ERR)
         }
