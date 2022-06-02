@@ -1,19 +1,18 @@
 use std::collections::HashMap;
 use std::hash::Hash;
 
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{Buf, Bytes, BytesMut};
 
 use super::{HeadData, JceType, JMap, MAP};
 
 impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
-    fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::new(MAP, tag, self.capacity() as u32).format();
-        b.put((self.len() as i32).to_bytes(0));
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        HeadData::new(MAP, tag, self.capacity() as u32).format(b);
+        (self.len() as i32).to_bytes(b, 0);
         for (k, v) in self.iter() {
-            b.put(k.to_bytes(0));
-            b.put(v.to_bytes(1));
+            k.to_bytes(b, 0);
+            v.to_bytes(b, 1);
         }
-        b
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> JMap<T, U> {
@@ -36,15 +35,20 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::{Bytes, BytesMut};
+
+    use crate::cookie::network::protocol::frame::jce::field::{JByte, JString};
 
     use super::{JceType, JMap, MAP};
 
     #[test]
     fn to_bytes() {
         let mut h: JMap<i8, String> = JMap::new();
+        let mut b = BytesMut::new();
+
         h.insert(0, String::from("せんこさん大好き"));
-        assert_eq!(h.to_bytes(0), vec![8, 0, 1, 12, 22, 24, 227, 129, 155, 227, 130, 147, 227, 129, 147, 227, 129, 149, 227, 130, 147, 229, 164, 167, 229, 165, 189, 227, 129, 141]);
+        h.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![8, 0, 1, 12, 22, 24, 227, 129, 155, 227, 130, 147, 227, 129, 147, 227, 129, 149, 227, 130, 147, 229, 164, 167, 229, 165, 189, 227, 129, 141]);
     }
 
     #[test]
@@ -52,7 +56,6 @@ mod tests {
         let mut h: JMap<i8, String> = JMap::new();
         h.insert(0, String::from("せんこさん"));
         h.insert(1, String::from("大好き"));
-        let a: JMap<i8, String> = JMap::from_bytes(&mut Bytes::from(vec![0, 2, 12, 22, 15, 227, 129, 155, 227, 130, 147, 227, 129, 147, 227, 129, 149, 227, 130, 147, 0, 1, 22, 9, 229, 164, 167, 229, 165, 189, 227, 129, 141]), MAP);
-        assert_eq!(h, a);
+        assert_eq!(h, JMap::from_bytes(&mut Bytes::from(vec![0, 2, 12, 22, 15, 227, 129, 155, 227, 130, 147, 227, 129, 147, 227, 129, 149, 227, 130, 147, 0, 1, 22, 9, 229, 164, 167, 229, 165, 189, 227, 129, 141]), MAP) as JMap<JByte, JString>);
     }
 }

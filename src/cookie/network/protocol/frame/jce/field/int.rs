@@ -3,11 +3,10 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 use super::{BYTE, HeadData, INT, JceType, JInt, SHORT, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JInt> for JInt {
-    fn to_bytes(&self, tag: u8) -> BytesMut {
-        if *self < 32768 && *self >= -32768 { return (*self as i16).to_bytes(tag); }
-        let mut b = HeadData::new(INT, tag, 4).format();
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        if *self < 32768 && *self >= -32768 { return (*self as i16).to_bytes(b, tag); }
+        HeadData::new(INT, tag, 4).format(b);
         b.put_i32(*self);
-        b
     }
 
     fn from_bytes(b: &mut Bytes, r#type: u8) -> JInt {
@@ -23,12 +22,16 @@ impl JceType<JInt> for JInt {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::{Bytes, BytesMut};
 
     use super::{INT, JceType, JInt, SHORT};
 
     #[test]
-    fn to_bytes() { assert_eq!(114514_i32.to_bytes(0), vec![2, 0, 1, 191, 82]); }
+    fn to_bytes() {
+        let mut b = BytesMut::new();
+        114514_i32.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![2, 0, 1, 191, 82]);
+    }
 
     #[test]
     fn from_bytes() {
@@ -39,7 +42,11 @@ mod tests {
     }
 
     #[test]
-    fn to_bytes_short() { assert_eq!(1919_i32.to_bytes(0), vec![1, 7, 127]); }
+    fn to_bytes_short() {
+        let mut b = BytesMut::new();
+        1919_i32.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![1, 7, 127]);
+    }
 
     #[test]
     fn from_bytes_short() {

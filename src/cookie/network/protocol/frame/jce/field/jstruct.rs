@@ -1,22 +1,22 @@
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{Bytes, BytesMut};
 
 use super::{HeadData, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
 
 impl<T: JceStruct<T>> JceType<T> for T {
-    fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::new(STRUCT_BEGIN, tag, 0).format();
-        b.put(self.s_to_bytes());
-        b.put(HeadData::new(STRUCT_END, 0, 0).format());
-        b
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        HeadData::new(STRUCT_BEGIN, tag, 0).format(b);
+        self.s_to_bytes(b);
+        HeadData::new(STRUCT_END, 0, 0).format(b);
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> T {
-        let a = T::s_from_bytes(T::init(), b);
+        let mut t = T::new();
+        t.s_from_bytes(b);
         {
             let head = HeadData::parse(b);
             if head.tag != 0 || head.r#type != STRUCT_END { panic!("{}", TYPE_ERR) }
         }
-        a
+        t
     }
 }
 
@@ -32,25 +32,21 @@ mod tests {
     }
 
     impl JceStruct<Q> for Q {
-        fn s_to_bytes(&self) -> BytesMut { self.name.to_bytes(0) }
+        fn s_to_bytes(&self, b: &mut BytesMut) { self.name.to_bytes(b, 0); }
 
-        fn s_from_bytes(mut self, b: &mut Bytes) -> Q {
-            {
-                let _ = HeadData::parse(b);
-                self.name = String::from_bytes(b, STRING1);
-            }
-            self
+        fn s_from_bytes(&mut self, b: &mut Bytes) {
+            let _ = HeadData::parse(b);
+            self.name = String::from_bytes(b, STRING1);
         }
 
-        fn init() -> Q { Q { name: String::new() } }
+        fn new() -> Q { Q { name: String::new() } }
     }
 
     #[test]
     fn to_bytes() {
-        assert_eq!(
-            Q { name: String::from("千") }.to_bytes(0),
-            vec![10, 6, 3, 229, 141, 131, 11],
-        );
+        let mut b = BytesMut::new();
+        Q { name: String::from("千") }.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![10, 6, 3, 229, 141, 131, 11]);
     }
 
     #[test]

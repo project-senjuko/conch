@@ -1,13 +1,12 @@
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{Buf, Bytes, BytesMut};
 
 use super::{HeadData, JceType, JList, LIST};
 
 impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
-    fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::new(LIST, tag, self.capacity() as u32).format();
-        b.put((self.len() as i32).to_bytes(0));
-        for v in self.iter() { b.put(v.to_bytes(0)) }
-        b
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        HeadData::new(LIST, tag, self.capacity() as u32).format(b);
+        (self.len() as i32).to_bytes(b, 0);
+        for v in self.iter() { v.to_bytes(b, 0) }
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> JList<T> {
@@ -27,21 +26,24 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::{Bytes, BytesMut};
+
+    use crate::cookie::network::protocol::frame::jce::field::JString;
 
     use super::{JceType, JList, LIST};
 
     #[test]
     fn to_bytes() {
-        assert_eq!(
-            vec![String::from("千橘"), String::from("雫霞")].to_bytes(0),
-            vec![9, 0, 2, 6, 6, 229, 141, 131, 230, 169, 152, 6, 6, 233, 155, 171, 233, 156, 158],
-        );
+        let mut b = BytesMut::new();
+        vec![String::from("千橘"), String::from("雫霞")].to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![9, 0, 2, 6, 6, 229, 141, 131, 230, 169, 152, 6, 6, 233, 155, 171, 233, 156, 158]);
     }
 
     #[test]
     fn from_bytes() {
-        let a: JList<String> = JList::from_bytes(&mut Bytes::from(vec![0, 2, 6, 6, 229, 141, 131, 230, 169, 152, 6, 6, 233, 155, 171, 233, 156, 158]), LIST);
-        assert_eq!(a, vec![String::from("千橘"), String::from("雫霞")]);
+        assert_eq!(
+            JList::from_bytes(&mut Bytes::from(vec![0, 2, 6, 6, 229, 141, 131, 230, 169, 152, 6, 6, 233, 155, 171, 233, 156, 158]), LIST) as JList<JString>,
+            vec![String::from("千橘"), String::from("雫霞")],
+        );
     }
 }

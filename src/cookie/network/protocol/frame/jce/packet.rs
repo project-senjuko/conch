@@ -1,4 +1,4 @@
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{Bytes, BytesMut};
 
 use super::field::{HeadData, JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString, MAP, SIMPLE_LIST};
 
@@ -19,21 +19,20 @@ struct JcePacket {
 }
 
 impl JceStruct<JcePacket> for JcePacket {
-    fn s_to_bytes(&self) -> BytesMut {
-        let mut b = self.version.to_bytes(1);
-        b.put(self.packet_type.to_bytes(2));
-        b.put(self.message_type.to_bytes(3));
-        b.put(self.request_id.to_bytes(4));
-        b.put(self.servant_name.to_bytes(5));
-        b.put(self.func_name.to_bytes(6));
-        b.put(self.buffer.to_bytes(7));
-        b.put(self.timeout.to_bytes(8));
-        b.put(self.context.to_bytes(9));
-        b.put(self.status.to_bytes(10));
-        b
+    fn s_to_bytes(&self, b: &mut BytesMut) {
+        self.version.to_bytes(b, 1);
+        self.packet_type.to_bytes(b, 2);
+        self.message_type.to_bytes(b, 3);
+        self.request_id.to_bytes(b, 4);
+        self.servant_name.to_bytes(b, 5);
+        self.func_name.to_bytes(b, 6);
+        self.buffer.to_bytes(b, 7);
+        self.timeout.to_bytes(b, 8);
+        self.context.to_bytes(b, 9);
+        self.status.to_bytes(b, 10);
     }
 
-    fn s_from_bytes(mut self, b: &mut Bytes) -> JcePacket {
+    fn s_from_bytes(&mut self, b: &mut Bytes) {
         {
             let h = HeadData::parse(b);
             self.version = JShort::from_bytes(b, h.r#type);
@@ -74,10 +73,9 @@ impl JceStruct<JcePacket> for JcePacket {
             let _ = HeadData::parse(b);
             self.status = JMap::from_bytes(b, MAP);
         }
-        self
     }
 
-    fn init() -> JcePacket {
+    fn new() -> JcePacket {
         JcePacket {
             version: 0,
             packet_type: 0,

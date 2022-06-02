@@ -3,11 +3,10 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 use super::{BYTE, HeadData, JceType, JShort, SHORT, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JShort> for JShort {
-    fn to_bytes(&self, tag: u8) -> BytesMut {
-        if *self < 128 && *self >= -128 { return (*self as i8).to_bytes(tag); }
-        let mut b = HeadData::new(SHORT, tag, 2).format();
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        if *self < 128 && *self >= -128 { return (*self as i8).to_bytes(b, tag); }
+        HeadData::new(SHORT, tag, 2).format(b);
         b.put_i16(*self);
-        b
     }
 
     fn from_bytes(b: &mut Bytes, r#type: u8) -> JShort {
@@ -22,12 +21,16 @@ impl JceType<JShort> for JShort {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::{Bytes, BytesMut};
 
     use super::{BYTE, JceType, JShort, SHORT};
 
     #[test]
-    fn to_bytes() { assert_eq!(1919_i16.to_bytes(0), vec![1, 7, 127]); }
+    fn to_bytes() {
+        let mut b = BytesMut::new();
+        1919_i16.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![1, 7, 127]);
+    }
 
     #[test]
     fn from_bytes() {
@@ -35,7 +38,11 @@ mod tests {
     }
 
     #[test]
-    fn to_bytes_byte() { assert_eq!(114_i16.to_bytes(0), vec![0, 114]); }
+    fn to_bytes_byte() {
+        let mut b = BytesMut::new();
+        114_i16.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![0, 114]);
+    }
 
     #[test]
     fn from_bytes_byte() {

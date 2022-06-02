@@ -3,10 +3,9 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 use super::{DOUBLE, HeadData, JceType, JDouble, TYPE_ERR};
 
 impl JceType<JDouble> for JDouble {
-    fn to_bytes(&self, tag: u8) -> BytesMut {
-        let mut b = HeadData::new(DOUBLE, tag, 8).format();
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        HeadData::new(DOUBLE, tag, 8).format(b);
         b.put_f64(*self);
-        b
     }
 
     fn from_bytes(b: &mut Bytes, r#type: u8) -> JDouble {
@@ -19,13 +18,15 @@ impl JceType<JDouble> for JDouble {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::{Bytes, BytesMut};
 
     use super::{DOUBLE, JceType, JDouble};
 
     #[test]
     fn to_bytes() {
-        assert_eq!(114.5141919810_f64.to_bytes(0), vec![5, 64, 92, 160, 232, 133, 123, 144, 171]);
+        let mut b = BytesMut::new();
+        114.5141919810_f64.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![5, 64, 92, 160, 232, 133, 123, 144, 171]);
     }
 
     #[test]

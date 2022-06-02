@@ -3,11 +3,10 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 use super::{BYTE, HeadData, INT, JceType, JLong, LONG, SHORT, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JLong> for JLong {
-    fn to_bytes(&self, tag: u8) -> BytesMut {
-        if *self < 2147483648 && *self >= -2147483648 { return (*self as i32).to_bytes(tag); }
-        let mut b = HeadData::new(LONG, tag, 8).format();
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        if *self < 2147483648 && *self >= -2147483648 { return (*self as i32).to_bytes(b, tag); }
+        HeadData::new(LONG, tag, 8).format(b);
         b.put_i64(*self);
-        b
     }
 
     fn from_bytes(b: &mut Bytes, r#type: u8) -> JLong {
@@ -24,13 +23,15 @@ impl JceType<JLong> for JLong {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::{Bytes, BytesMut};
 
     use super::{INT, JceType, JLong, LONG};
 
     #[test]
     fn to_bytes() {
-        assert_eq!(1145141919810_i64.to_bytes(0), vec![3, 0, 0, 1, 10, 159, 199, 0, 66]);
+        let mut b = BytesMut::new();
+        1145141919810_i64.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![3, 0, 0, 1, 10, 159, 199, 0, 66]);
     }
 
     #[test]
@@ -42,7 +43,11 @@ mod tests {
     }
 
     #[test]
-    fn to_bytes_int() { assert_eq!(114514_i64.to_bytes(0), vec![2, 0, 1, 191, 82]); }
+    fn to_bytes_int() {
+        let mut b = BytesMut::new();
+        114514_i64.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![2, 0, 1, 191, 82]);
+    }
 
     #[test]
     fn from_bytes_int() {

@@ -58,18 +58,18 @@ pub struct Field<T: JceType<T>> {
 /// 标准 Jce 类型必须具备的特征
 pub trait JceType<T> {
     /// 将支持的类型格式化为字节流
-    fn to_bytes(&self, tag: u8) -> BytesMut;
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8);
     /// 从字节流中解读支持的类型
     fn from_bytes(b: &mut Bytes, r#type: u8) -> T;
 }
 
 pub trait JceStruct<T> {
     /// 将支持的结构体格式化为字节流
-    fn s_to_bytes(&self) -> BytesMut;
+    fn s_to_bytes(&self, b: &mut BytesMut);
     /// 从字节流中解读支持的结构体
-    fn s_from_bytes(mut self, b: &mut Bytes) -> T;
-    /// 初始化结构体
-    fn init() -> T;
+    fn s_from_bytes(&mut self, b: &mut Bytes);
+    /// 新建为默认值的结构体
+    fn new() -> T;
 }
 
 

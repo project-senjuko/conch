@@ -30,21 +30,20 @@ impl HeadData {
         (head, JInt::from_bytes(b, head.r#type) as usize)
     }
 
-    pub fn format(&self) -> BytesMut {
-        let mut b = BytesMut::with_capacity((2 + self.length) as usize);
+    pub fn format(&self, b: &mut BytesMut) {
+        b.reserve(2 + self.length as usize);
         if self.tag <= 14 {
             b.put_u8(self.r#type | (self.tag << 4));
         } else {
             b.put_u8(self.r#type | 240);
             b.put_u8(self.tag);
         }
-        b
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::{Bytes, BytesMut};
 
     use super::HeadData;
 
@@ -70,17 +69,37 @@ mod tests {
     fn parse24424() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![244, 24])), E); }
 
     #[test]
-    fn format00() { assert_eq!(A.format().to_vec(), vec![0]); }
+    fn format00() {
+        let mut b = BytesMut::new();
+        A.format(&mut b);
+        assert_eq!(b.to_vec(), vec![0]);
+    }
 
     #[test]
-    fn format10() { assert_eq!(B.format().to_vec(), vec![1]); }
+    fn format10() {
+        let mut b = BytesMut::new();
+        B.format(&mut b);
+        assert_eq!(b.to_vec(), vec![1]);
+    }
 
     #[test]
-    fn format12() { assert_eq!(C.format().to_vec(), vec![33]); }
+    fn format12() {
+        let mut b = BytesMut::new();
+        C.format(&mut b);
+        assert_eq!(b.to_vec(), vec![33]);
+    }
 
     #[test]
-    fn format28() { assert_eq!(D.format().to_vec(), vec![130]); }
+    fn format28() {
+        let mut b = BytesMut::new();
+        D.format(&mut b);
+        assert_eq!(b.to_vec(), vec![130]);
+    }
 
     #[test]
-    fn format424() { assert_eq!(E.format().to_vec(), vec![244, 24]); }
+    fn format424() {
+        let mut b = BytesMut::new();
+        E.format(&mut b);
+        assert_eq!(b.to_vec(), vec![244, 24]);
+    }
 }
