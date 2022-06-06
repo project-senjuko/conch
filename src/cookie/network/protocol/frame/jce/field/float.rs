@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{FLOAT, HeadData, JceType, JFloat, TYPE_ERR};
+use super::{FLOAT, HeadData, JceType, JFloat};
 
 impl JceType<JFloat> for JFloat {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {

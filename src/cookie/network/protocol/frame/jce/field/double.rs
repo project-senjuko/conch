@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{DOUBLE, HeadData, JceType, JDouble, TYPE_ERR};
+use super::{DOUBLE, HeadData, JceType, JDouble};
 
 impl JceType<JDouble> for JDouble {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
