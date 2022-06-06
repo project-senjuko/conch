@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{JceType, JInt, TYPE_ERR};
+use super::{BYTE, DOUBLE, FLOAT, INT, JceType, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END, TYPE_ERR, ZERO_TAG};
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub struct HeadData {
@@ -24,12 +24,6 @@ impl HeadData {
         HeadData { r#type, tag: t, length: 0 }
     }
 
-    pub fn parse_ttl4(b: &mut Bytes) -> (HeadData, usize) {
-        let head = HeadData::parse(b);
-        if head.tag != 0 { panic!("{}", TYPE_ERR) }
-        (head, JInt::from_bytes(b, head.r#type) as usize)
-    }
-
     pub fn format(&self, b: &mut BytesMut) {
         b.reserve(2 + self.length as usize);
         if self.tag <= 14 {
@@ -37,6 +31,64 @@ impl HeadData {
         } else {
             b.put_u8(self.r#type | 240);
             b.put_u8(self.tag);
+        }
+    }
+}
+
+impl HeadData {
+    pub fn parse_ttl4(b: &mut Bytes) -> (HeadData, usize) {
+        let head = HeadData::parse(b);
+        if head.tag != 0 { panic!("{}", TYPE_ERR) }
+        (head, JInt::from_bytes(b, head.r#type) as usize)
+    }
+
+    pub fn skip_value(&self, b: &mut Bytes) {
+        match self.r#type {
+            BYTE => b.advance(1),
+            SHORT => b.advance(2),
+            INT => b.advance(4),
+            LONG => b.advance(8),
+            FLOAT => b.advance(4),
+            DOUBLE => b.advance(8),
+            STRING1 => {
+                let l = b.get_u8() as usize;
+                b.advance(l);
+            }
+            STRING4 => {
+                let l = b.get_i32() as usize;
+                b.advance(l);
+            }
+            MAP => {
+                let (_, len) = HeadData::parse_ttl4(b);
+                let mut i = 0;
+                while i < len {
+                    HeadData::parse(b).skip_value(b); // K
+                    HeadData::parse(b).skip_value(b); // V
+                    i += 1;
+                }
+            }
+            LIST => {
+                let (_, len) = HeadData::parse_ttl4(b);
+                let mut i = 0;
+                while i < len {
+                    HeadData::parse(b).skip_value(b);
+                    i += 1;
+                }
+            }
+            STRUCT_BEGIN => {
+                let mut h = HeadData::parse(b);
+                while h.r#type != STRUCT_END {
+                    h.skip_value(b);
+                    h = HeadData::parse(b);
+                }
+            }
+            STRUCT_END => {}
+            ZERO_TAG => {}
+            SIMPLE_LIST => {
+                let (_, len) = HeadData::parse_ttl4(b);
+                b.advance(1 + len); // 0 type 0 tag head + bytes
+            }
+            _ => panic!("{}", TYPE_ERR),
         }
     }
 }
@@ -54,50 +106,32 @@ mod tests {
     const E: HeadData = HeadData { r#type: 4, tag: 24, length: 0 };
 
     #[test]
-    fn parse0() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![0])), A); }
+    fn parse() {
+        assert_eq!(HeadData::parse(&mut Bytes::from(vec![0])), A);
+        assert_eq!(HeadData::parse(&mut Bytes::from(vec![1])), B);
+        assert_eq!(HeadData::parse(&mut Bytes::from(vec![33])), C);
+        assert_eq!(HeadData::parse(&mut Bytes::from(vec![130])), D);
+        assert_eq!(HeadData::parse(&mut Bytes::from(vec![244, 24])), E);
+    }
 
     #[test]
-    fn parse1() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![1])), B); }
-
-    #[test]
-    fn parse33() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![33])), C); }
-
-    #[test]
-    fn parse130() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![130])), D); }
-
-    #[test]
-    fn parse24424() { assert_eq!(HeadData::parse(&mut Bytes::from(vec![244, 24])), E); }
-
-    #[test]
-    fn format00() {
+    fn format() {
         let mut b = BytesMut::new();
         A.format(&mut b);
         assert_eq!(b.to_vec(), vec![0]);
-    }
 
-    #[test]
-    fn format10() {
         let mut b = BytesMut::new();
         B.format(&mut b);
         assert_eq!(b.to_vec(), vec![1]);
-    }
 
-    #[test]
-    fn format12() {
         let mut b = BytesMut::new();
         C.format(&mut b);
         assert_eq!(b.to_vec(), vec![33]);
-    }
 
-    #[test]
-    fn format28() {
         let mut b = BytesMut::new();
         D.format(&mut b);
         assert_eq!(b.to_vec(), vec![130]);
-    }
 
-    #[test]
-    fn format424() {
         let mut b = BytesMut::new();
         E.format(&mut b);
         assert_eq!(b.to_vec(), vec![244, 24]);
