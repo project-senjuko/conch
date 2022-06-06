@@ -36,10 +36,10 @@ impl HeadData {
 }
 
 impl HeadData {
-    pub fn parse_ttl4(b: &mut Bytes) -> (HeadData, usize) {
+    pub fn parse_ttl4(b: &mut Bytes) -> usize {
         let head = HeadData::parse(b);
         if head.tag != 0 { panic!("{}", TYPE_ERR) }
-        (head, JInt::from_bytes(b, head.r#type) as usize)
+        JInt::from_bytes(b, head.r#type) as usize
     }
 
     pub fn skip_value(&self, b: &mut Bytes) {
@@ -59,7 +59,7 @@ impl HeadData {
                 b.advance(l);
             }
             MAP => {
-                let (_, len) = HeadData::parse_ttl4(b);
+                let len = HeadData::parse_ttl4(b);
                 let mut i = 0;
                 while i < len {
                     HeadData::parse(b).skip_value(b); // K
@@ -68,7 +68,7 @@ impl HeadData {
                 }
             }
             LIST => {
-                let (_, len) = HeadData::parse_ttl4(b);
+                let len = HeadData::parse_ttl4(b);
                 let mut i = 0;
                 while i < len {
                     HeadData::parse(b).skip_value(b);
@@ -85,8 +85,8 @@ impl HeadData {
             STRUCT_END => {}
             ZERO_TAG => {}
             SIMPLE_LIST => {
-                let (_, len) = HeadData::parse_ttl4(b);
-                b.advance(1 + len); // 0 type 0 tag head + bytes
+                let len = HeadData::parse_ttl4(b);
+                b.advance(1 + len); // 1: 0 type 0 tag head
             }
             _ => panic!("{}", TYPE_ERR),
         }

@@ -15,7 +15,7 @@ impl JceType<JSList> for JSList {
             let head = HeadData::parse(b);
             if head.tag != 0 || head.r#type != 0 { panic!("{}", TYPE_ERR) }
         }
-        let (_, len) = HeadData::parse_ttl4(b);
+        let len = HeadData::parse_ttl4(b);
         let a = b.slice(..len);
         b.advance(len);
         a

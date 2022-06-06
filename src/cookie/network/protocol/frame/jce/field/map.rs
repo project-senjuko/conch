@@ -16,7 +16,7 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> JMap<T, U> {
-        let (_, len) = HeadData::parse_ttl4(b);
+        let len = HeadData::parse_ttl4(b);
         let mut map: HashMap<T, U> = HashMap::with_capacity(b.remaining());
         {
             let mut i = 0;

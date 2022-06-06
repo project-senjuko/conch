@@ -10,7 +10,7 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> JList<T> {
-        let (_, len) = HeadData::parse_ttl4(b);
+        let len = HeadData::parse_ttl4(b);
         let mut vec: Vec<T> = Vec::with_capacity(b.remaining());
         {
             let mut i = 0;
