@@ -1,6 +1,8 @@
 use bytes::{Bytes, BytesMut};
 
-use super::field::{HeadData, JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString, MAP, SIMPLE_LIST};
+use crate::cookie::network::protocol::frame::jce::{JceReader, JceWriter};
+
+use super::field::{JByte, JceStruct, JInt, JMap, JShort, JSList, JString, SIMPLE_LIST};
 
 /// ## 版本控制信息
 /// struct-from | com.qq.taf.RequestPacket
@@ -20,59 +22,32 @@ struct JcePacket {
 
 impl JceStruct<JcePacket> for JcePacket {
     fn s_to_bytes(&self, b: &mut BytesMut) {
-        self.version.to_bytes(b, 1);
-        self.packet_type.to_bytes(b, 2);
-        self.message_type.to_bytes(b, 3);
-        self.request_id.to_bytes(b, 4);
-        self.servant_name.to_bytes(b, 5);
-        self.func_name.to_bytes(b, 6);
-        self.buffer.to_bytes(b, 7);
-        self.timeout.to_bytes(b, 8);
-        self.context.to_bytes(b, 9);
-        self.status.to_bytes(b, 10);
+        let mut w = JceWriter::with_tag(1);
+        w.put(&self.version);
+        w.put(&self.packet_type);
+        w.put(&self.message_type);
+        w.put(&self.request_id);
+        w.put(&self.servant_name);
+        w.put(&self.func_name);
+        w.put(&self.buffer);
+        w.put(&self.timeout);
+        w.put(&self.context);
+        w.put(&self.status);
+        w.to_bytes(b);
     }
 
-    fn s_from_bytes(&mut self, b: &mut Bytes) {
-        {
-            let h = HeadData::parse(b);
-            self.version = JShort::from_bytes(b, h.r#type);
-        }
-        {
-            let h = HeadData::parse(b);
-            self.packet_type = JByte::from_bytes(b, h.r#type);
-        }
-        {
-            let h = HeadData::parse(b);
-            self.message_type = JInt::from_bytes(b, h.r#type);
-        }
-        {
-            let h = HeadData::parse(b);
-            self.request_id = JInt::from_bytes(b, h.r#type);
-        }
-        {
-            let h = HeadData::parse(b);
-            self.servant_name = String::from_bytes(b, h.r#type);
-        }
-        {
-            let h = HeadData::parse(b);
-            self.func_name = String::from_bytes(b, h.r#type);
-        }
-        {
-            let _ = HeadData::parse(b);
-            self.buffer = JSList::from_bytes(b, SIMPLE_LIST);
-        }
-        {
-            let h = HeadData::parse(b);
-            self.timeout = JInt::from_bytes(b, h.r#type);
-        }
-        {
-            let _ = HeadData::parse(b);
-            self.context = JMap::from_bytes(b, MAP);
-        }
-        {
-            let _ = HeadData::parse(b);
-            self.status = JMap::from_bytes(b, MAP);
-        }
+    fn s_from_bytes(&mut self, b: Bytes) {
+        let mut r = JceReader::with_tag(b, 1);
+        self.version = r.get();
+        self.packet_type = r.get();
+        self.message_type = r.get();
+        self.request_id = r.get();
+        self.servant_name = r.get();
+        self.func_name = r.get();
+        self.buffer = r.get();
+        self.timeout = r.get();
+        self.context = r.get();
+        self.status = r.get();
     }
 
     fn new() -> JcePacket {
