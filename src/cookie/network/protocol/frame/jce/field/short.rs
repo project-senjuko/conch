@@ -5,7 +5,7 @@ use super::{BYTE, HeadData, JceType, JShort, SHORT, TYPE_ERR, ZERO_TAG};
 impl JceType<JShort> for JShort {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         if *self < 128 && *self >= -128 { return (*self as i8).to_bytes(b, tag); }
-        HeadData::new(SHORT, tag, 2).format(b);
+        HeadData::new(SHORT, tag).format(b, 2);
         b.put_i16(*self);
     }
 

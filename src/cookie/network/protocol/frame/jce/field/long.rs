@@ -5,7 +5,7 @@ use super::{BYTE, HeadData, INT, JceType, JLong, LONG, SHORT, TYPE_ERR, ZERO_TAG
 impl JceType<JLong> for JLong {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         if *self < 2147483648 && *self >= -2147483648 { return (*self as i32).to_bytes(b, tag); }
-        HeadData::new(LONG, tag, 8).format(b);
+        HeadData::new(LONG, tag).format(b, 8);
         b.put_i64(*self);
     }
 

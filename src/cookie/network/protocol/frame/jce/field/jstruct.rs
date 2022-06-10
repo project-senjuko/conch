@@ -4,9 +4,9 @@ use super::{HeadData, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
 
 impl<T: JceStruct<T>> JceType<T> for T {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(STRUCT_BEGIN, tag, 0).format(b);
+        HeadData::new(STRUCT_BEGIN, tag).format(b, 0);
         self.s_to_bytes(b);
-        HeadData::new(STRUCT_END, 0, 0).format(b);
+        HeadData::new(STRUCT_END, 0).format(b, 0);
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> T {

@@ -6,10 +6,10 @@ impl JceType<JString> for JString {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         let l = self.len();
         if l <= 255 {
-            HeadData::new(STRING1, tag, l as u32).format(b);
+            HeadData::new(STRING1, tag).format(b, l);
             b.put_u8(l as u8);
         } else {
-            HeadData::new(STRING4, tag, l as u32).format(b);
+            HeadData::new(STRING4, tag).format(b, l);
             b.put_i32(l as i32);
         };
         b.put_slice(self.as_ref());

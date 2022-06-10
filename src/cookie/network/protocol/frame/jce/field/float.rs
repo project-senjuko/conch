@@ -4,7 +4,7 @@ use super::{FLOAT, HeadData, JceType, JFloat};
 
 impl JceType<JFloat> for JFloat {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(FLOAT, tag, 4).format(b);
+        HeadData::new(FLOAT, tag).format(b, 4);
         b.put_f32(*self);
     }
 

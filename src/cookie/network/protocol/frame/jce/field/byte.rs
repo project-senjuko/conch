@@ -4,8 +4,8 @@ use super::{BYTE, HeadData, JByte, JceType, TYPE_ERR, ZERO_TAG};
 
 impl JceType<JByte> for JByte {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        if *self == 0 { return HeadData::new(ZERO_TAG, tag, 0).format(b); }
-        HeadData::new(BYTE, tag, 1).format(b);
+        if *self == 0 { return HeadData::new(ZERO_TAG, tag).format(b, 0); }
+        HeadData::new(BYTE, tag).format(b, 1);
         b.put_i8(*self);
     }
 

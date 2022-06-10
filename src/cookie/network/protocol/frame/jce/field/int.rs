@@ -5,7 +5,7 @@ use super::{BYTE, HeadData, INT, JceType, JInt, SHORT, TYPE_ERR, ZERO_TAG};
 impl JceType<JInt> for JInt {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         if *self < 32768 && *self >= -32768 { return (*self as i16).to_bytes(b, tag); }
-        HeadData::new(INT, tag, 4).format(b);
+        HeadData::new(INT, tag).format(b, 4);
         b.put_i32(*self);
     }
 

@@ -4,8 +4,8 @@ use super::{BYTE, HeadData, JceType, JSList, SIMPLE_LIST, TYPE_ERR};
 
 impl JceType<JSList> for JSList {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(SIMPLE_LIST, tag, self.remaining() as u32).format(b);
-        HeadData::new(BYTE, 0, 0).format(b);
+        HeadData::new(SIMPLE_LIST, tag).format(b, self.remaining());
+        HeadData::new(BYTE, 0).format(b, 0);
         (self.remaining() as i32).to_bytes(b, 0);
         b.put(self.slice(..));
     }

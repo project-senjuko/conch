@@ -4,7 +4,7 @@ use super::{DOUBLE, HeadData, JceType, JDouble};
 
 impl JceType<JDouble> for JDouble {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(DOUBLE, tag, 8).format(b);
+        HeadData::new(DOUBLE, tag).format(b, 8);
         b.put_f64(*self);
     }
 

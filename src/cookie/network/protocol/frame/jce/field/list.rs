@@ -4,7 +4,7 @@ use super::{HeadData, JceType, JList, LIST};
 
 impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(LIST, tag, self.capacity() as u32).format(b);
+        HeadData::new(LIST, tag).format(b, self.capacity());
         (self.len() as i32).to_bytes(b, 0);
         for v in self.iter() { v.to_bytes(b, 0) }
     }

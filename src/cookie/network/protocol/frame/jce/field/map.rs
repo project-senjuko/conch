@@ -7,7 +7,7 @@ use super::{HeadData, JceType, JMap, MAP};
 
 impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(MAP, tag, self.capacity() as u32).format(b);
+        HeadData::new(MAP, tag).format(b, self.capacity());
         (self.len() as i32).to_bytes(b, 0);
         for (k, v) in self.iter() {
             k.to_bytes(b, 0);

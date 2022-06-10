@@ -6,24 +6,19 @@ use super::{BYTE, DOUBLE, FLOAT, INT, JceType, JInt, LIST, LONG, MAP, SHORT, SIM
 pub struct HeadData {
     pub r#type: u8,
     pub tag: u8,
-    pub length: u32,
 }
 
 impl HeadData {
-    pub fn new(r#type: u8, tag: u8, length: u32) -> HeadData { HeadData { r#type, tag, length } }
+    pub fn new(r#type: u8, tag: u8) -> HeadData { HeadData { r#type, tag } }
 
     pub fn parse(b: &mut Bytes) -> HeadData {
         let f = b.get_u8();
         let t = (f & 240) >> 4;
-        HeadData {
-            r#type: f & 15,
-            tag: if t != 15 { t } else { b.get_u8() },
-            length: 0,
-        }
+        HeadData { r#type: f & 15, tag: if t != 15 { t } else { b.get_u8() } }
     }
 
-    pub fn format(&self, b: &mut BytesMut) {
-        b.reserve(2 + self.length as usize);
+    pub fn format(&self, b: &mut BytesMut, additional: usize) {
+        b.reserve(2 + additional);
         if self.tag <= 14 {
             b.put_u8(self.r#type | (self.tag << 4));
         } else {
@@ -97,11 +92,11 @@ mod tests {
 
     use super::HeadData;
 
-    const A: HeadData = HeadData { r#type: 0, tag: 0, length: 0 };
-    const B: HeadData = HeadData { r#type: 1, tag: 0, length: 0 };
-    const C: HeadData = HeadData { r#type: 1, tag: 2, length: 0 };
-    const D: HeadData = HeadData { r#type: 2, tag: 8, length: 0 };
-    const E: HeadData = HeadData { r#type: 4, tag: 24, length: 0 };
+    const A: HeadData = HeadData { r#type: 0, tag: 0 };
+    const B: HeadData = HeadData { r#type: 1, tag: 0 };
+    const C: HeadData = HeadData { r#type: 1, tag: 2 };
+    const D: HeadData = HeadData { r#type: 2, tag: 8 };
+    const E: HeadData = HeadData { r#type: 4, tag: 24 };
 
     #[test]
     fn parse() {
@@ -115,23 +110,23 @@ mod tests {
     #[test]
     fn format() {
         let mut b = BytesMut::new();
-        A.format(&mut b);
+        A.format(&mut b, 0);
         assert_eq!(b.to_vec(), vec![0]);
 
         let mut b = BytesMut::new();
-        B.format(&mut b);
+        B.format(&mut b, 0);
         assert_eq!(b.to_vec(), vec![1]);
 
         let mut b = BytesMut::new();
-        C.format(&mut b);
+        C.format(&mut b, 0);
         assert_eq!(b.to_vec(), vec![33]);
 
         let mut b = BytesMut::new();
-        D.format(&mut b);
+        D.format(&mut b, 0);
         assert_eq!(b.to_vec(), vec![130]);
 
         let mut b = BytesMut::new();
-        E.format(&mut b);
+        E.format(&mut b, 0);
         assert_eq!(b.to_vec(), vec![244, 24]);
     }
 }
