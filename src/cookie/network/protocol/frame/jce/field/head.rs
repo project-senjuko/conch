@@ -36,21 +36,19 @@ impl HeadData {
     }
 
     pub fn skip_value(&self, b: &mut Bytes) {
-        match self.r#type {
-            BYTE => b.advance(1),
-            SHORT => b.advance(2),
-            INT => b.advance(4),
-            LONG => b.advance(8),
-            FLOAT => b.advance(4),
-            DOUBLE => b.advance(8),
-            STRING1 => {
-                let l = b.get_u8() as usize;
-                b.advance(l);
-            }
-            STRING4 => {
-                let l = b.get_i32() as usize;
-                b.advance(l);
-            }
+        if self.r#type > 13 {
+            panic!("{}", TYPE_ERR);
+        }
+
+        let len = match self.r#type {
+            BYTE => 1,
+            SHORT => 2,
+            INT => 4,
+            LONG => 8,
+            FLOAT => 4,
+            DOUBLE => 8,
+            STRING1 => b.get_u8() as usize,
+            STRING4 => b.get_i32() as usize,
             MAP => {
                 let len = HeadData::parse_ttl4(b);
                 let mut i = 0;
@@ -59,6 +57,7 @@ impl HeadData {
                     HeadData::parse(b).skip_value(b); // V
                     i += 1;
                 }
+                0
             }
             LIST => {
                 let len = HeadData::parse_ttl4(b);
@@ -67,6 +66,7 @@ impl HeadData {
                     HeadData::parse(b).skip_value(b);
                     i += 1;
                 }
+                0
             }
             STRUCT_BEGIN => {
                 let mut h = HeadData::parse(b);
@@ -74,15 +74,12 @@ impl HeadData {
                     h.skip_value(b);
                     h = HeadData::parse(b);
                 }
+                0
             }
-            STRUCT_END => {}
-            ZERO_TAG => {}
-            SIMPLE_LIST => {
-                let len = HeadData::parse_ttl4(b);
-                b.advance(1 + len); // 1: 0 type 0 tag head
-            }
-            _ => panic!("{}", TYPE_ERR),
-        }
+            SIMPLE_LIST => 1 + HeadData::parse_ttl4(b), // 1: 0 type 0 tag head
+            _ => 0, // STRUCT_END + ZERO_TAG
+        };
+        b.advance(len);
     }
 }
 
