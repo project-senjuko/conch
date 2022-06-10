@@ -1,6 +1,6 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, DOUBLE, FLOAT, INT, JceType, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END, TYPE_ERR, ZERO_TAG};
+use super::{BYTE, DOUBLE, FLOAT, INT, JceType, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub struct HeadData {
