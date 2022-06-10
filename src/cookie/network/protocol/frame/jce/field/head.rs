@@ -14,14 +14,12 @@ impl HeadData {
 
     pub fn parse(b: &mut Bytes) -> HeadData {
         let f = b.get_u8();
-        let r#type = f & 15;
-        let mut t = (f & 240) >> 4;
-
-        if t == 15 {
-            t = b.get_u8() & 255;
+        let t = (f & 240) >> 4;
+        HeadData {
+            r#type: f & 15,
+            tag: if t != 15 { t } else { b.get_u8() },
+            length: 0,
         }
-
-        HeadData { r#type, tag: t, length: 0 }
     }
 
     pub fn format(&self, b: &mut BytesMut) {
