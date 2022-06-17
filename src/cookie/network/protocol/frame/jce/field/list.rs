@@ -28,9 +28,8 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use crate::cookie::network::protocol::frame::jce::field::JString;
-
     use super::{JceType, JList, LIST};
+    use super::super::JString;
 
     #[test]
     fn to_bytes() {

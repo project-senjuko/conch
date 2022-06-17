@@ -64,9 +64,8 @@ impl<'a> JceReader<'a> {
 mod tests {
     use bytes::Bytes;
 
-    use crate::cookie::network::protocol::frame::jce::field::{JByte, JString};
-
     use super::JceReader;
+    use super::super::field::{JByte, JString};
 
     #[test]
     fn get() {

@@ -4,5 +4,5 @@ pub use self::writer::JceWriter;
 pub mod field;
 pub mod packet;
 
-pub mod reader;
-pub mod writer;
+mod reader;
+mod writer;
