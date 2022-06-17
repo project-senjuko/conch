@@ -34,6 +34,7 @@ mod tests {
     }
 
     #[test]
+    #[allow(clippy::bool_assert_comparison)] // 适用该检查将导致语义含糊，故禁用
     fn from_bytes() {
         assert_eq!(JBool::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG), false);
     }
