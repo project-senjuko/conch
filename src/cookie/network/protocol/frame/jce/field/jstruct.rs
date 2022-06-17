@@ -10,7 +10,7 @@ impl<T: JceStruct<T>> JceType<T> for T {
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> T {
-        let mut t = T::new();
+        let mut t = T::init();
         t.s_from_bytes(b);
         {
             let head = HeadData::parse(b);
@@ -39,7 +39,7 @@ mod tests {
             self.name = String::from_bytes(b, STRING1);
         }
 
-        fn new() -> Q { Q { name: String::new() } }
+        fn init() -> Q { Q { name: String::new() } }
     }
 
     #[test]

@@ -50,7 +50,7 @@ impl JceStruct<JcePacket> for JcePacket {
         self.status = r.get();
     }
 
-    fn new() -> JcePacket {
+    fn init() -> JcePacket {
         JcePacket {
             version: 0,
             packet_type: 0,
