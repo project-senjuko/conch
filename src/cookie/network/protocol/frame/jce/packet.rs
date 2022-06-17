@@ -36,7 +36,7 @@ impl JceStruct<JcePacket> for JcePacket {
         w.to_bytes(b);
     }
 
-    fn s_from_bytes(&mut self, b: Bytes) {
+    fn s_from_bytes(&mut self, b: &mut Bytes) {
         let mut r = JceReader::with_tag(b, 1);
         self.version = r.get();
         self.packet_type = r.get();

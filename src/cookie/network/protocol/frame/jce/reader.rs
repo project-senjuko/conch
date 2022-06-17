@@ -3,19 +3,19 @@ use rustc_hash::FxHashMap;
 
 use super::field::{HeadData, JceType};
 
-pub struct JceReader {
-    b: Bytes,
+pub struct JceReader<'a> {
+    b: &'a mut Bytes,
     tag: u8,
     cache: FxHashMap<u8, (HeadData, Bytes)>,
 }
 
-impl JceReader {
-    pub fn new(b: Bytes) -> JceReader { JceReader { b, tag: 0, cache: FxHashMap::default() } }
+impl<'a> JceReader<'a> {
+    pub fn new(b: &'a mut Bytes) -> JceReader<'a> { JceReader { b, tag: 0, cache: FxHashMap::default() } }
 
-    pub fn with_tag(b: Bytes, tag: u8) -> JceReader { JceReader { b, tag, cache: FxHashMap::default() } }
+    pub fn with_tag(b: &'a mut Bytes, tag: u8) -> JceReader<'a> { JceReader { b, tag, cache: FxHashMap::default() } }
 }
 
-impl JceReader {
+impl<'a> JceReader<'a> {
     #[inline(always)]
     pub fn advance(&mut self, cnt: u8) { self.tag += cnt; }
 
@@ -41,22 +41,22 @@ impl JceReader {
             );
         }
 
-        let mut h = HeadData::parse(&mut self.b);
+        let mut h = HeadData::parse(self.b);
         while h.tag != self.tag {
             let rb = self.b.clone();
-            h.skip_value(&mut self.b);
+            h.skip_value(self.b);
             self.cache.insert(
                 h.tag,
                 (h, rb.slice(..rb.len() - self.b.remaining())),
             );
 
             if self.b.has_remaining() {
-                h = HeadData::parse(&mut self.b);
+                h = HeadData::parse(self.b);
             } else {
                 return self._get_optional();
             }
         }
-        Some(T::from_bytes(&mut self.b, h.r#type))
+        Some(T::from_bytes(self.b, h.r#type))
     }
 }
 
@@ -70,9 +70,10 @@ mod tests {
 
     #[test]
     fn get() {
-        let mut r = JceReader::with_tag(Bytes::from(
+        let mut b = Bytes::from(
             vec![16, 1, 38, 9, 229, 141, 131, 230, 169, 152, 230, 169, 152],
-        ), 1);
+        );
+        let mut r = JceReader::with_tag(&mut b, 1);
         let num: JByte = r.get();
         let str: JString = r.get();
 
@@ -82,9 +83,10 @@ mod tests {
 
     #[test]
     fn get_wild() {
-        let mut r = JceReader::with_tag(Bytes::from(
+        let mut b = Bytes::from(
             vec![38, 9, 229, 141, 131, 230, 169, 152, 230, 169, 152, 16, 1],
-        ), 1);
+        );
+        let mut r = JceReader::with_tag(&mut b, 1);
         let num: JByte = r.get();
         let str: JString = r.get();
 
@@ -94,9 +96,10 @@ mod tests {
 
     #[test]
     fn get_optional() {
-        let mut r = JceReader::with_tag(Bytes::from(
+        let mut b = Bytes::from(
             vec![38, 9, 229, 141, 131, 230, 169, 152, 230, 169, 152],
-        ), 1);
+        );
+        let mut r = JceReader::with_tag(&mut b, 1);
         let num: Option<JByte> = r.get_optional();
         let str: JString = r.get();
 

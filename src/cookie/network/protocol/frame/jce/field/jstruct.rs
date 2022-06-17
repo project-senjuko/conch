@@ -11,7 +11,7 @@ impl<T: JceStruct<T>> JceType<T> for T {
 
     fn from_bytes(b: &mut Bytes, _: u8) -> T {
         let mut t = T::new();
-        t.s_from_bytes(b.clone());
+        t.s_from_bytes(b);
         {
             let head = HeadData::parse(b);
             if head.tag != 0 || head.r#type != STRUCT_END { panic!("{}", TYPE_ERR) }
@@ -34,9 +34,9 @@ mod tests {
     impl JceStruct<Q> for Q {
         fn s_to_bytes(&self, b: &mut BytesMut) { self.name.to_bytes(b, 0); }
 
-        fn s_from_bytes(&mut self, mut b: Bytes) {
-            let _ = HeadData::parse(&mut b);
-            self.name = String::from_bytes(&mut b, STRING1);
+        fn s_from_bytes(&mut self, b: &mut Bytes) {
+            let _ = HeadData::parse(b);
+            self.name = String::from_bytes(b, STRING1);
         }
 
         fn new() -> Q { Q { name: String::new() } }
