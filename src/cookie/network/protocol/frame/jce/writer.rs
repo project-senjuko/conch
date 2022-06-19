@@ -22,11 +22,11 @@ impl JceWriter {
 }
 
 impl JceWriter {
-    pub fn advance(&mut self, cnt: u8) { self.tag += cnt; }
+    pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
     pub fn put<T: JceType<T>>(&mut self, t: &T) {
         t.to_bytes(&mut self.b, self.tag);
-        self.advance(1);
+        self.set_tag(self.tag + 1);
     }
 
     pub fn to_bytes(self, b: &mut BytesMut) { b.put(self.b); }
