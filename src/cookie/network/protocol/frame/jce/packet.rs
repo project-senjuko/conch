@@ -15,7 +15,7 @@ use super::field::{JByte, JceStruct, JInt, JMap, JShort, JSList, JString};
 
 /// ## 版本控制信息
 /// struct-from | com.qq.taf.RequestPacket
-/// qq-version | 7975
+/// qq-version | 8265
 #[derive(Default)]
 struct JcePacket {
     version: JShort,
