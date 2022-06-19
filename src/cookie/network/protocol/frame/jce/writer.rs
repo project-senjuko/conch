@@ -29,7 +29,7 @@ impl JceWriter {
         self.set_tag(self.tag + 1);
     }
 
-    pub fn to_bytes(self, b: &mut BytesMut) { b.put(self.b); }
+    pub fn flash(self, b: &mut BytesMut) { b.put(self.b); }
 }
 
 #[cfg(test)]
@@ -44,7 +44,7 @@ mod tests {
         let mut w = JceWriter::new(1);
         w.put(&1);
         w.put(&String::from("千橘橘"));
-        w.to_bytes(&mut b);
+        w.flash(&mut b);
         assert_eq!(b.to_vec(), vec![16, 1, 38, 9, 229, 141, 131, 230, 169, 152, 230, 169, 152]);
     }
 }

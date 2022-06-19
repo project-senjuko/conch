@@ -43,7 +43,7 @@ impl JceStruct<JcePacket> for JcePacket {
         w.put(&self.timeout);
         w.put(&self.context);
         w.put(&self.status);
-        w.to_bytes(b);
+        w.flash(b);
     }
 
     fn s_from_bytes(&mut self, b: &mut Bytes) {
