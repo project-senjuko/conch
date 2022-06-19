@@ -31,7 +31,7 @@ struct JcePacket {
 
 impl JceStruct<JcePacket> for JcePacket {
     fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::with_tag(1);
+        let mut w = JceWriter::new(1);
         w.put(&self.version);
         w.put(&self.packet_type);
         w.put(&self.message_type);

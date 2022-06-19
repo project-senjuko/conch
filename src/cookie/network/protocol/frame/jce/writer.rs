@@ -18,9 +18,7 @@ pub struct JceWriter {
 }
 
 impl JceWriter {
-    pub fn new() -> JceWriter { JceWriter { b: BytesMut::new(), tag: 0 } }
-
-    pub fn with_tag(tag: u8) -> JceWriter { JceWriter { b: BytesMut::new(), tag } }
+    pub fn new(tag: u8) -> JceWriter { JceWriter { b: BytesMut::new(), tag } }
 }
 
 impl JceWriter {
@@ -43,7 +41,7 @@ mod tests {
     #[test]
     fn to_bytes() {
         let mut b = BytesMut::new();
-        let mut w = JceWriter::with_tag(1);
+        let mut w = JceWriter::new(1);
         w.put(&1);
         w.put(&String::from("千橘橘"));
         w.to_bytes(&mut b);
