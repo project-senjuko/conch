@@ -12,7 +12,7 @@ use bytes::{Bytes, BytesMut};
 
 use super::{HeadData, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
 
-impl<T: JceStruct<T>> JceType<T> for T {
+impl<T: JceStruct<T> + Default> JceType<T> for T {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         HeadData::new(STRUCT_BEGIN, tag).format(b, 0);
         self.s_to_bytes(b);
@@ -20,7 +20,7 @@ impl<T: JceStruct<T>> JceType<T> for T {
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> T {
-        let mut t = T::init();
+        let mut t = T::default();
         t.s_from_bytes(b);
         {
             let head = HeadData::parse(b);
@@ -36,7 +36,7 @@ mod tests {
 
     use super::super::{HeadData, JceStruct, JceType, STRING1, STRUCT_BEGIN};
 
-    #[derive(PartialEq, Debug)]
+    #[derive(Default, PartialEq, Debug)]
     struct Q {
         name: String,
     }
@@ -48,8 +48,6 @@ mod tests {
             let _ = HeadData::parse(b);
             self.name = String::from_bytes(b, STRING1);
         }
-
-        fn init() -> Q { Q { name: String::new() } }
     }
 
     #[test]

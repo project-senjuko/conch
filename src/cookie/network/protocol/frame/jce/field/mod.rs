@@ -78,8 +78,6 @@ pub trait JceStruct<T> {
     fn s_to_bytes(&self, b: &mut BytesMut);
     /// 从字节流中解读支持的结构体
     fn s_from_bytes(&mut self, b: &mut Bytes);
-    /// 新建为默认值的结构体
-    fn init() -> T;
 }
 
 

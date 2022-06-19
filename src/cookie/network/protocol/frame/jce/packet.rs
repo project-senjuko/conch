@@ -16,6 +16,7 @@ use super::field::{JByte, JceStruct, JInt, JMap, JShort, JSList, JString};
 /// ## 版本控制信息
 /// struct-from | com.qq.taf.RequestPacket
 /// qq-version | 7975
+#[derive(Default)]
 struct JcePacket {
     version: JShort,
     packet_type: JByte,
@@ -57,20 +58,5 @@ impl JceStruct<JcePacket> for JcePacket {
         self.timeout = r.get();
         self.context = r.get();
         self.status = r.get();
-    }
-
-    fn init() -> JcePacket {
-        JcePacket {
-            version: 0,
-            packet_type: 0,
-            message_type: 0,
-            request_id: 0,
-            servant_name: JString::new(),
-            func_name: JString::new(),
-            buffer: JSList::new(),
-            timeout: 0,
-            context: JMap::new(),
-            status: JMap::new(),
-        }
     }
 }
