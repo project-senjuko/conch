@@ -1,0 +1,16 @@
+apiVersion: generator/v1
+kind: Jce
+metadata:
+  name: Template
+  upstreamVersion: 1
+  source: ren.qianjunakasumi.jce.Template
+  description: Jce 模板
+spec:
+  startTag: 1
+  field:
+    - name: is_qianju
+      type: JBool
+    - name: message
+      type: JString
+      tag: 5
+      default: せんじゅうなかすみ
