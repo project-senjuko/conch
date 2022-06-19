@@ -58,7 +58,7 @@ mod tests {
     fn encrypt() {
         assert_eq!(
             QTeaCipher::new([75, 7565, 6576, 76]). // senjunakasumi
-                encrypt(&mut Bytes::from(vec![2, 0, 2, 2])),
+                encrypt(&Bytes::from(vec![2, 0, 2, 2])),
             vec![159, 224, 47, 148, 141, 93, 112, 191, 185, 78, 235, 150, 76, 140, 182, 252],
         );
     }
