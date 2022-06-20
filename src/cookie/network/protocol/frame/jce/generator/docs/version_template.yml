@@ -1,0 +1,5 @@
+apiVersion: generator/v1
+kind: Version
+spec:
+  current: 100
+  minimal: 70

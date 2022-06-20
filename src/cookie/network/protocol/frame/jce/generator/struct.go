@@ -31,9 +31,19 @@ type ConfigSpec struct {
 	Spec ConfigKind `yaml:"spec"`
 }
 
+type VersionSpec struct {
+	*BasicSpec
+	Spec VersionKind `yaml:"spec"`
+}
+
 // === Kind
 
 type ConfigKind struct {
 	Source string `yaml:"source"`
 	Output string `yaml:"output"`
+}
+
+type VersionKind struct {
+	Current uint32 `yaml:"current"`
+	Minimal uint32 `yaml:"minimal"`
 }

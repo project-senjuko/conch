@@ -19,7 +19,17 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func UniversalRead(s BasicReader) {
+func UniversalOpen(fp, dsc string) *bufio.Reader {
+	f, err := os.OpenFile(fp, os.O_RDONLY, 0444)
+	if err != nil {
+		panic("加载" + dsc + "文件失败：" + err.Error())
+	}
+	defer f.Close()
+
+	return bufio.NewReader(f)
+}
+
+func UniversalRead(s BasicReader, k, dsc string) {
 	a := s.getApiVersion()
 	v, err := strconv.ParseUint(strings.TrimPrefix(a, "generator/v"), 10, 32)
 	if err != nil {
@@ -29,24 +39,32 @@ func UniversalRead(s BasicReader) {
 	if v > 10 {
 		panic("Spec 版本不兼容，请更新生成器或检查 Spec 是否正确")
 	}
+	if s.getKind() != k {
+		panic("解析" + dsc + "文件失败：错误的 Spec 类型，请检查")
+	}
 }
 
 func ReadConfigSpec() *ConfigSpec {
-	f, err := os.OpenFile("config.yml", os.O_RDONLY, 0444)
-	if err != nil {
-		panic("加载配置文件失败：" + err.Error())
-	}
-	defer f.Close()
-
+	const d = "配置"
 	a := ConfigSpec{}
-	err = yaml.NewDecoder(bufio.NewReader(f)).Decode(&a)
-	if err != nil {
-		panic("解析配置文件失败：" + err.Error())
+	if err := yaml.NewDecoder(UniversalOpen("config.yml", d)).Decode(&a); err != nil {
+		panic("解析" + d + "文件失败：" + err.Error())
 	}
-	UniversalRead(&a)
+	UniversalRead(&a, "Config", d)
 
-	if a.Kind != "Config" {
-		panic("解析配置文件失败：错误的 Spec 类型，请检查")
+	return &a
+}
+
+func ReadVersionSpec(fp string) *VersionSpec {
+	const d = "版本"
+	a := VersionSpec{}
+	if err := yaml.NewDecoder(UniversalOpen(fp, d)).Decode(&a); err != nil {
+		panic("解析" + d + "文件失败：" + err.Error())
+	}
+	UniversalRead(&a, "Version", d)
+
+	if a.Spec.Current < a.Spec.Minimal {
+		panic("解析" + d + "文件失败：current < minimal")
 	}
 
 	return &a
