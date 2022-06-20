@@ -11,7 +11,8 @@
 package main
 
 import (
-	"bufio"
+	"bytes"
+	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -19,38 +20,43 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func UniversalOpen(fp, dsc string) *bufio.Reader {
+func UniversalRead(fp, k, dsc string) *bytes.Reader {
 	f, err := os.OpenFile(fp, os.O_RDONLY, 0444)
 	if err != nil {
-		panic("加载" + dsc + "文件失败：" + err.Error())
+		panic("打开" + dsc + "文件失败：" + err.Error())
 	}
 	defer f.Close()
-
-	return bufio.NewReader(f)
-}
-
-func UniversalRead(s BasicReader, k, dsc string) {
-	a := s.getApiVersion()
-	v, err := strconv.ParseUint(strings.TrimPrefix(a, "generator/v"), 10, 32)
+	fb, err := io.ReadAll(f)
 	if err != nil {
-		panic("解析通用 Spec 版本失败：" + err.Error())
+		panic("读取" + dsc + "文件失败：" + err.Error())
 	}
 
-	if v > 10 {
-		panic("Spec 版本不兼容，请更新生成器或检查 Spec 是否正确")
+	a := BasicSpec{}
+	if err := yaml.NewDecoder(bytes.NewReader(fb)).Decode(&a); err != nil {
+		panic("解析" + dsc + "文件失败：通用 Spec 解析失败" + err.Error())
 	}
-	if s.getKind() != k {
-		panic("解析" + dsc + "文件失败：错误的 Spec 类型，请检查")
+
+	v, err := strconv.ParseUint(strings.ReplaceAll(a.ApiVersion, "generator/v", ""), 10, 32)
+	if err != nil {
+		panic("解析" + dsc + "文件失败：通用 Spec 版本解析失败：" + err.Error())
 	}
+
+	if v > 10 { // v1.0
+		panic("解析" + dsc + "文件失败：Spec 版本不兼容，请更新生成器或检查 Spec 是否正确")
+	}
+	if a.Kind != k {
+		panic("解析" + dsc + "文件失败：错误的 Spec 类型，请检查是否正确")
+	}
+
+	return bytes.NewReader(fb)
 }
 
 func ReadConfigSpec() *ConfigSpec {
 	const d = "配置"
 	a := ConfigSpec{}
-	if err := yaml.NewDecoder(UniversalOpen("config.yml", d)).Decode(&a); err != nil {
+	if err := yaml.NewDecoder(UniversalRead("config.yml", "Config", d)).Decode(&a); err != nil {
 		panic("解析" + d + "文件失败：" + err.Error())
 	}
-	UniversalRead(&a, "Config", d)
 
 	return &a
 }
@@ -58,10 +64,9 @@ func ReadConfigSpec() *ConfigSpec {
 func ReadVersionSpec(fp string) *VersionSpec {
 	const d = "版本"
 	a := VersionSpec{}
-	if err := yaml.NewDecoder(UniversalOpen(fp, d)).Decode(&a); err != nil {
+	if err := yaml.NewDecoder(UniversalRead(fp, "Version", d)).Decode(&a); err != nil {
 		panic("解析" + d + "文件失败：" + err.Error())
 	}
-	UniversalRead(&a, "Version", d)
 
 	if a.Spec.Current < a.Spec.Minimal {
 		panic("解析" + d + "文件失败：current < minimal")
@@ -73,10 +78,9 @@ func ReadVersionSpec(fp string) *VersionSpec {
 func ReadJceSpec(fp string) *JceSpec {
 	const d = "Jce"
 	a := JceSpec{}
-	if err := yaml.NewDecoder(UniversalOpen(fp, d)).Decode(&a); err != nil {
+	if err := yaml.NewDecoder(UniversalRead(fp, "Jce", d)).Decode(&a); err != nil {
 		panic("解析" + d + "文件失败：" + err.Error())
 	}
-	UniversalRead(&a, "Jce", d)
 
 	return &a
 }

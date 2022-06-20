@@ -15,29 +15,17 @@ type BasicSpec struct {
 	Kind       string `yaml:"kind"`
 }
 
-type BasicReader interface {
-	getApiVersion() string
-	getKind() string
-}
-
-func (b *BasicSpec) getApiVersion() string { return b.ApiVersion }
-
-func (b *BasicSpec) getKind() string { return b.Kind }
-
 // === Spec
 
 type ConfigSpec struct {
-	*BasicSpec
 	Spec ConfigKind `yaml:"spec"`
 }
 
 type VersionSpec struct {
-	*BasicSpec
 	Spec VersionKind `yaml:"spec"`
 }
 
 type JceSpec struct {
-	*BasicSpec
 	Metadata struct {
 		Name            string `yaml:"name"`
 		UpstreamVersion uint32 `yaml:"upstreamVersion"`
