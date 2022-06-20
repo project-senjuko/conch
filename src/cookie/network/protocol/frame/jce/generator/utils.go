@@ -69,3 +69,14 @@ func ReadVersionSpec(fp string) *VersionSpec {
 
 	return &a
 }
+
+func ReadJceSpec(fp string) *JceSpec {
+	const d = "Jce"
+	a := JceSpec{}
+	if err := yaml.NewDecoder(UniversalOpen(fp, d)).Decode(&a); err != nil {
+		panic("解析" + d + "文件失败：" + err.Error())
+	}
+	UniversalRead(&a, "Jce", d)
+
+	return &a
+}
