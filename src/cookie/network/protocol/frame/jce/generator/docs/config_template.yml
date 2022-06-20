@@ -1,0 +1,5 @@
+apiVersion: generator/v1
+kind: Config
+spec:
+  source: PathToSourceFile
+  output: PathToRustFolder
