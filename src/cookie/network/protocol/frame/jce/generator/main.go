@@ -13,7 +13,9 @@ package main
 import (
 	"fmt"
 	"io/fs"
+	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -37,7 +39,15 @@ func main() {
 		}
 
 		wg.Add(1)
-		go read(p, &wg) // 考虑协程池
+		go func() { // 考虑协程池
+			j := read(p)
+			s := format(j)
+			o := strings.ReplaceAll(p, filepath.Join(dir, "struct"), filepath.Dir(con.Spec.Output))
+			o = o[:len(o)-3]
+			write(s, o+"rs")
+			wg.Done()
+		}()
+
 		return nil
 	})
 	if err != nil {
@@ -50,7 +60,7 @@ func main() {
 	fmt.Println("Done.")
 }
 
-func read(p string, wg *sync.WaitGroup) {
+func read(p string) *JceSpec {
 	j := ReadJceSpec(p)
 	if j.Metadata.UpstreamVersion > Ver.Spec.Current {
 		panic("请检查版本文件是否未更新：upstreamVersion > current")
@@ -62,7 +72,22 @@ func read(p string, wg *sync.WaitGroup) {
 		fmt.Println("信息[Jce] | 请注意更新 " + p)
 	}
 
-	// TODO 生成 rust 文件
+	return j
+}
 
-	wg.Done()
+func write(s strings.Builder, fp string) {
+	err := os.MkdirAll(filepath.Dir(fp), 0200)
+	if err != nil {
+		panic("创建 " + fp + " 所属文件夹失败：" + err.Error())
+	}
+
+	f, err := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0200)
+	if err != nil && err == os.ErrExist {
+		panic("打开 " + fp + " 写入流失败：" + err.Error())
+	}
+
+	_, err = f.WriteString(s.String())
+	if err != nil {
+		panic("写入 " + fp + " 失败：" + err.Error())
+	}
 }
