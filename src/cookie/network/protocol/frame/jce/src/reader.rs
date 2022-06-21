@@ -27,7 +27,7 @@ impl<'a> JceReader<'a> {
 
 impl<'a> JceReader<'a> {
     #[inline(always)]
-    pub fn advance(&mut self, cnt: u8) { self.tag += cnt; }
+    pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
     #[inline(always)]
     pub fn get<T: JceType<T>>(&mut self) -> T {
@@ -39,7 +39,7 @@ impl<'a> JceReader<'a> {
 
     pub fn get_optional<T: JceType<T>>(&mut self) -> Option<T> {
         let r = self._get_optional();
-        self.advance(1);
+        self.set_tag(self.tag + 1);
         r
     }
 
@@ -74,8 +74,9 @@ impl<'a> JceReader<'a> {
 mod tests {
     use bytes::Bytes;
 
-    use super::JceReader;
     use crate::field::{JByte, JString};
+
+    use super::JceReader;
 
     #[test]
     fn get() {
