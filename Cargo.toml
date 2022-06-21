@@ -7,3 +7,5 @@ edition = "2021"
 
 [dependencies]
 conch-jce = { path = "src/cookie/network/protocol/frame/jce" }
+
+bytes = "1.1.0"
