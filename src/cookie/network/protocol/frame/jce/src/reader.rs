@@ -11,7 +11,7 @@
 use bytes::{Buf, Bytes};
 use rustc_hash::FxHashMap;
 
-use super::field::{HeadData, JceType};
+use crate::field::{HeadData, JceType};
 
 pub struct JceReader<'a> {
     b: &'a mut Bytes,
@@ -75,7 +75,7 @@ mod tests {
     use bytes::Bytes;
 
     use super::JceReader;
-    use super::super::field::{JByte, JString};
+    use crate::field::{JByte, JString};
 
     #[test]
     fn get() {

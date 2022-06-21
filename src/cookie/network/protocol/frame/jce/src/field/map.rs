@@ -47,9 +47,7 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use crate::cookie::network::protocol::frame::jce::field::{JByte, JString};
-
-    use super::{JceType, JMap, MAP};
+    use super::super::{JByte, JceType, JMap, JString, MAP};
 
     #[test]
     fn to_bytes() {

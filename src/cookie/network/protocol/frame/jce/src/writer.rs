@@ -10,7 +10,7 @@
 
 use bytes::{BufMut, BytesMut};
 
-use super::field::JceType;
+use crate::field::JceType;
 
 pub struct JceWriter {
     b: BytesMut,

@@ -1,9 +1,10 @@
 [package]
-name = "senjuko-conch"
+name = "conch-jce"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-conch-jce = { path = "src/cookie/network/protocol/frame/jce" }
+bytes = "1.1.0"
+rustc-hash = "1.1.0"

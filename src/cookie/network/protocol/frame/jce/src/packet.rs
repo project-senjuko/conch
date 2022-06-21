@@ -10,8 +10,8 @@
 
 use bytes::{Bytes, BytesMut};
 
-use super::{JceReader, JceWriter};
-use super::field::{JByte, JceStruct, JInt, JMap, JShort, JSList, JString};
+use crate::{JceReader, JceWriter};
+use crate::field::{JByte, JceStruct, JInt, JMap, JShort, JSList, JString};
 
 /// ## 版本控制信息
 /// struct-from | com.qq.taf.RequestPacket
