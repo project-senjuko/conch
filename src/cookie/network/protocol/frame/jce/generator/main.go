@@ -28,6 +28,7 @@ func main() {
 	dir := filepath.Dir(con.Spec.Source)
 	Ver = ReadVersionSpec(filepath.Join(dir, "version.yml"))
 	wg := sync.WaitGroup{}
+	cont := 0
 
 	err := filepath.WalkDir(filepath.Join(dir, "struct"), func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -39,6 +40,7 @@ func main() {
 		}
 
 		wg.Add(1)
+		cont += 1
 		go func() { // 考虑协程池
 			j := read(p)
 			s := format(j)
@@ -53,11 +55,9 @@ func main() {
 	if err != nil {
 		fmt.Println("警告[遍历结束] | " + err.Error())
 	}
+
 	wg.Wait()
-
-	// TODO 统计信息
-
-	fmt.Println("Done.")
+	fmt.Println("Done. 共计生成 ", cont, " 个文件")
 }
 
 func read(p string) *JceSpec {
