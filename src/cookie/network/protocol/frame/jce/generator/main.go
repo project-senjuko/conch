@@ -15,49 +15,65 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"sync"
 )
 
-var Ver *VersionSpec
+var (
+	Con    *ConfigSpec
+	ORGDir string
+	Ver    *VersionSpec
+	Wg     = sync.WaitGroup{}
+	Rs     = make(map[string]string)
+)
 
 func main() {
+	fmt.Print(`
+     ██  ██████ ███████  ██████  ███████ ███    ██ ███████ ██████   █████  ████████  ██████  ██████  
+     ██ ██      ██      ██       ██      ████   ██ ██      ██   ██ ██   ██    ██    ██    ██ ██   ██ 
+     ██ ██      █████   ██   ███ █████   ██ ██  ██ █████   ██████  ███████    ██    ██    ██ ██████  
+██   ██ ██      ██      ██    ██ ██      ██  ██ ██ ██      ██   ██ ██   ██    ██    ██    ██ ██   ██ 
+ █████   ██████ ███████  ██████  ███████ ██   ████ ███████ ██   ██ ██   ██    ██     ██████  ██   ██
+
+`)
 	fmt.Println("少女祈祷中...")
 
-	con := ReadConfigSpec()
-	dir := filepath.Dir(con.Spec.Source)
-	Ver = ReadVersionSpec(filepath.Join(dir, "version.yml"))
-	wg := sync.WaitGroup{}
-	cont := 0
+	Con = ReadConfigSpec()
+	ORGDir = filepath.Dir(Con.Spec.Source)
+	Ver = ReadVersionSpec(filepath.Join(ORGDir, "version.yml"))
 
-	err := filepath.WalkDir(filepath.Join(dir, "struct"), func(p string, d fs.DirEntry, err error) error {
+	err := walk()
+	if err != nil {
+		panic("读取 Jce 文件失败：" + err.Error())
+	}
+
+	Wg.Wait()
+	c := pack()
+	Wg.Wait()
+
+	fmt.Println("Done. 共计生成 ", c, " 个 JceStruct")
+}
+
+func walk() error {
+	return filepath.WalkDir(filepath.Join(ORGDir, "struct"), func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
-			fmt.Println("警告[遍历途中] | " + err.Error())
+			fmt.Println("警告(逻辑) " + err.Error())
 			return err
 		}
 		if d.IsDir() {
 			return nil
 		}
 
-		wg.Add(1)
-		cont += 1
-		go func() { // 考虑协程池
+		Wg.Add(1)
+		go func() {
 			j := read(p)
 			s := format(j)
-			o := strings.ReplaceAll(p, filepath.Join(dir, "struct"), filepath.Dir(con.Spec.Output))
-			o = o[:len(o)-3]
-			write(s, o+"rs")
-			wg.Done()
+			Rs[j.Metadata.Name] = s.String()
+			Wg.Done()
 		}()
-
 		return nil
 	})
-	if err != nil {
-		fmt.Println("警告[遍历结束] | " + err.Error())
-	}
-
-	wg.Wait()
-	fmt.Println("Done. 共计生成 ", cont, " 个文件")
 }
 
 func read(p string) *JceSpec {
@@ -69,17 +85,36 @@ func read(p string) *JceSpec {
 		panic("Jce 版本滞后于最低容忍版本，请更新 Jce")
 	}
 	if j.Metadata.UpstreamVersion != Ver.Spec.Current {
-		fmt.Println("信息[Jce] | 请注意更新 " + p)
+		fmt.Println("信息(Jce) 请注意更新 " + p)
 	}
 
 	return j
 }
 
-func write(s strings.Builder, fp string) {
-	err := os.MkdirAll(filepath.Dir(fp), 0200)
-	if err != nil {
-		panic("创建 " + fp + " 所属文件夹失败：" + err.Error())
+func pack() int {
+	keys := make([]string, 0)
+	for k := range Rs {
+		keys = append(keys, k)
 	}
+	sort.Strings(keys)
+
+	s := strings.Builder{}
+	s.WriteString(HEAD)
+	for _, k := range keys {
+		s.WriteString(`
+
+////////////////////////////////////////////////////////////////////////////////
+`)
+		s.WriteString(Rs[k])
+	}
+
+	Wg.Add(1)
+	go write(s)
+	return len(keys)
+}
+
+func write(s strings.Builder) {
+	fp := filepath.Join(filepath.Dir(Con.Spec.Output), "mod.rs")
 
 	f, err := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0200)
 	if err != nil && err == os.ErrExist {
@@ -90,4 +125,5 @@ func write(s strings.Builder, fp string) {
 	if err != nil {
 		panic("写入 " + fp + " 失败：" + err.Error())
 	}
+	Wg.Done()
 }
