@@ -50,9 +50,9 @@ type VersionKind struct {
 type JceKind struct {
 	StartTag uint8 `yaml:"startTag"`
 	Field    []*struct {
-		Name    string  `yaml:"name"`
-		Type    string  `yaml:"type"`
-		Tag     *uint8  `yaml:"tag"`
-		Default *string `yaml:"default"`
+		Name   string `yaml:"name"`
+		Type   string `yaml:"type"`
+		Tag    *uint8 `yaml:"tag"`
+		Option bool   `yaml:"option"`
 	} `yaml:"field"`
 }

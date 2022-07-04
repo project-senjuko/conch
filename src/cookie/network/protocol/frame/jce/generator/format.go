@@ -72,7 +72,7 @@ func formatStruct(j *JceSpec) string {
 		b.WriteString("    ")
 		b.WriteString(v.Name)
 		b.WriteString(": ")
-		if v.Default == nil {
+		if !v.Option {
 			b.WriteString(v.Type)
 		} else {
 			b.WriteString("Option<")
@@ -99,7 +99,7 @@ func formatImplToBytes(j *JceSpec) string {
 `)
 		}
 
-		if v.Default == nil {
+		if !v.Option {
 			b.WriteString("        w.put(&self.")
 			b.WriteString(v.Name)
 			b.WriteString(");")
@@ -132,7 +132,7 @@ func formatImplFromBytes(j *JceSpec) string {
 		b.WriteString("        self.")
 		b.WriteString(v.Name)
 		b.WriteString(" = ")
-		if v.Default == nil {
+		if !v.Option {
 			b.WriteString("r.get();")
 		} else {
 			b.WriteString("r.get_optional();")
