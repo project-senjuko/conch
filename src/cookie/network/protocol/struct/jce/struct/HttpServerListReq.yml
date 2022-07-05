@@ -1,0 +1,24 @@
+apiVersion: generator/v1
+kind: Jce
+metadata:
+  name: HttpServerListReq
+  upstreamVersion: 8410
+  source: com.tencent.msf.service.protocol.serverconfig.d
+  description: HTTP 服务器列表请求结构体
+spec:
+  startTag: 1
+  field:
+    - name: a
+      type: JLong
+    - name: b
+      type: JLong
+    - name: c
+      type: JByte
+    - name: d
+      type: JString
+    - name: e
+      type: JInt
+    - name: f
+      type: JLong
+    - name: g
+      type: JString
