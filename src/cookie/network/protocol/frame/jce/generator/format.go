@@ -26,7 +26,7 @@ use conch_jce::{JceReader, JceWriter};
 use conch_jce::field::{JBool, JByte, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};`
 const STRUCT = `
 #[derive(Default)]
-struct `
+pub struct `
 const STRUCTSTART = ` {
 `
 const STRUCTEND = `}
