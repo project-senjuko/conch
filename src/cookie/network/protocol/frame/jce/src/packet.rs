@@ -15,19 +15,19 @@ use crate::field::{JByte, JceStruct, JInt, JMap, JShort, JSList, JString};
 
 /// ## 版本控制信息
 /// struct-from | com.qq.taf.RequestPacket
-/// qq-version | 8265
+/// qq-version | 8555
 #[derive(Default)]
-struct JcePacket {
-    version: JShort,
-    packet_type: JByte,
-    message_type: JInt,
-    request_id: JInt,
-    servant_name: JString,
-    func_name: JString,
-    buffer: JSList,
-    timeout: JInt,
-    context: JMap<JString, JString>,
-    status: JMap<JString, JString>,
+pub struct JcePacket {
+    pub version: JShort,
+    pub packet_type: JByte,
+    pub message_type: JInt,
+    pub request_id: JInt,
+    pub servant_name: JString,
+    pub func_name: JString,
+    pub buffer: JSList,
+    pub timeout: JInt,
+    pub context: JMap<JString, JString>,
+    pub status: JMap<JString, JString>,
 }
 
 impl JceStruct<JcePacket> for JcePacket {
