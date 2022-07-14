@@ -19,7 +19,7 @@ pub struct HttpServerListReq {
     pub g: JString,
 }
 
-impl JceStruct<HttpServerListReq> for HttpServerListReq {
+impl JceStruct for HttpServerListReq {
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(1);
         w.put(&self.a);

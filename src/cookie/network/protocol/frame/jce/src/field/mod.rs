@@ -73,7 +73,7 @@ pub trait JceType<T> {
     fn from_bytes(b: &mut Bytes, r#type: u8) -> T;
 }
 
-pub trait JceStruct<T> {
+pub trait JceStruct {
     /// 将支持的结构体格式化为字节流
     fn s_to_bytes(&self, b: &mut BytesMut);
     /// 从字节流中解读支持的结构体

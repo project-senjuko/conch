@@ -12,7 +12,7 @@ use bytes::{Bytes, BytesMut};
 
 use super::{HeadData, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
 
-impl<T: JceStruct<T> + Default> JceType<T> for T {
+impl<T: JceStruct + Default> JceType<T> for T {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         HeadData::new(STRUCT_BEGIN, tag).format(b, 0);
         self.s_to_bytes(b);
@@ -41,7 +41,7 @@ mod tests {
         name: String,
     }
 
-    impl JceStruct<Q> for Q {
+    impl JceStruct for Q {
         fn s_to_bytes(&self, b: &mut BytesMut) { self.name.to_bytes(b, 0); }
 
         fn s_from_bytes(&mut self, b: &mut Bytes) {

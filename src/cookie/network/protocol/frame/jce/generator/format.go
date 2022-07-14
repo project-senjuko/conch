@@ -31,8 +31,7 @@ const STRUCTSTART = ` {
 `
 const STRUCTEND = `}
 
-impl JceStruct<`
-const IMPLSTART = `> for `
+impl JceStruct for `
 const IMPLMIDDLE1 = ` {
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(`
@@ -51,8 +50,6 @@ func format(j *JceSpec) (b strings.Builder) {
 	b.WriteString(STRUCTSTART)
 	b.WriteString(formatStruct(j))
 	b.WriteString(STRUCTEND)
-	b.WriteString(j.Metadata.Name)
-	b.WriteString(IMPLSTART)
 	b.WriteString(j.Metadata.Name)
 	b.WriteString(IMPLMIDDLE1)
 	b.WriteString(t)

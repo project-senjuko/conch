@@ -30,7 +30,7 @@ pub struct JcePacket {
     pub status: JMap<JString, JString>,
 }
 
-impl JceStruct<JcePacket> for JcePacket {
+impl JceStruct for JcePacket {
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(1);
         w.put(&self.version);
