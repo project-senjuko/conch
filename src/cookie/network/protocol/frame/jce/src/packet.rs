@@ -8,10 +8,52 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Bytes, BytesMut};
+use bytes::{BufMut, Bytes, BytesMut};
 
 use crate::{JceReader, JceWriter};
-use crate::field::{JByte, JceStruct, JInt, JMap, JShort, JSList, JString};
+use crate::field::{JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString};
+
+pub struct JcePacketV3 {
+    p: JcePacket,
+    data: JMap<JString, JSList>,
+}
+
+impl JcePacketV3 {
+    pub fn new(rid: JInt, sn: JString, r#fn: JString) -> JcePacketV3 {
+        JcePacketV3 {
+            p: JcePacket {
+                version: 3,
+                request_id: rid,
+                servant_name: sn,
+                func_name: r#fn,
+                ..Default::default()
+            },
+            data: JMap::new(),
+        }
+    }
+
+    pub fn put<T: JceType<T>>(&mut self, n: JString, d: T) {
+        let mut buf = BytesMut::new();
+        d.to_bytes(&mut buf, 0);
+        self.data.insert(n, JSList::from(buf));
+    }
+
+    /// 编码为 UniPacket
+    pub fn encode(&mut self, b: &mut BytesMut) {
+        let mut buf = BytesMut::new();
+        self.data.to_bytes(&mut buf, 0);
+        self.p.buffer = JSList::from(buf);
+
+        let mut jp = BytesMut::new();
+        self.p.s_to_bytes(&mut jp);
+
+        let cap = jp.capacity();
+        let mut up = BytesMut::with_capacity(cap + 4);
+        up.put_i32(cap as i32);
+        up.put(jp);
+        b.put(up);
+    }
+}
 
 /// ## 版本控制信息
 /// struct-from | com.qq.taf.RequestPacket
