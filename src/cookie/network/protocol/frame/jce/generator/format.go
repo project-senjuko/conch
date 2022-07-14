@@ -69,7 +69,7 @@ func format(j *JceSpec) (b strings.Builder) {
 func formatStruct(j *JceSpec) string {
 	var b strings.Builder
 	for i, v := range j.Spec.Field {
-		b.WriteString("    ")
+		b.WriteString("    pub ")
 		b.WriteString(v.Name)
 		b.WriteString(": ")
 		if !v.Option {

@@ -10,13 +10,13 @@ use conch_jce::field::{JBool, JByte, JceStruct, JDouble, JFloat, JInt, JList, JL
 
 #[derive(Default)]
 pub struct HttpServerListReq {
-    a: JLong,
-    b: JLong,
-    c: JByte,
-    d: JString,
-    e: JInt,
-    f: JLong,
-    g: JString,
+    pub a: JLong,
+    pub b: JLong,
+    pub c: JByte,
+    pub d: JString,
+    pub e: JInt,
+    pub f: JLong,
+    pub g: JString,
 }
 
 impl JceStruct<HttpServerListReq> for HttpServerListReq {
