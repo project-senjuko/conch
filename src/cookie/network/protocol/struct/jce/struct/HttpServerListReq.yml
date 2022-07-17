@@ -8,17 +8,17 @@ metadata:
 spec:
   startTag: 1
   field:
-    - name: a
+    - name: uin
       type: JLong
-    - name: b
+    - name: timeout
       type: JLong
     - name: c
       type: JByte
-    - name: d
+    - name: imsi
       type: JString
-    - name: e
+    - name: is_wifi_conn
       type: JInt
-    - name: f
+    - name: app_id
       type: JLong
-    - name: g
+    - name: imei
       type: JString

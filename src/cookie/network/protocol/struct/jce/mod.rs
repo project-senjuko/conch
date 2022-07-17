@@ -10,36 +10,36 @@ use conch_jce::field::{JBool, JByte, JceStruct, JDouble, JFloat, JInt, JList, JL
 
 #[derive(Default)]
 pub struct HttpServerListReq {
-    pub a: JLong,
-    pub b: JLong,
+    pub uin: JLong,
+    pub timeout: JLong,
     pub c: JByte,
-    pub d: JString,
-    pub e: JInt,
-    pub f: JLong,
-    pub g: JString,
+    pub imsi: JString,
+    pub is_wifi_conn: JInt,
+    pub app_id: JLong,
+    pub imei: JString,
 }
 
 impl JceStruct for HttpServerListReq {
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(1);
-        w.put(&self.a);
-        w.put(&self.b);
+        w.put(&self.uin);
+        w.put(&self.timeout);
         w.put(&self.c);
-        w.put(&self.d);
-        w.put(&self.e);
-        w.put(&self.f);
-        w.put(&self.g);
+        w.put(&self.imsi);
+        w.put(&self.is_wifi_conn);
+        w.put(&self.app_id);
+        w.put(&self.imei);
         w.flash(b);
     }
 
     fn s_from_bytes(&mut self, b: &mut Bytes) {
         let mut r = JceReader::with_tag(b, 1);
-        self.a = r.get();
-        self.b = r.get();
+        self.uin = r.get();
+        self.timeout = r.get();
         self.c = r.get();
-        self.d = r.get();
-        self.e = r.get();
-        self.f = r.get();
-        self.g = r.get();
+        self.imsi = r.get();
+        self.is_wifi_conn = r.get();
+        self.app_id = r.get();
+        self.imei = r.get();
     }
 }
