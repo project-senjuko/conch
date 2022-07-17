@@ -5,7 +5,15 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
-conch-jce = { path = "src/cookie/network/protocol/frame/jce" }
+[[bin]]
+name = "conch"
+path = "crates/conch/main.rs"
 
-bytes = "1.1.0"
+[workspace]
+members = [
+    "crates/cookie",
+    "crates/cookie/src/network/protocol/frame/jce",
+]
+
+[dependencies]
+conch-cookie = { path = "crates/cookie" }

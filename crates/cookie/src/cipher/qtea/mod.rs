@@ -15,7 +15,7 @@ use self::{qcbc::QCBChaining, tea::TeaCipher};
 mod tea;
 mod qcbc;
 
-struct QTeaCipher {
+pub struct QTeaCipher {
     c: QCBChaining,
 }
 
