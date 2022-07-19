@@ -8,13 +8,14 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{Buf, BufMut, Bytes, BytesMut};
 
 use qtea::QTeaCipher;
 
 use crate::{JceReader, JceWriter};
 use crate::field::{JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString};
 
+#[derive(Default)]
 pub struct JcePacketV3 {
     p: JcePacket,
     data: JMap<JString, JSList>,
@@ -64,10 +65,33 @@ impl JcePacketV3 {
     }
 }
 
-/// ## 版本控制信息
-/// struct-from | com.qq.taf.RequestPacket
-/// qq-version | 8555
-#[derive(Default)]
+impl JcePacketV3 {
+    pub fn from(b: &mut Bytes, key: [u32; 4]) -> JcePacketV3 {
+        let mut db = QTeaCipher::new(key).decrypt(b);
+        db.get_i32(); // length
+
+        let mut s = JcePacket::default();
+        s.s_from_bytes(&mut Bytes::from(db));
+        if s.buffer.get_u8() != 8 { // Map { tag = 0 }
+            //TODO 优雅地panic
+            panic!("不是 Map 类型");
+        }
+
+        JcePacketV3 { data: JMap::from_bytes(&mut s.buffer, 0), p: s }
+    }
+
+    pub fn get<T: JceType<T>>(&mut self, n: &str) -> T {
+        T::from_bytes(
+            &mut self.data.get(n).expect("不存在的 Key") //TODO log打印
+                .slice(1..), // 固定字节 10: StructBegin Head
+            0,
+        )
+    }
+}
+
+/// 版本 | 8555
+/// 源 | com.qq.taf.RequestPacket
+#[derive(Default, Debug)]
 pub struct JcePacket {
     pub version: JShort,
     pub packet_type: JByte,
