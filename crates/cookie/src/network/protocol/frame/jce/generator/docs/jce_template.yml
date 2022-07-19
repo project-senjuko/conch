@@ -13,4 +13,4 @@ spec:
     - name: message
       type: JString
       tag: 5
-      default: せんじゅうなかすみ
+      option: true
