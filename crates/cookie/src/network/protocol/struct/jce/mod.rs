@@ -43,3 +43,178 @@ impl JceStruct for HttpServerListReq {
         self.imei = r.get();
     }
 }
+
+////////////////////////////////////////////////////////////////////////////////
+
+#[derive(Default)]
+pub struct HttpServerListRes {
+    pub a: JInt,
+    pub socket_mobile_ipv4: JList<HttpServerListResServer>,
+    pub socket_wifi_ipv4: JList<HttpServerListResServer>,
+    pub d: JInt,
+    pub e: JInt,
+    pub f: Option<JByte>,
+    pub g: Option<JByte>,
+    pub h: Option<JInt>,
+    pub i: Option<JInt>,
+    pub j: Option<JLong>,
+    pub k: Option<JInt>,
+    pub http_mobile_ipv4: Option<JList<HttpServerListResServer>>,
+    pub http_wifi_ipv4: Option<JList<HttpServerListResServer>>,
+    pub speedtest_info: Option<JSList>,
+    pub socket_ipv6: Option<JList<HttpServerListResServer>>,
+    pub http_ipv6: Option<JList<HttpServerListResServer>>,
+    pub quic_ipv6: Option<JList<HttpServerListResServer>>,
+    pub net_type: Option<JByte>,
+    pub he_threshold: Option<JInt>,
+    pub policy_id: Option<JString>,
+    pub u: Option<JByte>,
+}
+
+impl JceStruct for HttpServerListRes {
+    fn s_to_bytes(&self, b: &mut BytesMut) {
+        let mut w = JceWriter::new(1);
+        w.put(&self.a);
+        w.put(&self.socket_mobile_ipv4);
+        w.put(&self.socket_wifi_ipv4);
+        w.put(&self.d);
+        w.put(&self.e);
+        match &self.f {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.g {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.h {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.i {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.j {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.k {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.http_mobile_ipv4 {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.http_wifi_ipv4 {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.speedtest_info {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.socket_ipv6 {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.http_ipv6 {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.quic_ipv6 {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.net_type {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.he_threshold {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.policy_id {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.u {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        w.flash(b);
+    }
+
+    fn s_from_bytes(&mut self, b: &mut Bytes) {
+        let mut r = JceReader::with_tag(b, 1);
+        self.a = r.get();
+        self.socket_mobile_ipv4 = r.get();
+        self.socket_wifi_ipv4 = r.get();
+        self.d = r.get();
+        self.e = r.get();
+        self.f = r.get_optional();
+        self.g = r.get_optional();
+        self.h = r.get_optional();
+        self.i = r.get_optional();
+        self.j = r.get_optional();
+        self.k = r.get_optional();
+        self.http_mobile_ipv4 = r.get_optional();
+        self.http_wifi_ipv4 = r.get_optional();
+        self.speedtest_info = r.get_optional();
+        self.socket_ipv6 = r.get_optional();
+        self.http_ipv6 = r.get_optional();
+        self.quic_ipv6 = r.get_optional();
+        self.net_type = r.get_optional();
+        self.he_threshold = r.get_optional();
+        self.policy_id = r.get_optional();
+        self.u = r.get_optional();
+    }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
+#[derive(Default)]
+pub struct HttpServerListResServer {
+    pub ip: JString,
+    pub port: JInt,
+    pub c: JLong,
+    pub d: JLong,
+    pub e: JLong,
+    pub f: JLong,
+    pub g: JLong,
+    pub location: JString,
+    pub i: JString,
+    pub j: JLong,
+}
+
+impl JceStruct for HttpServerListResServer {
+    fn s_to_bytes(&self, b: &mut BytesMut) {
+        let mut w = JceWriter::new(1);
+        w.put(&self.ip);
+        w.put(&self.port);
+        w.put(&self.c);
+        w.put(&self.d);
+        w.put(&self.e);
+        w.put(&self.f);
+        w.put(&self.g);
+        w.put(&self.location);
+        w.put(&self.i);
+        w.put(&self.j);
+        w.flash(b);
+    }
+
+    fn s_from_bytes(&mut self, b: &mut Bytes) {
+        let mut r = JceReader::with_tag(b, 1);
+        self.ip = r.get();
+        self.port = r.get();
+        self.c = r.get();
+        self.d = r.get();
+        self.e = r.get();
+        self.f = r.get();
+        self.g = r.get();
+        self.location = r.get();
+        self.i = r.get();
+        self.j = r.get();
+    }
+}

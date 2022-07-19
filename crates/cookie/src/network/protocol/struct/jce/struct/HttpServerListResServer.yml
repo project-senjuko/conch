@@ -1,0 +1,30 @@
+apiVersion: generator/v1
+kind: Jce
+metadata:
+  name: HttpServerListResServer
+  upstreamVersion: 8555
+  source: <手动计算>
+  description: HTTP 服务器列表响应服务器结构体
+spec:
+  startTag: 1
+  field:
+    - name: ip
+      type: JString
+    - name: port
+      type: JInt
+    - name: c
+      type: JLong # For security
+    - name: d
+      type: JLong
+    - name: e
+      type: JLong
+    - name: f
+      type: JLong
+    - name: g
+      type: JLong
+    - name: location
+      type: JString
+    - name: i
+      type: JString
+    - name: j
+      type: JLong

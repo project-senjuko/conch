@@ -1,0 +1,68 @@
+apiVersion: generator/v1
+kind: Jce
+metadata:
+  name: HttpServerListRes
+  upstreamVersion: 8555
+  source: com.tencent.msf.service.protocol.serverconfig.e
+  description: HTTP 服务器列表响应结构体
+spec:
+  startTag: 1
+  field:
+    - name: a
+      type: JInt
+    - name: socket_mobile_ipv4
+      type: JList<HttpServerListResServer>
+    - name: socket_wifi_ipv4
+      type: JList<HttpServerListResServer>
+    - name: d
+      type: JInt
+    - name: e
+      type: JInt
+    - name: f
+      type: JByte
+      option: true
+    - name: g
+      type: JByte
+      option: true
+    - name: h
+      type: JInt
+      option: true
+    - name: i
+      type: JInt
+      option: true
+    - name: j
+      type: JLong
+      option: true
+    - name: k
+      type: JInt
+      option: true
+    - name: http_mobile_ipv4
+      type: JList<HttpServerListResServer>
+      option: true
+    - name: http_wifi_ipv4
+      type: JList<HttpServerListResServer>
+      option: true
+    - name: speedtest_info
+      type: JSList
+      option: true
+    - name: socket_ipv6
+      type: JList<HttpServerListResServer>
+      option: true
+    - name: http_ipv6
+      type: JList<HttpServerListResServer>
+      option: true
+    - name: quic_ipv6
+      type: JList<HttpServerListResServer>
+      option: true
+    - name: net_type
+      type: JByte
+      option: true
+    - name: he_threshold
+      type: JInt
+      option: true
+    - name: policy_id
+      type: JString
+      option: true
+    - name: u
+      type: JByte
+      option: true
