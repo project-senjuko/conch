@@ -19,23 +19,23 @@ pub struct JcePacketV3 {
 }
 
 impl JcePacketV3 {
-    pub fn new(rid: JInt, sn: JString, r#fn: JString) -> JcePacketV3 {
+    pub fn new(rid: JInt, sn: &str, r#fn: &str) -> JcePacketV3 {
         JcePacketV3 {
             p: JcePacket {
                 version: 3,
                 request_id: rid,
-                servant_name: sn,
-                func_name: r#fn,
+                servant_name: sn.to_string(),
+                func_name: r#fn.to_string(),
                 ..Default::default()
             },
             data: JMap::new(),
         }
     }
 
-    pub fn put<T: JceType<T>>(&mut self, n: JString, d: T) {
+    pub fn put<T: JceType<T>>(&mut self, n: &str, d: T) {
         let mut buf = BytesMut::new();
         d.to_bytes(&mut buf, 0);
-        self.data.insert(n, JSList::from(buf));
+        self.data.insert(n.to_string(), JSList::from(buf));
     }
 
     /// 编码为 UniPacket
