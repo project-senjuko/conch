@@ -49,14 +49,14 @@ name = "conch-cookie"
 version = "0.1.0"
 dependencies = [
  "bytes",
- "conch-jce",
+ "cookie-jce",
  "futures",
  "reqwest",
  "tokio",
 ]
 
 [[package]]
-name = "conch-jce"
+name = "cookie-jce"
 version = "0.1.0"
 dependencies = [
  "bytes",

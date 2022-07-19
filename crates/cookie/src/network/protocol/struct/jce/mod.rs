@@ -3,8 +3,8 @@
 
 use bytes::{Bytes, BytesMut};
 
-use conch_jce::{JceReader, JceWriter};
-use conch_jce::field::{JBool, JByte, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};
+use jce::{JceReader, JceWriter};
+use jce::field::{JBool, JByte, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};
 
 ////////////////////////////////////////////////////////////////////////////////
 
