@@ -101,10 +101,10 @@ func formatImplToBytes(j *JceSpec) string {
 			b.WriteString(v.Name)
 			b.WriteString(");")
 		} else {
-			b.WriteString("        match self.")
+			b.WriteString("        match &self.")
 			b.WriteString(v.Name)
 			b.WriteString(` {
-            Some(v) => w.put(&v),
+            Some(v) => w.put(v),
             None => {}
         }`)
 		}
