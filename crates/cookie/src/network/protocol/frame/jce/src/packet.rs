@@ -10,6 +10,8 @@
 
 use bytes::{BufMut, Bytes, BytesMut};
 
+use qtea::QTeaCipher;
+
 use crate::{JceReader, JceWriter};
 use crate::field::{JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString};
 
@@ -52,6 +54,13 @@ impl JcePacketV3 {
         up.put_i32(cap as i32);
         up.put(jp);
         b.put(up);
+    }
+
+    /// 编码为 UniPacket 并 TEA 加密
+    pub fn encode_with_tea(&mut self, key: [u32; 4]) -> BytesMut {
+        let mut b = BytesMut::new();
+        self.encode(&mut b);
+        QTeaCipher::new(key).encrypt(&Bytes::from(b))
     }
 }
 
