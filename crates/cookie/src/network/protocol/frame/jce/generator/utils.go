@@ -12,6 +12,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"strconv"
@@ -54,6 +55,15 @@ func UniversalRead(fp, k, dsc string) *bytes.Reader {
 func ReadConfigSpec() *ConfigSpec {
 	const d = "配置"
 	a := ConfigSpec{}
+
+	_, err := os.Stat("config.yml")
+	if err != nil && os.IsNotExist(err) {
+		fmt.Println("配置文件不存在，将使用相对路径") // 默认项目根目录
+		a.Spec.Source = "../../../struct/jce/"
+		a.Spec.Output = "../../../struct/jce/"
+		return &a
+	}
+
 	if err := yaml.NewDecoder(UniversalRead("config.yml", "Config", d)).Decode(&a); err != nil {
 		panic("解析 " + d + " 文件失败：" + err.Error())
 	}
