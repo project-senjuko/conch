@@ -116,7 +116,7 @@ func pack() int {
 func write(s strings.Builder) {
 	fp := filepath.Join(filepath.Dir(Con.Spec.Output), "mod.rs")
 
-	f, err := os.OpenFile(fp, os.O_WRONLY|os.O_CREATE, 0200)
+	f, err := os.OpenFile(fp, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0200)
 	if err != nil && err == os.ErrExist {
 		panic("打开 " + fp + " 写入流失败：" + err.Error())
 	}
