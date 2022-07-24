@@ -10,9 +10,9 @@ import (
 )
 
 type VersionConf struct {
-	version string
-	code    uint64
-	appId   uint64
+	Version string `yaml:"version"`
+	Code    uint64 `yaml:"code"`
+	AppId   uint64 `yaml:"appId"`
 }
 
 type Arm func(oldVersion *VersionConf, newVersion *VersionConf) error
@@ -25,12 +25,12 @@ func main() {
 	body := requestHTML()
 	code, appId := parseDownloadURL(readDownloadURL(body))
 	nv := VersionConf{
-		version: readVersion(body),
-		code:    code,
-		appId:   appId,
+		Version: readVersion(body),
+		Code:    code,
+		AppId:   appId,
 	}
 
-	if code <= v.code {
+	if code <= v.Code {
 		fmt.Println("== 版本已同步，无需更新 ==")
 		return
 	}
