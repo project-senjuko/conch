@@ -17,7 +17,7 @@ type VersionConf struct {
 
 type Arm func(oldVersion *VersionConf, newVersion *VersionConf) error
 
-var arm = []Arm{updateVERSION}
+var arm = []Arm{updateVERSION, updateJceVersion}
 
 func main() {
 	v := readVersionConf()
