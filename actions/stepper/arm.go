@@ -19,21 +19,22 @@ import (
 )
 
 func updateVERSION(_ *VersionConf, n *VersionConf) (err error) {
-	fmt.Println("正在更新 VERSION.yml")
+	const d = "VERSION.yml"
+	fmt.Println("正在更新 " + d)
 
-	f, err := os.OpenFile("../../VERSION.yml", os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0200)
-	if err != nil && err == os.ErrExist {
-		return errors.New("打开 VERSION.yml 写入流失败：" + err.Error())
+	f, err := os.OpenFile("../../VERSION.yml", os.O_WRONLY|os.O_TRUNC, 0200)
+	if err != nil {
+		return errors.New("打开 " + d + " 写入流失败：" + err.Error())
 	}
 
 	o, err := yaml.Marshal(n)
 	if err != nil {
-		return errors.New("生成 VERSION.yml 失败：" + err.Error())
+		return errors.New("生成 " + d + " 失败：" + err.Error())
 	}
 
 	_, err = f.Write(o)
 	if err != nil {
-		return errors.New("写入 VERSION.yml 失败：" + err.Error())
+		return errors.New("写入 " + d + " 失败：" + err.Error())
 	}
 	return
 }
