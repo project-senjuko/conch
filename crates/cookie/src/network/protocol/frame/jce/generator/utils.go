@@ -11,9 +11,7 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 	"strings"
@@ -21,19 +19,16 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func UniversalRead(fp, k, dsc string) *bytes.Reader {
+func UniversalRead(fp, k, dsc string) (r *os.File) {
 	f, err := os.OpenFile(fp, os.O_RDONLY, 0444)
 	if err != nil {
 		panic("打开 " + dsc + " 文件失败：" + err.Error())
 	}
 	defer f.Close()
-	fb, err := io.ReadAll(f)
-	if err != nil {
-		panic("读取 " + dsc + " 文件失败：" + err.Error())
-	}
+	r, _ = os.OpenFile(fp, os.O_RDONLY, 0444)
 
 	a := BasicSpec{}
-	if err := yaml.NewDecoder(bytes.NewReader(fb)).Decode(&a); err != nil {
+	if err := yaml.NewDecoder(f).Decode(&a); err != nil {
 		panic("解析 " + dsc + " 文件失败：通用 Spec 解析失败" + err.Error())
 	}
 
@@ -48,8 +43,7 @@ func UniversalRead(fp, k, dsc string) *bytes.Reader {
 	if a.Kind != k {
 		panic("解析 " + dsc + " 文件失败：错误的 Spec 类型，请检查是否正确")
 	}
-
-	return bytes.NewReader(fb)
+	return
 }
 
 func ReadConfigSpec() *ConfigSpec {
@@ -64,9 +58,11 @@ func ReadConfigSpec() *ConfigSpec {
 		return &a
 	}
 
-	if err := yaml.NewDecoder(UniversalRead("config.yml", "Config", d)).Decode(&a); err != nil {
+	f := UniversalRead("config.yml", "Config", d)
+	if err := yaml.NewDecoder(f).Decode(&a); err != nil {
 		panic("解析 " + d + " 文件失败：" + err.Error())
 	}
+	defer f.Close()
 
 	return &a
 }
@@ -74,9 +70,11 @@ func ReadConfigSpec() *ConfigSpec {
 func ReadVersionSpec(fp string) *VersionSpec {
 	const d = "版本"
 	a := VersionSpec{}
-	if err := yaml.NewDecoder(UniversalRead(fp, "Version", d)).Decode(&a); err != nil {
+	f := UniversalRead(fp, "Version", d)
+	if err := yaml.NewDecoder(f).Decode(&a); err != nil {
 		panic("解析 " + d + " 文件失败：" + err.Error())
 	}
+	defer f.Close()
 
 	if a.Spec.Current < a.Spec.Minimal {
 		panic("解析 " + d + " 文件失败：current < minimal")
@@ -88,9 +86,11 @@ func ReadVersionSpec(fp string) *VersionSpec {
 func ReadJceSpec(fp string) *JceSpec {
 	const d = "Jce"
 	a := JceSpec{}
-	if err := yaml.NewDecoder(UniversalRead(fp, "Jce", d)).Decode(&a); err != nil {
+	f := UniversalRead(fp, "Jce", d)
+	if err := yaml.NewDecoder(f).Decode(&a); err != nil {
 		panic("解析" + d + "文件失败：" + err.Error())
 	}
-
+	f.Close()
+	
 	return &a
 }
