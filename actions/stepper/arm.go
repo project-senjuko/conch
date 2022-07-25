@@ -83,3 +83,15 @@ func _updateJceStructVersion(p string, o, n *VersionConf, wg *sync.WaitGroup) {
 	}
 	wg.Done()
 }
+
+func updateAppSetting(o, n *VersionConf) (err error) {
+	const d = "AppSetting"
+	fmt.Println("正在更新 " + d)
+
+	return ReadReplaceAndWrite(
+		"../../crates/cookie/src/config/app_setting.rs",
+		d,
+		ReplaceCode(o, n, "/// APP_ID: 版本 | "),
+		ReplaceAppId(o, n, "pub const APP_ID: u32 = "),
+	)
+}

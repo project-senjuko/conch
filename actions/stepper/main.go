@@ -15,9 +15,9 @@ type VersionConf struct {
 	AppId   uint64 `yaml:"appId"`
 }
 
-type Arm func(oldVersion *VersionConf, newVersion *VersionConf) error
+type Arm func(oldVersion, newVersion *VersionConf) error
 
-var arm = []Arm{updateVERSION, updateJceVersion, updateJceStructVersion}
+var arm = []Arm{updateVERSION, updateJceVersion, updateJceStructVersion, updateAppSetting}
 
 func main() {
 	v := readVersionConf()

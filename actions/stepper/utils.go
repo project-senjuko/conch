@@ -54,3 +54,10 @@ func ReplaceCode(o, n *VersionConf, prefix string) [2]string {
 		prefix + strconv.FormatUint(n.Code, 10),
 	}
 }
+
+func ReplaceAppId(o, n *VersionConf, prefix string) [2]string {
+	return [2]string{
+		prefix + strconv.FormatUint(o.AppId, 10),
+		prefix + strconv.FormatUint(n.AppId, 10),
+	}
+}
