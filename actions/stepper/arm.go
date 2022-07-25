@@ -29,13 +29,9 @@ func updateVERSION(_ *VersionConf, n *VersionConf) (err error) {
 	if err != nil {
 		return errors.New("打开 " + d + " 写入流失败：" + err.Error())
 	}
+	defer f.Close()
 
-	o, err := yaml.Marshal(n)
-	if err != nil {
-		return errors.New("生成 " + d + " 失败：" + err.Error())
-	}
-
-	_, err = f.Write(o)
+	err = yaml.NewEncoder(f).Encode(n)
 	if err != nil {
 		return errors.New("写入 " + d + " 失败：" + err.Error())
 	}
