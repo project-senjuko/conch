@@ -17,20 +17,20 @@ jobs:
       with:
         go-version: 1.18
 
-    - name: Change directory
-      run: cd ./actions/stepper/
-
     - name: Update Version
+      working-directory: ./actions/stepper
       run: go run -v ./...
 
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v4
       with:
-        commit-message: pref👽️ 更新版本
-        branch: pref/version
+        commit-message: pref👽️version 同步至上游版本
+        branch: pref/bump-version
         delete-branch: true
-        title: 👽️ 更新版本
+        title: auto⚙️action 同步至上游版本
         body: |
+          ## 检查清单
+          
           - [ ] JceStruct 已是最新
         assignees: qianjunakasumi
         reviewers: qianjunakasumi
