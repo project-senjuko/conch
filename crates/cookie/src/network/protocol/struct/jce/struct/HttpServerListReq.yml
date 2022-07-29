@@ -22,3 +22,24 @@ spec:
       type: JLong
     - name: imei
       type: JString
+    - name: h
+      type: JLong
+      option: true
+    - name: i
+      type: JLong
+      option: true
+    - name: j
+      type: JLong
+      option: true
+    - name: k
+      type: JByte
+      option: true
+    - name: l
+      type: JByte
+      option: true
+    - name: m
+      type: JLong
+      option: true
+    - name: n
+      type: JBool
+      option: true

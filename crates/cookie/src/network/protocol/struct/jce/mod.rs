@@ -17,6 +17,13 @@ pub struct HttpServerListReq {
     pub is_wifi_conn: JInt,
     pub app_id: JLong,
     pub imei: JString,
+    pub h: Option<JLong>,
+    pub i: Option<JLong>,
+    pub j: Option<JLong>,
+    pub k: Option<JByte>,
+    pub l: Option<JByte>,
+    pub m: Option<JLong>,
+    pub n: Option<JBool>,
 }
 
 impl JceStruct for HttpServerListReq {
@@ -29,6 +36,34 @@ impl JceStruct for HttpServerListReq {
         w.put(&self.is_wifi_conn);
         w.put(&self.app_id);
         w.put(&self.imei);
+        match &self.h {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.i {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.j {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.k {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.l {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.m {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.n {
+            Some(v) => w.put(v),
+            None => {}
+        }
         w.flash(b);
     }
 
@@ -41,6 +76,13 @@ impl JceStruct for HttpServerListReq {
         self.is_wifi_conn = r.get();
         self.app_id = r.get();
         self.imei = r.get();
+        self.h = r.get_optional();
+        self.i = r.get_optional();
+        self.j = r.get_optional();
+        self.k = r.get_optional();
+        self.l = r.get_optional();
+        self.m = r.get_optional();
+        self.n = r.get_optional();
     }
 }
 
