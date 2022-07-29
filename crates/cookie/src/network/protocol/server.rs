@@ -26,6 +26,7 @@ pub async fn get_http_server_list() -> HttpServerListRes {
         c: 1,
         is_wifi_conn: 100,
         app_id: APP_ID as JLong,
+        l: Some(1),
         ..Default::default()
     });
 

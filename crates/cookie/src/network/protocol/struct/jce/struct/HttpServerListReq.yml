@@ -2,7 +2,7 @@ apiVersion: generator/v1
 kind: Jce
 metadata:
   name: HttpServerListReq
-  upstreamVersion: 8555
+  upstreamVersion: 8685
   source: com.tencent.msf.service.protocol.serverconfig.d
   description: HTTP 服务器列表请求结构体
 spec:
@@ -22,3 +22,24 @@ spec:
       type: JLong
     - name: imei
       type: JString
+    - name: h
+      type: JLong
+      option: true
+    - name: i
+      type: JLong
+      option: true
+    - name: j
+      type: JLong
+      option: true
+    - name: k
+      type: JByte
+      option: true
+    - name: l
+      type: JByte
+      option: true
+    - name: m
+      type: JLong
+      option: true
+    - name: n
+      type: JBool
+      option: true
