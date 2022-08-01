@@ -30,6 +30,8 @@ func main() {
 		AppId:   appId,
 	}
 
+	fmt.Println("version: ", nv.Version, ", code: ", nv.Code, ", appid: ", nv.AppId)
+
 	if code <= v.Code {
 		fmt.Println("== 版本已同步，无需更新 ==")
 		return
