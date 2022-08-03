@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/crates/cookie/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/cookie/src/cipher/qtea/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/crates/cookie/src/network/protocol/frame/jce/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/crates/macaron/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/crates/cookie/src/network/protocol/frame/jce/target" />
     </content>

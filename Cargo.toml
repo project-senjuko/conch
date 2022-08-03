@@ -14,6 +14,8 @@ members = [
     "crates/cookie",
     "crates/cookie/src/cipher/qtea",
     "crates/cookie/src/network/protocol/frame/jce",
+
+    "crates/macaron"
 ]
 
 [dependencies]

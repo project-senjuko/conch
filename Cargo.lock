@@ -56,6 +56,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "conch-macaron"
+version = "0.1.0"
+
+[[package]]
 name = "cookie-jce"
 version = "0.1.0"
 dependencies = [
