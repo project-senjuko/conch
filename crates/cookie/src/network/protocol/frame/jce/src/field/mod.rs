@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use std::collections::HashMap;
+use std::fmt;
 
 use bytes::{Bytes, BytesMut};
 
@@ -70,15 +71,31 @@ pub trait JceType<T> {
     /// 将支持的类型格式化为字节流
     fn to_bytes(&self, b: &mut BytesMut, tag: u8);
     /// 从字节流中解读支持的类型
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> T;
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<T, JceFieldErr>;
 }
 
 pub trait JceStruct {
     /// 将支持的结构体格式化为字节流
     fn s_to_bytes(&self, b: &mut BytesMut);
     /// 从字节流中解读支持的结构体
-    fn s_from_bytes(&mut self, b: &mut Bytes);
+    fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr>;
 }
 
+/// Jce 字段错误，大部分在预期类型与实际不符时生成，
+/// 但也可以在期望标签与实际不符 或 无法正常识别 Jce 字段时 生成。
+/// 若预期类型与实际相同则是标签不符；
+/// 若期望类型是 255，则实际类型是错误代码。
+/// 100：无效的 Jce 类型
+/// 101：无效的标签值
+/// 200：缺少必须的字段
+#[derive(Debug)]
+pub struct JceFieldErr {
+    pub expectation: u8,
+    pub result: u8,
+}
 
-const TYPE_ERR: &str = "Jce 类型不符";
+impl fmt::Display for JceFieldErr {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "Jce 字段预期与实际不符 预期类型: {} 实际: {}", self.expectation, self.result)
+    }
+}

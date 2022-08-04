@@ -13,7 +13,7 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 use qtea::QTeaCipher;
 
 use crate::{JceReader, JceWriter};
-use crate::field::{JByte, JceStruct, JceType, JInt, JMap, JShort, JSList, JString};
+use crate::field::{JByte, JceFieldErr, JceStruct, JceType, JInt, JMap, JShort, JSList, JString};
 
 #[derive(Default)]
 pub struct JcePacketV3 {
@@ -66,21 +66,22 @@ impl JcePacketV3 {
 }
 
 impl JcePacketV3 {
-    pub fn from(b: &mut Bytes, key: [u32; 4]) -> JcePacketV3 {
+    pub fn from(b: &mut Bytes, key: [u32; 4]) -> Result<JcePacketV3, JceFieldErr> {
         let mut db = QTeaCipher::new(key).decrypt(b);
         db.get_i32(); // length
 
         let mut s = JcePacket::default();
-        s.s_from_bytes(&mut Bytes::from(db));
-        if s.buffer.get_u8() != 8 { // Map { tag = 0 }
-            //TODO 优雅地panic
-            panic!("不是 Map 类型");
+        s.s_from_bytes(&mut Bytes::from(db))?;
+
+        let i = s.buffer.get_u8();
+        if i != 8 { // type == map && tag == 0
+            return Err(JceFieldErr { expectation: 8, result: i });
         }
 
-        JcePacketV3 { data: JMap::from_bytes(&mut s.buffer, 0), p: s }
+        Ok(JcePacketV3 { data: JMap::from_bytes(&mut s.buffer, 0)?, p: s })
     }
 
-    pub fn get<T: JceType<T>>(&mut self, n: &str) -> T {
+    pub fn get<T: JceType<T>>(&mut self, n: &str) -> Result<T, JceFieldErr> {
         T::from_bytes(
             &mut self.data.get(n).expect("不存在的 Key") //TODO log打印
                 .slice(1..), // 固定字节 10: StructBegin Head
@@ -89,7 +90,6 @@ impl JcePacketV3 {
     }
 }
 
-/// 版本 | 8555
 /// 源 | com.qq.taf.RequestPacket
 #[derive(Default, Debug)]
 pub struct JcePacket {
@@ -121,17 +121,18 @@ impl JceStruct for JcePacket {
         w.flash(b);
     }
 
-    fn s_from_bytes(&mut self, b: &mut Bytes) {
+    fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
-        self.version = r.get();
-        self.packet_type = r.get();
-        self.message_type = r.get();
-        self.request_id = r.get();
-        self.servant_name = r.get();
-        self.func_name = r.get();
-        self.buffer = r.get();
-        self.timeout = r.get();
-        self.context = r.get();
-        self.status = r.get();
+        self.version = r.get()?;
+        self.packet_type = r.get()?;
+        self.message_type = r.get()?;
+        self.request_id = r.get()?;
+        self.servant_name = r.get()?;
+        self.func_name = r.get()?;
+        self.buffer = r.get()?;
+        self.timeout = r.get()?;
+        self.context = r.get()?;
+        self.status = r.get()?;
+        Ok(())
     }
 }

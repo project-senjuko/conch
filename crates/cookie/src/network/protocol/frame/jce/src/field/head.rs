@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, DOUBLE, FLOAT, INT, JceType, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
+use super::{BYTE, DOUBLE, FLOAT, INT, JceFieldErr, JceType, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END};
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub struct HeadData {
@@ -39,15 +39,15 @@ impl HeadData {
 }
 
 impl HeadData {
-    pub fn parse_ttl4(b: &mut Bytes) -> usize {
+    pub fn parse_ttl4(b: &mut Bytes) -> Result<usize, JceFieldErr> {
         let head = HeadData::parse(b);
-        if head.tag != 0 { panic!("{}", TYPE_ERR) }
-        JInt::from_bytes(b, head.r#type) as usize
+        if head.tag != 0 { return Err(JceFieldErr { expectation: 255, result: 101 }); }
+        Ok(JInt::from_bytes(b, head.r#type)? as usize)
     }
 
-    pub fn skip_value(&self, b: &mut Bytes) {
+    pub fn skip_value(&self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         if self.r#type > 13 {
-            panic!("{}", TYPE_ERR);
+            return Err(JceFieldErr { expectation: 255, result: 100 });
         }
 
         let len = match self.r#type {
@@ -60,20 +60,20 @@ impl HeadData {
             STRING1 => b.get_u8() as usize,
             STRING4 => b.get_i32() as usize,
             MAP => {
-                let len = HeadData::parse_ttl4(b);
+                let len = HeadData::parse_ttl4(b)?;
                 let mut i = 0;
                 while i < len {
-                    HeadData::parse(b).skip_value(b); // K
-                    HeadData::parse(b).skip_value(b); // V
+                    HeadData::parse(b).skip_value(b)?; // K
+                    HeadData::parse(b).skip_value(b)?; // V
                     i += 1;
                 }
                 0
             }
             LIST => {
-                let len = HeadData::parse_ttl4(b);
+                let len = HeadData::parse_ttl4(b)?;
                 let mut i = 0;
                 while i < len {
-                    HeadData::parse(b).skip_value(b);
+                    HeadData::parse(b).skip_value(b)?;
                     i += 1;
                 }
                 0
@@ -81,15 +81,16 @@ impl HeadData {
             STRUCT_BEGIN => {
                 let mut h = HeadData::parse(b);
                 while h.r#type != STRUCT_END {
-                    h.skip_value(b);
+                    h.skip_value(b)?;
                     h = HeadData::parse(b);
                 }
                 0
             }
-            SIMPLE_LIST => 1 + HeadData::parse_ttl4(b), // 1: 0 type 0 tag head
+            SIMPLE_LIST => 1 + HeadData::parse_ttl4(b)?, // 1: 0 type 0 tag head
             _ => 0, // STRUCT_END + ZERO_TAG
         };
         b.advance(len);
+        Ok(())
     }
 }
 

@@ -10,7 +10,7 @@
 
 use bytes::{Bytes, BytesMut};
 
-use super::{HeadData, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END, TYPE_ERR};
+use super::{HeadData, JceFieldErr, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END};
 
 impl<T: JceStruct + Default> JceType<T> for T {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -19,14 +19,16 @@ impl<T: JceStruct + Default> JceType<T> for T {
         HeadData::new(STRUCT_END, 0).format(b, 0);
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> T {
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<T, JceFieldErr> {
         let mut t = T::default();
-        t.s_from_bytes(b);
+        t.s_from_bytes(b)?;
         {
             let head = HeadData::parse(b);
-            if head.tag != 0 || head.r#type != STRUCT_END { panic!("{}", TYPE_ERR) }
+            if head.tag != 0 || head.r#type != STRUCT_END {
+                return Err(JceFieldErr { expectation: STRUCT_END, result: head.r#type });
+            }
         }
-        t
+        Ok(t)
     }
 }
 
@@ -34,7 +36,7 @@ impl<T: JceStruct + Default> JceType<T> for T {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::super::{HeadData, JceStruct, JceType, STRING1, STRUCT_BEGIN};
+    use super::super::{HeadData, JceFieldErr, JceStruct, JceType, STRING1, STRUCT_BEGIN};
 
     #[derive(Default, PartialEq, Debug)]
     struct Q {
@@ -44,9 +46,10 @@ mod tests {
     impl JceStruct for Q {
         fn s_to_bytes(&self, b: &mut BytesMut) { self.name.to_bytes(b, 0); }
 
-        fn s_from_bytes(&mut self, b: &mut Bytes) {
+        fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
             let _ = HeadData::parse(b);
-            self.name = String::from_bytes(b, STRING1);
+            self.name = String::from_bytes(b, STRING1)?;
+            Ok(())
         }
     }
 
@@ -60,7 +63,10 @@ mod tests {
     #[test]
     fn from_bytes() {
         assert_eq!(
-            Q::from_bytes(&mut Bytes::from(vec![6, 3, 229, 141, 131, 11]), STRUCT_BEGIN),
+            Q::from_bytes(
+                &mut Bytes::from(vec![6, 3, 229, 141, 131, 11]),
+                STRUCT_BEGIN,
+            ).unwrap(),
             Q { name: String::from("千") },
         );
     }

@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, JceType, JSList, SIMPLE_LIST, TYPE_ERR};
+use super::{BYTE, HeadData, JceFieldErr, JceType, JSList, SIMPLE_LIST};
 
 impl JceType<JSList> for JSList {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -20,15 +20,17 @@ impl JceType<JSList> for JSList {
         b.put(self.slice(..));
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> JSList {
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<JSList, JceFieldErr> {
         {
             let head = HeadData::parse(b);
-            if head.tag != 0 || head.r#type != 0 { panic!("{}", TYPE_ERR) }
+            if head.tag != 0 || head.r#type != 0 {
+                return Err(JceFieldErr { expectation: 0, result: head.r#type });
+            }
         }
-        let len = HeadData::parse_ttl4(b);
+        let len = HeadData::parse_ttl4(b)?;
         let a = b.slice(..len);
         b.advance(len);
-        a
+        Ok(a)
     }
 }
 
@@ -48,7 +50,10 @@ mod tests {
     #[test]
     fn from_bytes() {
         assert_eq!(
-            JSList::from_bytes(&mut Bytes::from(vec![0, 0, 6, 1, 1, 4, 5, 1, 4]), SIMPLE_LIST),
+            JSList::from_bytes(
+                &mut Bytes::from(vec![0, 0, 6, 1, 1, 4, 5, 1, 4]),
+                SIMPLE_LIST,
+            ).unwrap(),
             Bytes::from(vec![1, 1, 4, 5, 1, 4]),
         );
     }

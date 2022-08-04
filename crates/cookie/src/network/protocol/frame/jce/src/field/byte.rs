@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, JByte, JceType, TYPE_ERR, ZERO_TAG};
+use super::{BYTE, HeadData, JByte, JceFieldErr, JceType, ZERO_TAG};
 
 impl JceType<JByte> for JByte {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -19,11 +19,11 @@ impl JceType<JByte> for JByte {
         b.put_i8(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> JByte {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JByte, JceFieldErr> {
         match r#type {
-            BYTE => b.get_i8(),
-            ZERO_TAG => 0,
-            _ => panic!("{}", TYPE_ERR),
+            BYTE => Ok(b.get_i8()),
+            ZERO_TAG => Ok(0),
+            _ => Err(JceFieldErr { expectation: BYTE, result: r#type }),
         }
     }
 }
@@ -43,7 +43,10 @@ mod tests {
 
     #[test]
     fn from_bytes() {
-        assert_eq!(JByte::from_bytes(&mut Bytes::from(vec![114]), BYTE), 114_i8);
+        assert_eq!(
+            JByte::from_bytes(&mut Bytes::from(vec![114]), BYTE).unwrap(),
+            114_i8,
+        );
     }
 
     #[test]
@@ -55,6 +58,9 @@ mod tests {
 
     #[test]
     fn from_bytes_zero() {
-        assert_eq!(JByte::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG), 0_i8);
+        assert_eq!(
+            JByte::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG).unwrap(),
+            0_i8,
+        );
     }
 }
