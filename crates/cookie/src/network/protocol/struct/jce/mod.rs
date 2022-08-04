@@ -4,7 +4,7 @@
 use bytes::{Bytes, BytesMut};
 
 use jce::{JceReader, JceWriter};
-use jce::field::{JBool, JByte, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};
+use jce::field::{JBool, JByte, JceFieldErr, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -67,22 +67,23 @@ impl JceStruct for HttpServerListReq {
         w.flash(b);
     }
 
-    fn s_from_bytes(&mut self, b: &mut Bytes) {
+    fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
-        self.uin = r.get();
-        self.timeout = r.get();
-        self.c = r.get();
-        self.imsi = r.get();
-        self.is_wifi_conn = r.get();
-        self.app_id = r.get();
-        self.imei = r.get();
-        self.h = r.get_optional();
-        self.i = r.get_optional();
-        self.j = r.get_optional();
-        self.k = r.get_optional();
-        self.l = r.get_optional();
-        self.m = r.get_optional();
-        self.n = r.get_optional();
+        self.uin = r.get()?;
+        self.timeout = r.get()?;
+        self.c = r.get()?;
+        self.imsi = r.get()?;
+        self.is_wifi_conn = r.get()?;
+        self.app_id = r.get()?;
+        self.imei = r.get()?;
+        self.h = r.get_optional()?;
+        self.i = r.get_optional()?;
+        self.j = r.get_optional()?;
+        self.k = r.get_optional()?;
+        self.l = r.get_optional()?;
+        self.m = r.get_optional()?;
+        self.n = r.get_optional()?;
+        Ok(())
     }
 }
 
@@ -188,29 +189,30 @@ impl JceStruct for HttpServerListRes {
         w.flash(b);
     }
 
-    fn s_from_bytes(&mut self, b: &mut Bytes) {
+    fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
-        self.a = r.get();
-        self.socket_mobile_ipv4 = r.get();
-        self.socket_wifi_ipv4 = r.get();
-        self.d = r.get();
-        self.e = r.get();
-        self.f = r.get_optional();
-        self.g = r.get_optional();
-        self.h = r.get_optional();
-        self.i = r.get_optional();
-        self.j = r.get_optional();
-        self.k = r.get_optional();
-        self.http_mobile_ipv4 = r.get_optional();
-        self.http_wifi_ipv4 = r.get_optional();
-        self.speedtest_info = r.get_optional();
-        self.socket_ipv6 = r.get_optional();
-        self.http_ipv6 = r.get_optional();
-        self.quic_ipv6 = r.get_optional();
-        self.net_type = r.get_optional();
-        self.he_threshold = r.get_optional();
-        self.policy_id = r.get_optional();
-        self.u = r.get_optional();
+        self.a = r.get()?;
+        self.socket_mobile_ipv4 = r.get()?;
+        self.socket_wifi_ipv4 = r.get()?;
+        self.d = r.get()?;
+        self.e = r.get()?;
+        self.f = r.get_optional()?;
+        self.g = r.get_optional()?;
+        self.h = r.get_optional()?;
+        self.i = r.get_optional()?;
+        self.j = r.get_optional()?;
+        self.k = r.get_optional()?;
+        self.http_mobile_ipv4 = r.get_optional()?;
+        self.http_wifi_ipv4 = r.get_optional()?;
+        self.speedtest_info = r.get_optional()?;
+        self.socket_ipv6 = r.get_optional()?;
+        self.http_ipv6 = r.get_optional()?;
+        self.quic_ipv6 = r.get_optional()?;
+        self.net_type = r.get_optional()?;
+        self.he_threshold = r.get_optional()?;
+        self.policy_id = r.get_optional()?;
+        self.u = r.get_optional()?;
+        Ok(())
     }
 }
 
@@ -246,17 +248,18 @@ impl JceStruct for HttpServerListResServer {
         w.flash(b);
     }
 
-    fn s_from_bytes(&mut self, b: &mut Bytes) {
+    fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
-        self.ip = r.get();
-        self.port = r.get();
-        self.c = r.get();
-        self.d = r.get();
-        self.e = r.get();
-        self.f = r.get();
-        self.g = r.get();
-        self.location = r.get();
-        self.i = r.get();
-        self.j = r.get();
+        self.ip = r.get()?;
+        self.port = r.get()?;
+        self.c = r.get()?;
+        self.d = r.get()?;
+        self.e = r.get()?;
+        self.f = r.get()?;
+        self.g = r.get()?;
+        self.location = r.get()?;
+        self.i = r.get()?;
+        self.j = r.get()?;
+        Ok(())
     }
 }
