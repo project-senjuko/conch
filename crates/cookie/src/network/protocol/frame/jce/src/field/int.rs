@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, INT, JceType, JInt, SHORT, TYPE_ERR, ZERO_TAG};
+use super::{BYTE, HeadData, INT, JceFieldErr, JceType, JInt, SHORT, ZERO_TAG};
 
 impl JceType<JInt> for JInt {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -19,13 +19,13 @@ impl JceType<JInt> for JInt {
         b.put_i32(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> JInt {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JInt, JceFieldErr> {
         match r#type {
-            BYTE => b.get_i8() as i32,
-            SHORT => b.get_i16() as i32,
-            INT => b.get_i32(),
-            ZERO_TAG => 0,
-            _ => panic!("{}", TYPE_ERR),
+            BYTE => Ok(b.get_i8() as i32),
+            SHORT => Ok(b.get_i16() as i32),
+            INT => Ok(b.get_i32()),
+            ZERO_TAG => Ok(0),
+            _ => Err(JceFieldErr { expectation: INT, result: r#type }),
         }
     }
 }
@@ -46,7 +46,7 @@ mod tests {
     #[test]
     fn from_bytes() {
         assert_eq!(
-            JInt::from_bytes(&mut Bytes::from(vec![0, 1, 191, 82]), INT),
+            JInt::from_bytes(&mut Bytes::from(vec![0, 1, 191, 82]), INT).unwrap(),
             114514_i32,
         );
     }
@@ -60,6 +60,9 @@ mod tests {
 
     #[test]
     fn from_bytes_short() {
-        assert_eq!(JInt::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT), 1919_i32);
+        assert_eq!(
+            JInt::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT).unwrap(),
+            1919_i32,
+        );
     }
 }

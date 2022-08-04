@@ -10,7 +10,7 @@
 
 use bytes::Bytes;
 
-use jce::field::JLong;
+use jce::field::{JceFieldErr, JLong};
 use jce::packet::JcePacketV3;
 
 use crate::config::app_setting::APP_ID;
@@ -19,7 +19,7 @@ use crate::network::protocol::r#struct::jce::{HttpServerListReq, HttpServerListR
 const KEY: [u32; 4] = [4030996319, 4096632207, 3707212954, 3127038993];
 
 /// 获取 HTTP 服务器列表
-pub async fn get_http_server_list() -> HttpServerListRes {
+pub async fn get_http_server_list() -> Result<HttpServerListRes, JceFieldErr> {
     let mut p = JcePacketV3::new(0, "HttpServerListReq", "HttpServerListReq");
     p.put("HttpServerListReq", HttpServerListReq {
         timeout: 60,
@@ -43,16 +43,19 @@ pub async fn get_http_server_list() -> HttpServerListRes {
             .await
             .expect("读取服务器列表失败"), //TODO
         KEY,
-    );
+    )?;
     p.get("HttpServerListRes")
 }
 
 #[cfg(test)]
 mod tests {
+    use jce::field::JceFieldErr;
+
     use super::get_http_server_list;
 
     #[tokio::test]
-    async fn to_bytes() {
-        get_http_server_list().await;
+    async fn to_bytes() -> Result<(), JceFieldErr> {
+        get_http_server_list().await?;
+        Ok(())
     }
 }

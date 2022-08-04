@@ -10,7 +10,7 @@
 
 use bytes::{Buf, Bytes, BytesMut};
 
-use super::{HeadData, JceType, JList, LIST};
+use super::{HeadData, JceFieldErr, JceType, JList, LIST};
 
 impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -19,18 +19,18 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
         for v in self.iter() { v.to_bytes(b, 0) }
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> JList<T> {
-        let len = HeadData::parse_ttl4(b);
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<JList<T>, JceFieldErr> {
+        let len = HeadData::parse_ttl4(b)?;
         let mut vec: Vec<T> = Vec::with_capacity(b.remaining());
         {
             let mut i = 0;
             while i < len {
                 let vh = HeadData::parse(b);
-                vec.push(T::from_bytes(b, vh.r#type));
+                vec.push(T::from_bytes(b, vh.r#type)?);
                 i += 1;
             }
         };
-        vec
+        Ok(vec)
     }
 }
 
@@ -51,7 +51,10 @@ mod tests {
     #[test]
     fn from_bytes() {
         assert_eq!(
-            JList::from_bytes(&mut Bytes::from(vec![0, 2, 6, 6, 229, 141, 131, 230, 169, 152, 6, 6, 233, 155, 171, 233, 156, 158]), LIST) as JList<JString>,
+            JList::from_bytes(
+                &mut Bytes::from(vec![0, 2, 6, 6, 229, 141, 131, 230, 169, 152, 6, 6, 233, 155, 171, 233, 156, 158]),
+                LIST,
+            ).unwrap() as JList<JString>,
             vec![String::from("千橘"), String::from("雫霞")],
         );
     }

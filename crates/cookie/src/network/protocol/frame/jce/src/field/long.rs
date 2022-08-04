@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, INT, JceType, JLong, LONG, SHORT, TYPE_ERR, ZERO_TAG};
+use super::{BYTE, HeadData, INT, JceFieldErr, JceType, JLong, LONG, SHORT, ZERO_TAG};
 
 impl JceType<JLong> for JLong {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -19,14 +19,14 @@ impl JceType<JLong> for JLong {
         b.put_i64(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> JLong {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JLong, JceFieldErr> {
         match r#type {
-            BYTE => b.get_i8() as i64,
-            SHORT => b.get_i16() as i64,
-            INT => b.get_i32() as i64,
-            LONG => b.get_i64(),
-            ZERO_TAG => 0,
-            _ => panic!("{}", TYPE_ERR),
+            BYTE => Ok(b.get_i8() as i64),
+            SHORT => Ok(b.get_i16() as i64),
+            INT => Ok(b.get_i32() as i64),
+            LONG => Ok(b.get_i64()),
+            ZERO_TAG => Ok(0),
+            _ => Err(JceFieldErr { expectation: LONG, result: r#type }),
         }
     }
 }
@@ -47,7 +47,10 @@ mod tests {
     #[test]
     fn from_bytes() {
         assert_eq!(
-            JLong::from_bytes(&mut Bytes::from(vec![0, 0, 1, 10, 159, 199, 0, 66]), LONG),
+            JLong::from_bytes(
+                &mut Bytes::from(vec![0, 0, 1, 10, 159, 199, 0, 66]),
+                LONG,
+            ).unwrap(),
             1145141919810_i64,
         );
     }
@@ -62,7 +65,7 @@ mod tests {
     #[test]
     fn from_bytes_int() {
         assert_eq!(
-            JLong::from_bytes(&mut Bytes::from(vec![0, 1, 191, 82]), INT),
+            JLong::from_bytes(&mut Bytes::from(vec![0, 1, 191, 82]), INT).unwrap(),
             114514_i64,
         );
     }

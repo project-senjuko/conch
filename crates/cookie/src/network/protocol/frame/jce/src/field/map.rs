@@ -13,7 +13,7 @@ use std::hash::Hash;
 
 use bytes::{Buf, Bytes, BytesMut};
 
-use super::{HeadData, JceType, JMap, MAP};
+use super::{HeadData, JceFieldErr, JceType, JMap, MAP};
 
 impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -25,8 +25,8 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
         }
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> JMap<T, U> {
-        let len = HeadData::parse_ttl4(b);
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<JMap<T, U>, JceFieldErr> {
+        let len = HeadData::parse_ttl4(b)?;
         let mut map: HashMap<T, U> = HashMap::with_capacity(b.remaining());
         {
             let mut i = 0;
@@ -35,11 +35,11 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
                 let k = T::from_bytes(b, kh.r#type);
                 let vh = HeadData::parse(b);
                 let v = U::from_bytes(b, vh.r#type);
-                map.insert(k, v);
+                map.insert(k?, v?);
                 i += 1;
             }
         }
-        map
+        Ok(map)
     }
 }
 
@@ -64,6 +64,9 @@ mod tests {
         let mut h: JMap<i8, String> = JMap::new();
         h.insert(0, String::from("せんこさん"));
         h.insert(1, String::from("大好き"));
-        assert_eq!(h, JMap::from_bytes(&mut Bytes::from(vec![0, 2, 12, 22, 15, 227, 129, 155, 227, 130, 147, 227, 129, 147, 227, 129, 149, 227, 130, 147, 0, 1, 22, 9, 229, 164, 167, 229, 165, 189, 227, 129, 141]), MAP) as JMap<JByte, JString>);
+        assert_eq!(h, JMap::from_bytes(
+            &mut Bytes::from(vec![0, 2, 12, 22, 15, 227, 129, 155, 227, 130, 147, 227, 129, 147, 227, 129, 149, 227, 130, 147, 0, 1, 22, 9, 229, 164, 167, 229, 165, 189, 227, 129, 141]),
+            MAP,
+        ).unwrap() as JMap<JByte, JString>);
     }
 }

@@ -10,7 +10,7 @@
 
 use bytes::{Buf, Bytes, BytesMut};
 
-use super::{BOOL, JBool, JceType, TYPE_ERR, ZERO_TAG};
+use super::{BOOL, JBool, JceFieldErr, JceType, ZERO_TAG};
 
 impl JceType<JBool> for JBool {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -18,14 +18,14 @@ impl JceType<JBool> for JBool {
         0i8.to_bytes(b, tag);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> JBool {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JBool, JceFieldErr> {
         match r#type {
             BOOL => {
                 b.advance(1);
-                true
+                Ok(true)
             }
-            ZERO_TAG => false,
-            _ => panic!("{}", TYPE_ERR)
+            ZERO_TAG => Ok(false),
+            _ => Err(JceFieldErr { expectation: BOOL, result: r#type })
         }
     }
 }
@@ -46,6 +46,9 @@ mod tests {
     #[test]
     #[allow(clippy::bool_assert_comparison)] // 适用该检查将导致语义含糊，故禁用
     fn from_bytes() {
-        assert_eq!(JBool::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG), false);
+        assert_eq!(
+            JBool::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG).unwrap(),
+            false,
+        );
     }
 }

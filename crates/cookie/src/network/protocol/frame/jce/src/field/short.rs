@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, JceType, JShort, SHORT, TYPE_ERR, ZERO_TAG};
+use super::{BYTE, HeadData, JceFieldErr, JceType, JShort, SHORT, ZERO_TAG};
 
 impl JceType<JShort> for JShort {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -19,12 +19,12 @@ impl JceType<JShort> for JShort {
         b.put_i16(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> JShort {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JShort, JceFieldErr> {
         match r#type {
-            BYTE => b.get_i8() as i16,
-            SHORT => b.get_i16(),
-            ZERO_TAG => 0,
-            _ => panic!("{}", TYPE_ERR),
+            BYTE => Ok(b.get_i8() as i16),
+            SHORT => Ok(b.get_i16()),
+            ZERO_TAG => Ok(0),
+            _ => Err(JceFieldErr { expectation: SHORT, result: r#type }),
         }
     }
 }
@@ -44,7 +44,10 @@ mod tests {
 
     #[test]
     fn from_bytes() {
-        assert_eq!(JShort::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT), 1919_i16);
+        assert_eq!(
+            JShort::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT).unwrap(),
+            1919_i16,
+        );
     }
 
     #[test]
@@ -56,6 +59,10 @@ mod tests {
 
     #[test]
     fn from_bytes_byte() {
-        assert_eq!(JShort::from_bytes(&mut Bytes::from(vec![114]), BYTE), 114_i16);
+        assert_eq!(
+            JShort::from_bytes(
+                &mut Bytes::from(vec![114]),
+                BYTE,
+            ).unwrap(), 114_i16);
     }
 }

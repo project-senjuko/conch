@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{FLOAT, HeadData, JceType, JFloat};
+use super::{FLOAT, HeadData, JceFieldErr, JceType, JFloat};
 
 impl JceType<JFloat> for JFloat {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
@@ -18,7 +18,7 @@ impl JceType<JFloat> for JFloat {
         b.put_f32(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> JFloat { b.get_f32() }
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<JFloat, JceFieldErr> { Ok(b.get_f32()) }
 }
 
 #[cfg(test)]
@@ -37,7 +37,7 @@ mod tests {
     #[test]
     fn from_bytes() {
         assert_eq!(
-            JFloat::from_bytes(&mut Bytes::from(vec![65, 54, 102, 102]), FLOAT),
+            JFloat::from_bytes(&mut Bytes::from(vec![65, 54, 102, 102]), FLOAT).unwrap(),
             11.4_f32,
         );
     }
