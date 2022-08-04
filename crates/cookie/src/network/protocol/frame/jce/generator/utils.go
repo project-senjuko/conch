@@ -90,7 +90,7 @@ func ReadJceSpec(fp string) *JceSpec {
 	if err := yaml.NewDecoder(f).Decode(&a); err != nil {
 		panic("解析" + d + "文件失败：" + err.Error())
 	}
-	f.Close()
-	
+	defer f.Close()
+
 	return &a
 }
