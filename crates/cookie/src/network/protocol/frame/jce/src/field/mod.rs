@@ -87,7 +87,9 @@ pub trait JceStruct {
 /// 若期望类型是 255，则实际类型是错误代码。
 /// 100：无效的 Jce 类型
 /// 101：无效的标签值
+/// 102：无效的 utf-8 字符串
 /// 200：缺少必须的字段
+/// 201：指定的 Key 不存在
 #[derive(Debug)]
 pub struct JceFieldErr {
     pub expectation: u8,

@@ -31,9 +31,13 @@ impl JceType<JString> for JString {
             STRING4 => Ok(b.get_i32() as usize),
             _ => Err(JceFieldErr { expectation: STRING1, result: r#type }),
         }?;
-        let a = String::from_utf8(b.slice(..len).to_vec());
+        let r = String::from_utf8(b.slice(..len).to_vec());
         b.advance(len);
-        Ok(a.unwrap_or_default()) // 默认情况下以 utf-8 通讯
+
+        match r { // 默认情况下以 utf-8 通讯
+            Ok(r) => Ok(r),
+            Err(_) => Err(JceFieldErr { expectation: 255, result: 102 }) //TODO 日志追踪
+        }
     }
 }
 
