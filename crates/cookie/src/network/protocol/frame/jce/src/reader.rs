@@ -20,8 +20,10 @@ pub struct JceReader<'a> {
 }
 
 impl<'a> JceReader<'a> {
+    #[inline(always)]
     pub fn new(b: &'a mut Bytes) -> JceReader<'a> { JceReader { b, tag: 0, cache: FxHashMap::default() } }
 
+    #[inline(always)]
     pub fn with_tag(b: &'a mut Bytes, tag: u8) -> JceReader<'a> { JceReader { b, tag, cache: FxHashMap::default() } }
 }
 

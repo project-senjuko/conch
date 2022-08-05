@@ -18,17 +18,21 @@ pub struct JceWriter {
 }
 
 impl JceWriter {
+    #[inline(always)]
     pub fn new(tag: u8) -> JceWriter { JceWriter { b: BytesMut::new(), tag } }
 }
 
 impl JceWriter {
+    #[inline(always)]
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
+    #[inline(always)]
     pub fn put<T: JceType<T>>(&mut self, t: &T) {
         t.to_bytes(&mut self.b, self.tag);
         self.set_tag(self.tag + 1);
     }
 
+    #[inline(always)]
     pub fn flash(self, b: &mut BytesMut) { b.put(self.b); }
 }
 
