@@ -19,6 +19,7 @@ pub struct HeadData {
 }
 
 impl HeadData {
+    #[inline(always)]
     pub fn new(r#type: u8, tag: u8) -> HeadData { HeadData { r#type, tag } }
 
     pub fn parse(b: &mut Bytes) -> HeadData {
