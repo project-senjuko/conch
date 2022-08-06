@@ -84,7 +84,6 @@ impl JcePacketV3 {
 
     #[inline(always)]
     pub fn get<T: JceType<T>>(&mut self, n: &str) -> Result<T, JceFieldErr> {
-        //TODO log打印
         match self.data.get(n) {
             None => Err(JceFieldErr { expectation: 255, result: 201 }),
             Some(s) => T::from_bytes(&mut s.slice(1..), 0) // 固定字节 10: StructBegin Head

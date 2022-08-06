@@ -36,7 +36,7 @@ impl JceType<JString> for JString {
 
         match r { // 默认情况下以 utf-8 通讯
             Ok(r) => Ok(r),
-            Err(_) => Err(JceFieldErr { expectation: 255, result: 102 }) //TODO 日志追踪
+            Err(_) => Err(JceFieldErr { expectation: 255, result: 102 })
         }
     }
 }
