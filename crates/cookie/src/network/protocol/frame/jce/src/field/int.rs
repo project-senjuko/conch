@@ -34,7 +34,8 @@ impl JceType<JInt> for JInt {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{INT, JceType, JInt, SHORT};
+    use super::{INT, JceType, JInt, SHORT, ZERO_TAG};
+    use super::super::LONG;
 
     #[test]
     fn to_bytes() {
@@ -64,5 +65,19 @@ mod tests {
             JInt::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT).unwrap(),
             1919_i32,
         );
+    }
+
+    #[test]
+    fn from_bytes_zero() {
+        assert_eq!(
+            JInt::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG).unwrap(),
+            0_i32,
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn from_bytes_err() {
+        JInt::from_bytes(&mut Bytes::from(vec![]), LONG).unwrap();
     }
 }

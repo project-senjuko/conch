@@ -33,6 +33,7 @@ mod tests {
     use bytes::{Bytes, BytesMut};
 
     use super::{BYTE, JByte, JceType, ZERO_TAG};
+    use super::super::SHORT;
 
     #[test]
     fn to_bytes() {
@@ -62,5 +63,11 @@ mod tests {
             JByte::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG).unwrap(),
             0_i8,
         );
+    }
+
+    #[test]
+    #[should_panic]
+    fn from_bytes_err() {
+        JByte::from_bytes(&mut Bytes::from(vec![]), SHORT).unwrap();
     }
 }
