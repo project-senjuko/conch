@@ -81,15 +81,6 @@ pub trait JceStruct {
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr>;
 }
 
-/// Jce 字段错误，大部分在预期类型与实际不符时生成，
-/// 但也可以在期望标签与实际不符 或 无法正常识别 Jce 字段时 生成。
-/// 若预期类型与实际相同则是标签不符；
-/// 若期望类型是 255，则实际类型是错误代码。
-/// 100：无效的 Jce 类型
-/// 101：无效的标签值
-/// 102：无效的 utf-8 字符串
-/// 200：缺少必须的字段
-/// 201：指定的 Key 不存在
 #[derive(Debug)]
 pub struct JceFieldErr {
     pub expectation: u8,
@@ -98,6 +89,19 @@ pub struct JceFieldErr {
 
 impl fmt::Display for JceFieldErr {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "Jce 字段预期与实际不符 预期类型: {} 实际: {}", self.expectation, self.result)
+        if self.expectation == 255 {
+            match self.result {
+                100 => write!(f, "无效的 Jce 类型"),
+                101 => write!(f, "无效的 Jce 标签值"),
+                102 => write!(f, "无效的 Jce utf-8 字符串"),
+                200 => write!(f, "缺少必须的 Jce 字段"),
+                201 => write!(f, "指定的 JcePacket Key 不存在"),
+                _ => write!(f, "无效的 Jce 错误码")
+            }
+        } else if self.expectation == self.result {
+            write!(f, "Jce 字段预期标签与实际不符")
+        } else {
+            write!(f, "Jce 字段预期类型与实际不符 预期: {} 实际: {}", self.expectation, self.result)
+        }
     }
 }
