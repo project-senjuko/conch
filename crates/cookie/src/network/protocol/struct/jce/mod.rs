@@ -222,14 +222,14 @@ impl JceStruct for HttpServerListRes {
 pub struct HttpServerListResServer {
     pub ip: JString,
     pub port: JInt,
-    pub c: JLong,
-    pub d: JLong,
-    pub e: JLong,
-    pub f: JLong,
-    pub g: JLong,
-    pub location: JString,
-    pub i: JString,
-    pub j: JLong,
+    pub c: JByte,
+    pub d: JByte,
+    pub e: Option<JByte>,
+    pub f: Option<JInt>,
+    pub g: Option<JByte>,
+    pub region: Option<JString>,
+    pub oper: Option<JString>,
+    pub ability: Option<JLong>,
 }
 
 impl JceStruct for HttpServerListResServer {
@@ -239,12 +239,30 @@ impl JceStruct for HttpServerListResServer {
         w.put(&self.port);
         w.put(&self.c);
         w.put(&self.d);
-        w.put(&self.e);
-        w.put(&self.f);
-        w.put(&self.g);
-        w.put(&self.location);
-        w.put(&self.i);
-        w.put(&self.j);
+        match &self.e {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.f {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.g {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.region {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.oper {
+            Some(v) => w.put(v),
+            None => {}
+        }
+        match &self.ability {
+            Some(v) => w.put(v),
+            None => {}
+        }
         w.flash(b);
     }
 
@@ -254,12 +272,12 @@ impl JceStruct for HttpServerListResServer {
         self.port = r.get()?;
         self.c = r.get()?;
         self.d = r.get()?;
-        self.e = r.get()?;
-        self.f = r.get()?;
-        self.g = r.get()?;
-        self.location = r.get()?;
-        self.i = r.get()?;
-        self.j = r.get()?;
+        self.e = r.get_optional()?;
+        self.f = r.get_optional()?;
+        self.g = r.get_optional()?;
+        self.region = r.get_optional()?;
+        self.oper = r.get_optional()?;
+        self.ability = r.get_optional()?;
         Ok(())
     }
 }
