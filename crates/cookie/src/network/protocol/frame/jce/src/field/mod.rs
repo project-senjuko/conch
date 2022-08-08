@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use std::collections::HashMap;
+use std::error;
 use std::fmt;
 
 use bytes::{Bytes, BytesMut};
@@ -105,3 +106,5 @@ impl fmt::Display for JceFieldErr {
         }
     }
 }
+
+impl error::Error for JceFieldErr {}
