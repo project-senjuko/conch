@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use std::collections::HashMap;
+use std::error;
 use std::fmt;
 
 use bytes::{Bytes, BytesMut};
@@ -101,3 +102,5 @@ impl fmt::Display for JceFieldErr {
         write!(f, "Jce 字段预期与实际不符 预期类型: {} 实际: {}", self.expectation, self.result)
     }
 }
+
+impl error::Error for JceFieldErr {}
