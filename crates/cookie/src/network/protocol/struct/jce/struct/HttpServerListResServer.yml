@@ -2,8 +2,8 @@ apiVersion: generator/v1
 kind: Jce
 metadata:
   name: HttpServerListResServer
-  upstreamVersion: 8685
-  source: docs/HttpServerListResServer.xlsx
+  upstreamVersion: 8730
+  source: com.tencent.msf.service.protocol.serverconfig.i
   description: HTTP 服务器列表响应服务器结构体
 spec:
   startTag: 1
@@ -13,18 +13,24 @@ spec:
     - name: port
       type: JInt
     - name: c
-      type: JLong # For security
+      type: JByte
     - name: d
-      type: JLong
+      type: JByte
     - name: e
-      type: JLong
+      type: JByte
+      option: true
     - name: f
-      type: JLong
+      type: JInt
+      option: true
     - name: g
-      type: JLong
-    - name: location
+      type: JByte
+      option: true
+    - name: region
       type: JString
-    - name: i
+      option: true
+    - name: oper
       type: JString
-    - name: j
+      option: true
+    - name: ability
       type: JLong
+      option: true
