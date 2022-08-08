@@ -34,21 +34,44 @@ impl JceType<JBool> for JBool {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{JBool, JceType, ZERO_TAG};
+    use super::{BOOL, JBool, JceType, ZERO_TAG};
+    use super::super::SHORT;
 
     #[test]
-    fn to_bytes() {
+    fn to_bytes_true() {
         let mut b = BytesMut::new();
         true.to_bytes(&mut b, 0);
         assert_eq!(b.to_vec(), vec![0, 1]);
     }
 
     #[test]
-    #[allow(clippy::bool_assert_comparison)] // 适用该检查将导致语义含糊，故禁用
-    fn from_bytes() {
+    fn to_bytes_false() {
+        let mut b = BytesMut::new();
+        false.to_bytes(&mut b, 0);
+        assert_eq!(b.to_vec(), vec![12]);
+    }
+
+    #[test]
+    #[allow(clippy::bool_assert_comparison)] // 适用该检查将导致语义含糊
+    fn from_bytes_bool() {
+        assert_eq!(
+            JBool::from_bytes(&mut Bytes::from(vec![1]), BOOL).unwrap(),
+            true,
+        );
+    }
+
+    #[test]
+    #[allow(clippy::bool_assert_comparison)]
+    fn from_bytes_zero() {
         assert_eq!(
             JBool::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG).unwrap(),
             false,
         );
+    }
+
+    #[test]
+    #[should_panic]
+    fn from_bytes_err() {
+        JBool::from_bytes(&mut Bytes::from(vec![]), SHORT).unwrap();
     }
 }

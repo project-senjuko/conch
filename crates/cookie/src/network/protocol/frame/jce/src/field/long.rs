@@ -35,7 +35,8 @@ impl JceType<JLong> for JLong {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{INT, JceType, JLong, LONG};
+    use super::{BYTE, INT, JceType, JLong, LONG, SHORT, ZERO_TAG};
+    use super::super::DOUBLE;
 
     #[test]
     fn to_bytes() {
@@ -68,5 +69,35 @@ mod tests {
             JLong::from_bytes(&mut Bytes::from(vec![0, 1, 191, 82]), INT).unwrap(),
             114514_i64,
         );
+    }
+
+    #[test]
+    fn from_bytes_short() {
+        assert_eq!(
+            JLong::from_bytes(&mut Bytes::from(vec![7, 127]), SHORT).unwrap(),
+            1919_i64,
+        );
+    }
+
+    #[test]
+    fn from_bytes_byte() {
+        assert_eq!(
+            JLong::from_bytes(&mut Bytes::from(vec![114]), BYTE).unwrap(),
+            114_i64,
+        );
+    }
+
+    #[test]
+    fn from_bytes_zero() {
+        assert_eq!(
+            JLong::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG).unwrap(),
+            0_i64,
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn from_bytes_err() {
+        JLong::from_bytes(&mut Bytes::from(vec![]), DOUBLE).unwrap();
     }
 }

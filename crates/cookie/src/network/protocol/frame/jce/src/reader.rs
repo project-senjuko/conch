@@ -130,4 +130,16 @@ mod tests {
         assert_eq!(str, "千橘橘");
         Ok(())
     }
+
+    #[test]
+    fn get_err() -> Result<(), JceFieldErr> {
+        let mut b = Bytes::from(
+            vec![38, 9, 229, 141, 131, 230, 169, 152, 230, 169, 152],
+        );
+        let mut r = JceReader::with_tag(&mut b, 1);
+        let num: Result<JByte, JceFieldErr> = r.get();
+
+        assert!(num.is_err());
+        Ok(())
+    }
 }

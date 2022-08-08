@@ -33,7 +33,8 @@ impl JceType<JShort> for JShort {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{BYTE, JceType, JShort, SHORT};
+    use super::{BYTE, JceType, JShort, SHORT, ZERO_TAG};
+    use super::super::INT;
 
     #[test]
     fn to_bytes() {
@@ -60,9 +61,22 @@ mod tests {
     #[test]
     fn from_bytes_byte() {
         assert_eq!(
-            JShort::from_bytes(
-                &mut Bytes::from(vec![114]),
-                BYTE,
-            ).unwrap(), 114_i16);
+            JShort::from_bytes(&mut Bytes::from(vec![114]), BYTE).unwrap(),
+            114_i16,
+        );
+    }
+
+    #[test]
+    fn from_bytes_zero() {
+        assert_eq!(
+            JShort::from_bytes(&mut Bytes::from(vec![]), ZERO_TAG).unwrap(),
+            0_i16,
+        );
+    }
+
+    #[test]
+    #[should_panic]
+    fn from_bytes_err() {
+        JShort::from_bytes(&mut Bytes::from(vec![]), INT).unwrap();
     }
 }

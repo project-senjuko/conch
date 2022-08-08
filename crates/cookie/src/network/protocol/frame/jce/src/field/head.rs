@@ -138,4 +138,10 @@ mod tests {
         E.format(&mut b, 0);
         assert_eq!(b.to_vec(), vec![244, 24]);
     }
+
+    #[test]
+    #[should_panic]
+    fn skip_value_err() {
+        HeadData { r#type: 114, tag: 0 }.skip_value(&mut Bytes::new()).unwrap();
+    }
 }
