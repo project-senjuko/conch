@@ -37,7 +37,7 @@ pub async fn get_http_server_list() -> Result<HttpServerListRes> {
 
     let res = reqwest::Client::new()
         .post("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp?mType=getssolist")
-        .body(Bytes::from(p.encode_with_tea(KEY)))
+        .body(p.encode_with_tea(KEY).freeze())
         .send()
         .await;
     if res.is_err() {
