@@ -17,7 +17,7 @@ impl JceType<JSList> for JSList {
         HeadData::new(SIMPLE_LIST, tag).format(b, self.remaining());
         HeadData::new(BYTE, 0).format(b, 0);
         (self.remaining() as i32).to_bytes(b, 0);
-        b.put(self.slice(..));
+        b.put_slice(self);
     }
 
     fn from_bytes(b: &mut Bytes, _: u8) -> Result<JSList, JceFieldErr> {

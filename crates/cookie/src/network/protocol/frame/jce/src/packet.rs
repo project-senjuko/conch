@@ -62,7 +62,7 @@ impl JcePacketV3 {
     pub fn encode_with_tea(&mut self, key: [u32; 4]) -> BytesMut {
         let mut b = BytesMut::new();
         self.encode(&mut b);
-        QTeaCipher::new(key).encrypt(&Bytes::from(b))
+        QTeaCipher::new(key).encrypt(&b.freeze())
     }
 }
 
@@ -72,7 +72,7 @@ impl JcePacketV3 {
         db.get_i32(); // length
 
         let mut s = JcePacket::default();
-        s.s_from_bytes(&mut Bytes::from(db))?;
+        s.s_from_bytes(&mut db.freeze())?;
 
         let i = s.buffer.get_u8();
         if i != 8 { // type == map && tag == 0

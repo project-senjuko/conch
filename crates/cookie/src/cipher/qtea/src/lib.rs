@@ -8,7 +8,7 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, Bytes, BytesMut};
+use bytes::{Buf, BufMut, Bytes, BytesMut};
 
 use self::{qcbc::QCBChaining, tea::TeaCipher};
 
@@ -31,13 +31,15 @@ impl QTeaCipher {
         let fixed = 10 + len;
         let mut fill = fixed % 8;
         if fill != 0 { fill = 8 - fill; }
-        let head = 3 + fill;
+        let head = 2 + fill;
 
-        let mut v = vec![0u8; fixed + fill];
-        v[0] = fill as u8 | 248;
-        v[1..head].fill(75); // senju -> 75
-        v[head..head + len].copy_from_slice(b);
-        self.c.encrypt(&mut Bytes::from(v))
+        let mut bm = BytesMut::with_capacity(fixed + fill);
+        bm.put_u8(fill as u8 | 248);
+        bm.put_bytes(75, head); // 75 = senju
+        bm.put_slice(b);
+        bm.put_bytes(0, 7);
+
+        self.c.encrypt(&mut bm.freeze())
     }
 
     pub fn decrypt(&self, b: &mut Bytes) -> BytesMut {
