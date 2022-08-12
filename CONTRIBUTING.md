@@ -26,12 +26,16 @@
 
 ### 遵守 DCO 协议
 
-为降低整体性风险（包括但不限于著作权归属等问题）、避免冲突与纠纷，您理解并同意：所有贡献的提交都必须遵循 [`DCO`](/DEVELOPERCERTIFICATE) 协议（或通过 [developercertificate.org](https://developercertificate.org/) 获取副本）,否则提交将因分支受保护而无法正常合并。因此，请您在提交时添加 `Signed-off-by` 信息。
+为降低整体性风险（包括但不限于著作权归属等问题）、避免冲突与纠纷，您理解并同意：您创建的所有贡献都必须遵循 [`DCO`](/DEVELOPERCERTIFICATE) 协议（或通过 [developercertificate.org](https://developercertificate.org/) 获取副本）。
 
 ### 以相同的许可贡献
 
-除非您收到以不同许可证许可提交的贡献的要求，否则，所有的贡献都必须以 [`MPL`](/LICENSE) 许可。
+除非您收到以不同许可证许可提交的贡献的要求，否则，所有的贡献都必须以 [`MPL`](/LICENSE) 和 [`AGPL`](/LICENSE-AGPL) 双重许可。
 
 ### 遵循提交规范
 
 优雅的提交消息能愉悦身心，优秀的提交消息能一目了然。我们使用 [qianjucommits](https://github.com/qianjunakasumi/qianjucommits) 规范，请遵循此规范提交。
+
+### 避免分支污染
+
+使用 `rebase` 将污染分支，造成多余的提交。您应当使用 `merge` 合并上游更新，以避免污染。
