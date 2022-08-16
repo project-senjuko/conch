@@ -64,6 +64,12 @@ pub const SIMPLE_LIST: u8 = 13;
 /// Jce 类型特征，
 /// 提供 `Jce 类型` 与 `Jce 字节流` 之间序列化与反序列化、
 /// 描述 Jce 类型应实现方法的签名。
+///
+/// 与 [`JceStruct`] 特征不同，本特征是 `JceStruct` 的基石，
+/// 基于 Jce 原子类型对其序列化与反序列化，支持的类型广泛且普遍。
+/// 序列化或反序列化 Jce 结构体类型时，先调用 [`JceStruct`] 特征中
+/// 序列化或反序列化方法，将其字节流输出封装于或解封装
+/// [`STRUCT_BEGIN`] 和 [`STRUCT_END`] 标记，并有 tag。
 pub trait JceKind {
     /// Jce 类型
     type Type;
@@ -77,10 +83,20 @@ pub trait JceKind {
     fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr>;
 }
 
+/// Jce 结构体特征。
+/// 提供 `Jce 结构体` 与 `Jce 字节流` 之间序列化与反序列化、
+/// 描述 Jce 结构体应实现方法的签名。
+///
+/// 与 [`JceKind`] 特征不同，本特征基于 `JceKind`。
+/// 序列化或反序列化时，直接写入或读取 Jce 原子类型，
+/// 而不进行任何封装或解封装。用于直接生成封装在
+/// [`STRUCT_BEGIN`] 和 [`STRUCT_END`] 标记中的标准 Jce 字节流。
 pub trait JceStruct {
-    /// 将支持的结构体格式化为字节流
+    /// 将支持的 `Jce 结构体` 直接序列化为 `Jce 字节流`。
+    /// 序列化结果直接写入 b: &mut [`BytesMut`] 中。
     fn s_to_bytes(&self, b: &mut BytesMut);
-    /// 从字节流中解读支持的结构体
+
+    /// 将 `Jce 字节流` 反序列化为支持的 `Jce 结构体`
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr>;
 }
 
