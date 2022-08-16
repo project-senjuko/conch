@@ -61,12 +61,6 @@ pub const ZERO_TAG: u8 = 12;
 pub const SIMPLE_LIST: u8 = 13;
 
 
-#[derive(PartialEq, Debug)]
-pub struct Field<T: JceType<T>> {
-    pub key: HeadData,
-    pub value: T,
-}
-
 /// 标准 Jce 类型必须具备的特征
 pub trait JceType<T> {
     /// 将支持的类型格式化为字节流
