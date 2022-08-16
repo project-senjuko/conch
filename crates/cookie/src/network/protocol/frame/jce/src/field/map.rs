@@ -22,7 +22,7 @@ impl<T, U> JceKind for JMap<T, U>
     type Type = JMap<T, U>;
 
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(MAP, tag).format(b, self.capacity());
+        HeadData::new(MAP, tag).format(b, 0);
         (self.len() as i32).to_bytes(b, 0);
         for (k, v) in self.iter() {
             k.to_bytes(b, 0);

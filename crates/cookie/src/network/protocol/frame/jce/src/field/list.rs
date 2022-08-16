@@ -18,7 +18,7 @@ impl<T> JceKind for JList<T>
     type Type = JList<T>;
 
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(LIST, tag).format(b, self.capacity());
+        HeadData::new(LIST, tag).format(b, 0);
         (self.len() as i32).to_bytes(b, 0);
         for v in self.iter() { v.to_bytes(b, 0) }
     }
