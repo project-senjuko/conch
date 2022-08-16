@@ -10,16 +10,18 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, JByte, JceFieldErr, JceType, ZERO_TAG};
+use super::{BYTE, HeadData, JByte, JceFieldErr, JceKind, ZERO_TAG};
 
-impl JceType<JByte> for JByte {
+impl JceKind for JByte {
+    type Type = JByte;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         if *self == 0 { return HeadData::new(ZERO_TAG, tag).format(b, 0); }
         HeadData::new(BYTE, tag).format(b, 1);
         b.put_i8(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JByte, JceFieldErr> {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr> {
         match r#type {
             BYTE => Ok(b.get_i8()),
             ZERO_TAG => Ok(0),
@@ -32,7 +34,7 @@ impl JceType<JByte> for JByte {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{BYTE, JByte, JceType, ZERO_TAG};
+    use super::{BYTE, JByte, JceKind, ZERO_TAG};
     use super::super::SHORT;
 
     #[test]

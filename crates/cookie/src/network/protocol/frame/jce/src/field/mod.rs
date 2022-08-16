@@ -61,12 +61,20 @@ pub const ZERO_TAG: u8 = 12;
 pub const SIMPLE_LIST: u8 = 13;
 
 
-/// 标准 Jce 类型必须具备的特征
-pub trait JceType<T> {
-    /// 将支持的类型格式化为字节流
+/// Jce 类型特征，
+/// 提供 `Jce 类型` 与 `Jce 字节流` 之间序列化与反序列化、
+/// 描述 Jce 类型应实现方法的签名。
+pub trait JceKind {
+    /// Jce 类型
+    type Type;
+
+    /// 将支持的 `Jce 类型` 序列化为 `Jce 字节流`。
+    /// 序列化结果直接写入 b: &mut [`BytesMut`] 中。
     fn to_bytes(&self, b: &mut BytesMut, tag: u8);
-    /// 从字节流中解读支持的类型
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<T, JceFieldErr>;
+
+    /// 将 `Jce 字节流` 反序列化为支持的 `Jce 类型`。
+    /// r#type 视反序列化目标类型不同，可能会被忽略。
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr>;
 }
 
 pub trait JceStruct {

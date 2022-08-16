@@ -10,9 +10,11 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{HeadData, JceFieldErr, JceType, JString, STRING1, STRING4};
+use super::{HeadData, JceFieldErr, JceKind, JString, STRING1, STRING4};
 
-impl JceType<JString> for JString {
+impl JceKind for JString {
+    type Type = JString;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         let l = self.len();
         if l <= 255 {
@@ -25,7 +27,7 @@ impl JceType<JString> for JString {
         b.put_slice(self.as_ref());
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JString, JceFieldErr> {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr> {
         let len = match r#type {
             STRING1 => Ok(b.get_u8() as usize),
             STRING4 => Ok(b.get_i32() as usize),
@@ -45,7 +47,7 @@ impl JceType<JString> for JString {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{JceType, JString, STRING1, STRING4};
+    use super::{JceKind, JString, STRING1, STRING4};
 
     #[test]
     fn to_bytes1() {

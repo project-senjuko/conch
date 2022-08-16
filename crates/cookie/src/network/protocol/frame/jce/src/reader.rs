@@ -11,7 +11,7 @@
 use bytes::{Buf, Bytes};
 use rustc_hash::FxHashMap;
 
-use crate::field::{HeadData, JceFieldErr, JceType};
+use crate::field::{HeadData, JceFieldErr, JceKind};
 
 pub struct JceReader<'a> {
     b: &'a mut Bytes,
@@ -32,21 +32,27 @@ impl<'a> JceReader<'a> {
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
     #[inline(always)]
-    pub fn get<T: JceType<T>>(&mut self) -> Result<T, JceFieldErr> {
+    pub fn get<T>(&mut self) -> Result<T, JceFieldErr>
+        where T: JceKind<Type=T>
+    {
         match self.get_optional()? as Option<T> {
             Some(o) => Ok(o),
             None => Err(JceFieldErr { expectation: 255, result: 200 }),
         }
     }
 
-    pub fn get_optional<T: JceType<T>>(&mut self) -> Result<Option<T>, JceFieldErr> {
+    pub fn get_optional<T>(&mut self) -> Result<Option<T>, JceFieldErr>
+        where T: JceKind<Type=T>
+    {
         let r = self._get_optional();
         self.set_tag(self.tag + 1);
         r
     }
 
     #[inline(always)]
-    fn _get_optional<T: JceType<T>>(&mut self) -> Result<Option<T>, JceFieldErr> {
+    fn _get_optional<T>(&mut self) -> Result<Option<T>, JceFieldErr>
+        where T: JceKind<Type=T>
+    {
         if !self.b.has_remaining() {
             return match self.cache.get(&self.tag).map(
                 |o| T::from_bytes(&mut o.1.clone(), o.0.r#type),

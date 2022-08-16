@@ -10,16 +10,20 @@
 
 use bytes::{Buf, Bytes, BytesMut};
 
-use super::{HeadData, JceFieldErr, JceType, JList, LIST};
+use super::{HeadData, JceFieldErr, JceKind, JList, LIST};
 
-impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
+impl<T> JceKind for JList<T>
+    where T: JceKind<Type=T>
+{
+    type Type = JList<T>;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         HeadData::new(LIST, tag).format(b, self.capacity());
         (self.len() as i32).to_bytes(b, 0);
         for v in self.iter() { v.to_bytes(b, 0) }
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<JList<T>, JceFieldErr> {
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> {
         let len = HeadData::parse_ttl4(b)?;
         let mut vec: Vec<T> = Vec::with_capacity(b.remaining());
         {
@@ -38,7 +42,7 @@ impl<T: JceType<T>> JceType<JList<T>> for JList<T> {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{JceType, JList, LIST};
+    use super::{JceKind, JList, LIST};
     use super::super::JString;
 
     #[test]

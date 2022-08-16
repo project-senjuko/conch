@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, DOUBLE, FLOAT, INT, JceFieldErr, JceType, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END};
+use super::{BYTE, DOUBLE, FLOAT, INT, JceFieldErr, JceKind, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END};
 
 #[derive(Copy, Clone, PartialEq, Debug)]
 pub struct HeadData {

@@ -10,22 +10,24 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{FLOAT, HeadData, JceFieldErr, JceType, JFloat};
+use super::{FLOAT, HeadData, JceFieldErr, JceKind, JFloat};
 
-impl JceType<JFloat> for JFloat {
+impl JceKind for JFloat {
+    type Type = JFloat;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         HeadData::new(FLOAT, tag).format(b, 4);
         b.put_f32(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<JFloat, JceFieldErr> { Ok(b.get_f32()) }
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> { Ok(b.get_f32()) }
 }
 
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{FLOAT, JceType, JFloat};
+    use super::{FLOAT, JceKind, JFloat};
 
     #[test]
     fn to_bytes() {

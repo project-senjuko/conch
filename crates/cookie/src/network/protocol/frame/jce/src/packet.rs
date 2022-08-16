@@ -13,7 +13,7 @@ use bytes::{Buf, BufMut, Bytes, BytesMut};
 use qtea::QTeaCipher;
 
 use crate::{JceReader, JceWriter};
-use crate::field::{JByte, JceFieldErr, JceStruct, JceType, JInt, JMap, JShort, JSList, JString};
+use crate::field::{JByte, JceFieldErr, JceKind, JceStruct, JInt, JMap, JShort, JSList, JString};
 
 #[derive(Default)]
 pub struct JcePacketV3 {
@@ -36,7 +36,7 @@ impl JcePacketV3 {
         }
     }
 
-    pub fn put<T: JceType<T>>(&mut self, n: &str, d: T) {
+    pub fn put<T: JceKind>(&mut self, n: &str, d: T) {
         let mut buf = BytesMut::new();
         d.to_bytes(&mut buf, 0);
         self.data.insert(n.to_string(), JSList::from(buf));
@@ -83,7 +83,9 @@ impl JcePacketV3 {
     }
 
     #[inline(always)]
-    pub fn get<T: JceType<T>>(&mut self, n: &str) -> Result<T, JceFieldErr> {
+    pub fn get<T>(&mut self, n: &str) -> Result<T, JceFieldErr>
+        where T: JceKind<Type=T>
+    {
         match self.data.get(n) {
             None => Err(JceFieldErr { expectation: 255, result: 201 }),
             Some(s) => T::from_bytes(&mut s.slice(1..), 0) // 固定字节 10: StructBegin Head

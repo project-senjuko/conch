@@ -10,15 +10,17 @@
 
 use bytes::{Buf, Bytes, BytesMut};
 
-use super::{BOOL, JBool, JceFieldErr, JceType, ZERO_TAG};
+use super::{BOOL, JBool, JceFieldErr, JceKind, ZERO_TAG};
 
-impl JceType<JBool> for JBool {
+impl JceKind for JBool {
+    type Type = JBool;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         if *self { return 1_i8.to_bytes(b, tag); }
         0i8.to_bytes(b, tag);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JBool, JceFieldErr> {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr> {
         match r#type {
             BOOL => {
                 b.advance(1);
@@ -34,7 +36,7 @@ impl JceType<JBool> for JBool {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{BOOL, JBool, JceType, ZERO_TAG};
+    use super::{BOOL, JBool, JceKind, ZERO_TAG};
     use super::super::SHORT;
 
     #[test]

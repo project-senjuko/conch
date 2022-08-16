@@ -10,16 +10,18 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, INT, JceFieldErr, JceType, JLong, LONG, SHORT, ZERO_TAG};
+use super::{BYTE, HeadData, INT, JceFieldErr, JceKind, JLong, LONG, SHORT, ZERO_TAG};
 
-impl JceType<JLong> for JLong {
+impl JceKind for JLong {
+    type Type = JLong;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         if *self < 2147483648 && *self >= -2147483648 { return (*self as i32).to_bytes(b, tag); }
         HeadData::new(LONG, tag).format(b, 8);
         b.put_i64(*self);
     }
 
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<JLong, JceFieldErr> {
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr> {
         match r#type {
             BYTE => Ok(b.get_i8() as i64),
             SHORT => Ok(b.get_i16() as i64),
@@ -35,7 +37,7 @@ impl JceType<JLong> for JLong {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{BYTE, INT, JceType, JLong, LONG, SHORT, ZERO_TAG};
+    use super::{BYTE, INT, JceKind, JLong, LONG, SHORT, ZERO_TAG};
     use super::super::DOUBLE;
 
     #[test]

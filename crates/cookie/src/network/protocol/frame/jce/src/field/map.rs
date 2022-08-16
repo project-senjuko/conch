@@ -13,9 +13,14 @@ use std::hash::Hash;
 
 use bytes::{Buf, Bytes, BytesMut};
 
-use super::{HeadData, JceFieldErr, JceType, JMap, MAP};
+use super::{HeadData, JceFieldErr, JceKind, JMap, MAP};
 
-impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U> {
+impl<T, U> JceKind for JMap<T, U>
+    where T: JceKind<Type=T> + Eq + Hash,
+          U: JceKind<Type=U>
+{
+    type Type = JMap<T, U>;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         HeadData::new(MAP, tag).format(b, self.capacity());
         (self.len() as i32).to_bytes(b, 0);
@@ -25,7 +30,7 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
         }
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<JMap<T, U>, JceFieldErr> {
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> {
         let len = HeadData::parse_ttl4(b)?;
         let mut map: HashMap<T, U> = HashMap::with_capacity(b.remaining());
         {
@@ -47,7 +52,7 @@ impl<T: JceType<T> + Eq + Hash, U: JceType<U>> JceType<JMap<T, U>> for JMap<T, U
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::super::{JByte, JceType, JMap, JString, MAP};
+    use super::super::{JByte, JceKind, JMap, JString, MAP};
 
     #[test]
     fn to_bytes() {

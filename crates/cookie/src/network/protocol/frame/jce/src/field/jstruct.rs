@@ -10,17 +10,21 @@
 
 use bytes::{Bytes, BytesMut};
 
-use super::{HeadData, JceFieldErr, JceStruct, JceType, STRUCT_BEGIN, STRUCT_END};
+use super::{HeadData, JceFieldErr, JceKind, JceStruct, STRUCT_BEGIN, STRUCT_END};
 
-impl<T: JceStruct + Default> JceType<T> for T {
+impl<T> JceKind for T
+    where T: JceStruct + Default
+{
+    type Type = T;
+
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         HeadData::new(STRUCT_BEGIN, tag).format(b, 0);
         self.s_to_bytes(b);
         HeadData::new(STRUCT_END, 0).format(b, 0);
     }
 
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<T, JceFieldErr> {
-        let mut t = T::default();
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> {
+        let mut t = Self::Type::default();
         t.s_from_bytes(b)?;
         {
             let head = HeadData::parse(b);
@@ -36,7 +40,7 @@ impl<T: JceStruct + Default> JceType<T> for T {
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::super::{HeadData, JceFieldErr, JceStruct, JceType, STRING1, STRUCT_BEGIN};
+    use super::super::{HeadData, JceFieldErr, JceKind, JceStruct, STRING1, STRUCT_BEGIN};
 
     #[derive(Default, PartialEq, Debug)]
     struct Q {

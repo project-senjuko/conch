@@ -10,7 +10,7 @@
 
 use bytes::{BufMut, BytesMut};
 
-use crate::field::JceType;
+use crate::field::JceKind;
 
 pub struct JceWriter {
     b: BytesMut,
@@ -27,7 +27,7 @@ impl JceWriter {
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
     #[inline(always)]
-    pub fn put<T: JceType<T>>(&mut self, t: &T) {
+    pub fn put<T: JceKind>(&mut self, t: &T) {
         t.to_bytes(&mut self.b, self.tag);
         self.set_tag(self.tag + 1);
     }
