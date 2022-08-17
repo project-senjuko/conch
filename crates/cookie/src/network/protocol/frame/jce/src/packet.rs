@@ -8,6 +8,10 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
+//! Jce 包模块，
+//! 定义 `Jce 请求包` 结构体、
+//! 实现 Jce 数据在 `Jce 请求包` 中的编解码。
+
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
 use qtea::QTeaCipher;
@@ -22,6 +26,7 @@ pub struct JcePacketV3 {
 }
 
 impl JcePacketV3 {
+    /// 新建一个基本的 `Jce 请求包(ver.3)`
     #[inline(always)]
     pub fn new(rid: JInt, sn: &str, r#fn: &str) -> JcePacketV3 {
         JcePacketV3 {
@@ -36,13 +41,14 @@ impl JcePacketV3 {
         }
     }
 
+    /// 添加 `Jce 类型` 数据至本请求包
     pub fn put<T: JceKind>(&mut self, n: &str, d: T) {
         let mut buf = BytesMut::new();
         d.to_bytes(&mut buf, 0);
         self.data.insert(n.to_string(), JSList::from(buf));
     }
 
-    /// 编码为 UniPacket
+    /// 将本请求包中所有数据编码为 UniPacket `Jce 字节流`
     pub fn encode(&mut self, b: &mut BytesMut) {
         let mut buf = BytesMut::new();
         self.data.to_bytes(&mut buf, 0);
@@ -58,7 +64,8 @@ impl JcePacketV3 {
         b.put(up);
     }
 
-    /// 编码为 UniPacket 并 TEA 加密
+    /// 将本请求包中所有数据编码为 UniPacket `Jce 字节流`，
+    /// 并使用 [`QTeaCipher`] 加密。
     pub fn encode_with_tea(&mut self, key: [u32; 4]) -> BytesMut {
         let mut b = BytesMut::new();
         self.encode(&mut b);
@@ -67,6 +74,8 @@ impl JcePacketV3 {
 }
 
 impl JcePacketV3 {
+    /// 从加密的 UniPacket `Jce 字节流` 中解码为 `Jce 请求包(ver.3)`。
+    /// 使用 [`QTeaCipher`] 解密。
     pub fn from(b: &mut Bytes, key: [u32; 4]) -> Result<JcePacketV3, JceFieldErr> {
         let mut db = QTeaCipher::new(key).decrypt(b);
         db.get_i32(); // length
@@ -82,6 +91,7 @@ impl JcePacketV3 {
         Ok(JcePacketV3 { data: JMap::from_bytes(&mut s.buffer, 0)?, p: s })
     }
 
+    /// 获取本请求包中 `Jce 类型`
     #[inline(always)]
     pub fn get<T>(&mut self, n: &str) -> Result<T, JceFieldErr>
         where T: JceKind<Type=T>

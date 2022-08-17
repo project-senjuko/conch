@@ -8,11 +8,15 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
+//! Jce 字节流读取器模块，
+//! 提供 `Jce 字节流` 解码为 `Jce 类型` 。
+
 use bytes::{Buf, Bytes};
 use rustc_hash::FxHashMap;
 
 use crate::field::{HeadData, JceFieldErr, JceKind};
 
+/// Jce 字节流读取器
 pub struct JceReader<'a> {
     b: &'a mut Bytes,
     tag: u8,
@@ -20,17 +24,23 @@ pub struct JceReader<'a> {
 }
 
 impl<'a> JceReader<'a> {
+    /// 新建一个 tag 指针默认为 0 的 `Jce 字节流读取器`
     #[inline(always)]
-    pub fn new(b: &'a mut Bytes) -> JceReader<'a> { JceReader { b, tag: 0, cache: FxHashMap::default() } }
+    pub fn new(b: &'a mut Bytes) -> Self { Self::with_tag(b, 0) }
 
+    /// 新建一个完整填充的 `Jce 字节流读取器`
     #[inline(always)]
-    pub fn with_tag(b: &'a mut Bytes, tag: u8) -> JceReader<'a> { JceReader { b, tag, cache: FxHashMap::default() } }
+    pub fn with_tag(b: &'a mut Bytes, tag: u8) -> Self {
+        Self { b, tag, cache: FxHashMap::default() }
+    }
 }
 
 impl<'a> JceReader<'a> {
+    /// 设置 tag 指针数值
     #[inline(always)]
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
+    /// 获取 `Jce 类型`
     #[inline(always)]
     pub fn get<T>(&mut self) -> Result<T, JceFieldErr>
         where T: JceKind<Type=T>
@@ -41,6 +51,7 @@ impl<'a> JceReader<'a> {
         }
     }
 
+    /// 获取可选存在的 `Jce 类型`
     pub fn get_optional<T>(&mut self) -> Result<Option<T>, JceFieldErr>
         where T: JceKind<Type=T>
     {
