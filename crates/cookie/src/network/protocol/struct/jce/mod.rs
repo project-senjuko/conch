@@ -28,7 +28,7 @@ pub struct HttpServerListReq {
 
 impl JceStruct for HttpServerListReq {
     fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(1);
+        let mut w = JceWriter::new(b, 1);
         w.put(&self.uin);
         w.put(&self.timeout);
         w.put(&self.c);
@@ -64,7 +64,6 @@ impl JceStruct for HttpServerListReq {
             Some(v) => w.put(v),
             None => {}
         }
-        w.flash(b);
     }
 
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
@@ -116,7 +115,7 @@ pub struct HttpServerListRes {
 
 impl JceStruct for HttpServerListRes {
     fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(1);
+        let mut w = JceWriter::new(b, 1);
         w.put(&self.a);
         w.put(&self.socket_mobile_ipv4);
         w.put(&self.socket_wifi_ipv4);
@@ -186,7 +185,6 @@ impl JceStruct for HttpServerListRes {
             Some(v) => w.put(v),
             None => {}
         }
-        w.flash(b);
     }
 
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
@@ -234,7 +232,7 @@ pub struct HttpServerListResServer {
 
 impl JceStruct for HttpServerListResServer {
     fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(1);
+        let mut w = JceWriter::new(b, 1);
         w.put(&self.ip);
         w.put(&self.port);
         w.put(&self.c);
@@ -263,7 +261,6 @@ impl JceStruct for HttpServerListResServer {
             Some(v) => w.put(v),
             None => {}
         }
-        w.flash(b);
     }
 
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {

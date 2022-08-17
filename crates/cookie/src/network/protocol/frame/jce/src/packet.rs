@@ -28,8 +28,8 @@ pub struct JcePacketV3 {
 impl JcePacketV3 {
     /// 新建一个基本的 `Jce 请求包(ver.3)`
     #[inline(always)]
-    pub fn new(rid: JInt, sn: &str, r#fn: &str) -> JcePacketV3 {
-        JcePacketV3 {
+    pub fn new(rid: JInt, sn: &str, r#fn: &str) -> Self {
+        Self {
             p: JcePacket {
                 version: 3,
                 request_id: rid,
@@ -76,7 +76,7 @@ impl JcePacketV3 {
 impl JcePacketV3 {
     /// 从加密的 UniPacket `Jce 字节流` 中解码为 `Jce 请求包(ver.3)`。
     /// 使用 [`QTeaCipher`] 解密。
-    pub fn from(b: &mut Bytes, key: [u32; 4]) -> Result<JcePacketV3, JceFieldErr> {
+    pub fn from(b: &mut Bytes, key: [u32; 4]) -> Result<Self, JceFieldErr> {
         let mut db = QTeaCipher::new(key).decrypt(b);
         db.get_i32(); // length
 
@@ -88,7 +88,7 @@ impl JcePacketV3 {
             return Err(JceFieldErr { expectation: 8, result: i });
         }
 
-        Ok(JcePacketV3 { data: JMap::from_bytes(&mut s.buffer, 0)?, p: s })
+        Ok(Self { data: JMap::from_bytes(&mut s.buffer, 0)?, p: s })
     }
 
     /// 获取本请求包中 `Jce 类型`
@@ -120,7 +120,7 @@ pub struct JcePacket {
 
 impl JceStruct for JcePacket {
     fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(1);
+        let mut w = JceWriter::new(b, 1);
         w.put(&self.version);
         w.put(&self.packet_type);
         w.put(&self.message_type);
@@ -131,7 +131,6 @@ impl JceStruct for JcePacket {
         w.put(&self.timeout);
         w.put(&self.context);
         w.put(&self.status);
-        w.flash(b);
     }
 
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {

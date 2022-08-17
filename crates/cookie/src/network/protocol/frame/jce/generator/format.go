@@ -34,9 +34,8 @@ const STRUCTEND = `}
 impl JceStruct for `
 const IMPLMIDDLE1 = ` {
     fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(`
-const IMPMMIDDLE2 = `
-    }
+        let mut w = JceWriter::new(b, `
+const IMPMMIDDLE2 = `    }
 
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, `
@@ -111,7 +110,6 @@ func formatImplToBytes(j *JceSpec) string {
 		b.WriteString(`
 `)
 	}
-	b.WriteString("        w.flash(b);")
 
 	return b.String()
 }

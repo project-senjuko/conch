@@ -11,23 +11,23 @@
 //! Jce 字节流写入器，
 //! 提供 `Jce 类型` 编码为 `Jce 字节流`。
 
-use bytes::{BufMut, BytesMut};
+use bytes::BytesMut;
 
 use crate::field::JceKind;
 
 /// Jce 字节流写入器
-pub struct JceWriter {
-    b: BytesMut,
+pub struct JceWriter<'a> {
+    b: &'a mut BytesMut,
     tag: u8,
 }
 
-impl JceWriter {
+impl<'a> JceWriter<'a> {
     /// 新建一个完整填充的 `Jce 字节流写入器`
     #[inline(always)]
-    pub fn new(tag: u8) -> JceWriter { JceWriter { b: BytesMut::new(), tag } }
+    pub fn new(b: &'a mut BytesMut, tag: u8) -> Self { Self { b, tag } }
 }
 
-impl JceWriter {
+impl JceWriter<'_> {
     /// 设置 tag 指针数值
     #[inline(always)]
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
@@ -35,13 +35,9 @@ impl JceWriter {
     /// 添加 `Jce 类型` 数据至本写入器
     #[inline(always)]
     pub fn put<T: JceKind>(&mut self, t: &T) {
-        t.to_bytes(&mut self.b, self.tag);
+        t.to_bytes(self.b, self.tag);
         self.set_tag(self.tag + 1);
     }
-
-    /// 将本写入器中缓存的 `Jce 字节流` 刷写入 `b`
-    #[inline(always)]
-    pub fn flash(self, b: &mut BytesMut) { b.put(self.b); }
 }
 
 #[cfg(test)]
@@ -53,10 +49,9 @@ mod tests {
     #[test]
     fn to_bytes() {
         let mut b = BytesMut::new();
-        let mut w = JceWriter::new(1);
+        let mut w = JceWriter::new(&mut b, 1);
         w.put(&1);
         w.put(&String::from("千橘橘"));
-        w.flash(&mut b);
         assert_eq!(b.to_vec(), vec![16, 1, 38, 9, 229, 141, 131, 230, 169, 152, 230, 169, 152]);
     }
 }
