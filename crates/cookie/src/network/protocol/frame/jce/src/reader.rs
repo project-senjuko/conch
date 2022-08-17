@@ -35,7 +35,7 @@ impl<'a> JceReader<'a> {
     }
 }
 
-impl<'a> JceReader<'a> {
+impl JceReader<'_> {
     /// 设置 tag 指针数值
     #[inline(always)]
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
