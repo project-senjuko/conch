@@ -25,7 +25,7 @@ use bytes::{Bytes, BytesMut};
 use jce::{JceReader, JceWriter};
 use jce::field::{JBool, JByte, JceFieldErr, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};`
 const STRUCT = `
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct `
 const STRUCTSTART = ` {
 `

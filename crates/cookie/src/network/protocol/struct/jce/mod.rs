@@ -8,7 +8,7 @@ use jce::field::{JBool, JByte, JceFieldErr, JceStruct, JDouble, JFloat, JInt, JL
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct HttpServerListReq {
     pub uin: JLong,
     pub timeout: JLong,
@@ -88,7 +88,7 @@ impl JceStruct for HttpServerListReq {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct HttpServerListRes {
     pub a: JInt,
     pub socket_mobile_ipv4: JList<HttpServerListResServer>,
@@ -216,7 +216,7 @@ impl JceStruct for HttpServerListRes {
 
 ////////////////////////////////////////////////////////////////////////////////
 
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct HttpServerListResServer {
     pub ip: JString,
     pub port: JInt,
