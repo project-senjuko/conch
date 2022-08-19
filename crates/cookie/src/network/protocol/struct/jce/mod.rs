@@ -2,6 +2,7 @@
 // It is not intended for manual editing.
 
 use bytes::{Bytes, BytesMut};
+use tracing::{instrument, trace};
 
 use jce::{JceReader, JceWriter};
 use jce::field::{JBool, JByte, JceFieldErr, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};
@@ -27,6 +28,7 @@ pub struct HttpServerListReq {
 }
 
 impl JceStruct for HttpServerListReq {
+	#[instrument]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.uin);
@@ -64,8 +66,10 @@ impl JceStruct for HttpServerListReq {
             Some(v) => w.put(v),
             None => {}
         }
+        trace!(dsc = "「HTTP 服务器列表请求结构体」编码为「Jce 字节流」完成", data = ?self);
     }
 
+	#[instrument]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.uin = r.get()?;
@@ -82,6 +86,7 @@ impl JceStruct for HttpServerListReq {
         self.l = r.get_optional()?;
         self.m = r.get_optional()?;
         self.n = r.get_optional()?;
+        trace!(dsc = "「HTTP 服务器列表请求结构体」解码为「Jce 字节流」完成", data = ?self);
         Ok(())
     }
 }
@@ -114,6 +119,7 @@ pub struct HttpServerListRes {
 }
 
 impl JceStruct for HttpServerListRes {
+	#[instrument]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.a);
@@ -185,8 +191,10 @@ impl JceStruct for HttpServerListRes {
             Some(v) => w.put(v),
             None => {}
         }
+        trace!(dsc = "「HTTP 服务器列表响应结构体」编码为「Jce 字节流」完成", data = ?self);
     }
 
+	#[instrument]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.a = r.get()?;
@@ -210,6 +218,7 @@ impl JceStruct for HttpServerListRes {
         self.he_threshold = r.get_optional()?;
         self.policy_id = r.get_optional()?;
         self.u = r.get_optional()?;
+        trace!(dsc = "「HTTP 服务器列表响应结构体」解码为「Jce 字节流」完成", data = ?self);
         Ok(())
     }
 }
@@ -231,6 +240,7 @@ pub struct HttpServerListResServer {
 }
 
 impl JceStruct for HttpServerListResServer {
+	#[instrument]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.ip);
@@ -261,8 +271,10 @@ impl JceStruct for HttpServerListResServer {
             Some(v) => w.put(v),
             None => {}
         }
+        trace!(dsc = "「HTTP 服务器列表响应服务器结构体」编码为「Jce 字节流」完成", data = ?self);
     }
 
+	#[instrument]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.ip = r.get()?;
@@ -275,6 +287,7 @@ impl JceStruct for HttpServerListResServer {
         self.region = r.get_optional()?;
         self.oper = r.get_optional()?;
         self.ability = r.get_optional()?;
+        trace!(dsc = "「HTTP 服务器列表响应服务器结构体」解码为「Jce 字节流」完成", data = ?self);
         Ok(())
     }
 }

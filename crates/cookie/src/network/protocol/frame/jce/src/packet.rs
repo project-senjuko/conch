@@ -13,6 +13,7 @@
 //! 实现 Jce 数据在 `Jce 请求包` 中的编解码。
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
+use tracing::{instrument, trace};
 
 use qtea::QTeaCipher;
 
@@ -119,6 +120,7 @@ pub struct JcePacket {
 }
 
 impl JceStruct for JcePacket {
+    #[instrument]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.version);
@@ -131,8 +133,10 @@ impl JceStruct for JcePacket {
         w.put(&self.timeout);
         w.put(&self.context);
         w.put(&self.status);
+        trace!(dsc = "「Jce 请求包」编码为「Jce 字节流」完成", data = ?self);
     }
 
+    #[instrument]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.version = r.get()?;
@@ -145,6 +149,7 @@ impl JceStruct for JcePacket {
         self.timeout = r.get()?;
         self.context = r.get()?;
         self.status = r.get()?;
+        trace!(dsc = "「Jce 请求包」解码为「Jce 字节流」完成", data = ?self);
         Ok(())
     }
 }
