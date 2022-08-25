@@ -8,4 +8,38 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-mod config;
+use serde::Deserialize;
+
+#[derive(Debug, Deserialize)]
+pub struct Config {
+    pub qq: QQTable,
+    pub network: NetworkTable,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct QQTable {
+    pub account: QQAccountTable,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct QQAccountTable {
+    pub number: u64,
+    pub password: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct NetworkTable {
+    #[serde(default = "network_table_dns_default")]
+    pub dns: Vec<NetworkDNSTable>,
+}
+
+fn network_table_dns_default() -> Vec<NetworkDNSTable> {
+    vec![
+        NetworkDNSTable { address: String::from("119.29.29.29") }
+    ]
+}
+
+#[derive(Deserialize, Debug)]
+pub struct NetworkDNSTable {
+    pub address: String,
+}
