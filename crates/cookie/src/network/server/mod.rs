@@ -9,12 +9,15 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::str::FromStr;
 
 use anyhow::Result;
 use tokio::try_join;
 use tracing::{error, instrument};
 use trust_dns_resolver::config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts};
 use trust_dns_resolver::TokioAsyncResolver;
+
+use crate::network::protocol::server::get_http_server_list;
 
 #[derive(Debug)]
 pub struct ServerManager {
@@ -74,6 +77,23 @@ impl ServerManager {
         }
         for v4re in v4res.iter() {
             r.push(SocketAddr::new(IpAddr::from(*v4re), 8080))
+        }
+
+        Ok(r)
+    }
+
+    #[instrument]
+    async fn fetch_server_by_protocol(&self) -> Result<Vec<SocketAddr>> {
+        let s = get_http_server_list().await?;
+
+        let mut r = Vec::new();
+        for s in s.socket_wifi_ipv4.iter() {
+            let i = IpAddr::from_str(&*s.ip);
+            if i.is_err() {
+                error!(dsc = "解析 HttpServerListRes.socket_wifi_ipv4.ip 为 IpAddr 失败", err = %i.as_ref().unwrap_err());
+            }
+
+            r.push(SocketAddr::new(i?, s.port as u16));
         }
 
         Ok(r)
