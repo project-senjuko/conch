@@ -12,8 +12,8 @@ use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::str::FromStr;
 
 use anyhow::Result;
-use tokio::try_join;
-use tracing::{error, instrument};
+use tokio::{join, try_join};
+use tracing::{error, instrument, warn};
 use trust_dns_resolver::config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts};
 use trust_dns_resolver::TokioAsyncResolver;
 
@@ -26,11 +26,37 @@ mod r#static;
 pub struct ServerManager {
     socket: Vec<SocketAddr>,
     quic: Vec<SocketAddr>,
-    // "socket://msfwifiv6.3g.qq.com:8080"
-    // "socket://msfwifi.3g.qq.com:8080"
 }
 
 impl ServerManager {
+    /// 更新服务器列表
+    #[instrument]
+    async fn update_server_list(&mut self) -> Result<()> {
+        let r = join!(
+            self.fetch_server_by_protocol(),
+            self.fetch_server_by_dns(),
+        );
+        if r.0.is_err() && r.1.is_err() {
+            error!(
+                dsc = "无法通过 网络 更新服务器列表",
+                protobufErr = %r.0.as_ref().unwrap_err(), dnsErr = %r.1.as_ref().unwrap_err(),
+            );
+            return Err(r.0.unwrap_err());
+        }
+
+        match r.0 {
+            Ok(s) => { self.socket.extend_from_slice(&*s); }
+            Err(e) => { warn!(dsc = "无法通过 Protobuf 更新服务器列表", err = %e); }
+        }
+        match r.1 {
+            Ok(s) => { self.socket.extend_from_slice(&*s); }
+            Err(e) => { warn!(dsc = "无法通过 DNS 更新服务器列表", err = %e); }
+        }
+
+        Ok(())
+    }
+
+    /// 通过 DNS 获取服务器列表
     #[instrument]
     async fn fetch_server_by_dns(&self) -> Result<Vec<SocketAddr>> {
         let mut rc = ResolverConfig::new();
@@ -66,6 +92,7 @@ impl ServerManager {
         Ok(r)
     }
 
+    /// 通过 协议 获取服务器列表
     #[instrument]
     async fn fetch_server_by_protocol(&self) -> Result<Vec<SocketAddr>> {
         let s = get_http_server_list().await?;
@@ -90,8 +117,7 @@ mod tests {
 
     #[tokio::test]
     async fn fetch_server_by_dns() {
-        let mut a = ServerManager { socket: Vec::new(), quic: Vec::new() };
-        let a = a.fetch_server_by_dns().await.unwrap();
-        println!("{:#?}", a);
+        let a = ServerManager { socket: Vec::new(), quic: Vec::new() };
+        a.fetch_server_by_dns().await.unwrap();
     }
 }
