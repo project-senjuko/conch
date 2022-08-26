@@ -19,6 +19,9 @@ use trust_dns_resolver::TokioAsyncResolver;
 
 use crate::network::protocol::server::get_http_server_list;
 
+mod r#static;
+
+/// 服务器管理器
 #[derive(Debug)]
 pub struct ServerManager {
     socket: Vec<SocketAddr>,
@@ -28,25 +31,6 @@ pub struct ServerManager {
 }
 
 impl ServerManager {
-    fn new() -> ServerManager {
-        ServerManager {
-            socket: vec![
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(183, 47, 102, 209)), 8080),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(113, 96, 18, 167)), 8080),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(157, 148, 36, 57)), 14000),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(120, 232, 67, 190)), 443),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(113, 96, 18, 167)), 14000),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(157, 148, 54, 73)), 443),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(120, 232, 19, 199)), 80),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(43, 154, 240, 21)), 8080),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(43, 154, 240, 194)), 8080),
-            ],
-            quic: vec![
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(58, 251, 106, 174)), 443),
-            ],
-        }
-    }
-
     #[instrument]
     async fn fetch_server_by_dns(&self) -> Result<Vec<SocketAddr>> {
         let mut rc = ResolverConfig::new();
