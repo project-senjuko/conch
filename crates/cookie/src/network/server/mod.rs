@@ -17,7 +17,7 @@ use tracing::{error, instrument, warn};
 use trust_dns_resolver::config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts};
 use trust_dns_resolver::TokioAsyncResolver;
 
-use crate::network::protocol::server::get_http_server_list;
+use crate::network::protocol::server::fetch_server_list;
 
 mod r#static;
 
@@ -95,7 +95,7 @@ impl ServerManager {
     /// 通过 协议 获取服务器列表
     #[instrument]
     async fn fetch_server_by_protocol(&self) -> Result<Vec<SocketAddr>> {
-        let s = get_http_server_list().await?;
+        let s = fetch_server_list().await?;
 
         let mut r = Vec::new();
         for s in s.socket_wifi_ipv4.iter() {
