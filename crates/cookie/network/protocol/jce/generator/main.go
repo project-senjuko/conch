@@ -50,7 +50,7 @@ func main() {
 }
 
 func walk() error {
-	return filepath.WalkDir(filepath.Join(ORGDir, "struct"), func(p string, d fs.DirEntry, err error) error {
+	return filepath.WalkDir(filepath.Join(ORGDir, "blueprint"), func(p string, d fs.DirEntry, err error) error {
 		if err != nil {
 			fmt.Println("警告(逻辑) " + err.Error())
 			return err

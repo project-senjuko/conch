@@ -53,8 +53,8 @@ func ReadConfigSpec() *ConfigSpec {
 	_, err := os.Stat("config.yml")
 	if err != nil && os.IsNotExist(err) {
 		fmt.Println("配置文件不存在，将使用相对路径") // 默认项目根目录
-		a.Spec.Source = "../../../struct/jce/"
-		a.Spec.Output = "../../../struct/jce/"
+		a.Spec.Source = "../struct/"
+		a.Spec.Output = "../struct/"
 		return &a
 	}
 
