@@ -12,8 +12,8 @@ path = "crates/conch/main.rs"
 [workspace]
 members = [
     "crates/cookie",
-    "crates/cookie/src/cipher/qtea",
-    "crates/cookie/src/network/protocol/frame/jce",
+    "crates/cookie/cipher/qtea",
+    "crates/cookie/network/protocol/frame/jce",
 
     "crates/macaron"
 ]
