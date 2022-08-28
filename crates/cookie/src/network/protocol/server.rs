@@ -22,9 +22,9 @@ const KEY: [u32; 4] = [4030996319, 4096632207, 3707212954, 3127038993];
 
 const ERR: &str = "请求服务器列表失败";
 
-/// 获取 HTTP 服务器列表
+/// 通过 HTTP 获取服务器列表
 #[instrument]
-pub async fn get_http_server_list() -> Result<HttpServerListRes> {
+pub async fn fetch_server_list() -> Result<HttpServerListRes> {
     let mut p = UniPacket::new(0, "HttpServerListReq", "HttpServerListReq");
     p.put("HttpServerListReq", HttpServerListReq {
         timeout: 60,
@@ -64,11 +64,11 @@ pub async fn get_http_server_list() -> Result<HttpServerListRes> {
 mod tests {
     use anyhow::Result;
 
-    use super::get_http_server_list;
+    use super::fetch_server_list;
 
     #[tokio::test]
     async fn to_bytes() -> Result<()> {
-        get_http_server_list().await?;
+        fetch_server_list().await?;
         Ok(())
     }
 }

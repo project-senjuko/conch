@@ -9,41 +9,54 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
+use std::str::FromStr;
 
 use anyhow::Result;
-use tokio::try_join;
-use tracing::{error, instrument};
+use tokio::{join, try_join};
+use tracing::{error, instrument, warn};
 use trust_dns_resolver::config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts};
 use trust_dns_resolver::TokioAsyncResolver;
 
+use crate::network::protocol::server::fetch_server_list;
+
+mod r#static;
+
+/// 服务器管理器
 #[derive(Debug)]
 pub struct ServerManager {
     socket: Vec<SocketAddr>,
     quic: Vec<SocketAddr>,
-    // "socket://msfwifiv6.3g.qq.com:8080"
-    // "socket://msfwifi.3g.qq.com:8080"
 }
 
 impl ServerManager {
-    fn new() -> ServerManager {
-        ServerManager {
-            socket: vec![
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(183, 47, 102, 209)), 8080),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(113, 96, 18, 167)), 8080),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(157, 148, 36, 57)), 14000),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(120, 232, 67, 190)), 443),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(113, 96, 18, 167)), 14000),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(157, 148, 54, 73)), 443),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(120, 232, 19, 199)), 80),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(43, 154, 240, 21)), 8080),
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(43, 154, 240, 194)), 8080),
-            ],
-            quic: vec![
-                SocketAddr::new(IpAddr::V4(Ipv4Addr::new(58, 251, 106, 174)), 443),
-            ],
+    /// 更新服务器列表
+    #[instrument]
+    async fn update_server_list(&mut self) -> Result<()> {
+        let r = join!(
+            self.fetch_server_by_protocol(),
+            self.fetch_server_by_dns(),
+        );
+        if r.0.is_err() && r.1.is_err() {
+            error!(
+                dsc = "无法通过 网络 更新服务器列表",
+                protobufErr = %r.0.as_ref().unwrap_err(), dnsErr = %r.1.as_ref().unwrap_err(),
+            );
+            return Err(r.0.unwrap_err());
         }
+
+        match r.0 {
+            Ok(s) => { self.socket.extend_from_slice(&*s); }
+            Err(e) => { warn!(dsc = "无法通过 Protobuf 更新服务器列表", err = %e); }
+        }
+        match r.1 {
+            Ok(s) => { self.socket.extend_from_slice(&*s); }
+            Err(e) => { warn!(dsc = "无法通过 DNS 更新服务器列表", err = %e); }
+        }
+
+        Ok(())
     }
 
+    /// 通过 DNS 获取服务器列表
     #[instrument]
     async fn fetch_server_by_dns(&self) -> Result<Vec<SocketAddr>> {
         let mut rc = ResolverConfig::new();
@@ -78,6 +91,24 @@ impl ServerManager {
 
         Ok(r)
     }
+
+    /// 通过 协议 获取服务器列表
+    #[instrument]
+    async fn fetch_server_by_protocol(&self) -> Result<Vec<SocketAddr>> {
+        let s = fetch_server_list().await?;
+
+        let mut r = Vec::new();
+        for s in s.socket_wifi_ipv4.iter() {
+            let i = IpAddr::from_str(&*s.ip);
+            if i.is_err() {
+                error!(dsc = "解析 HttpServerListRes.socket_wifi_ipv4.ip 为 IpAddr 失败", err = %i.as_ref().unwrap_err());
+            }
+
+            r.push(SocketAddr::new(i?, s.port as u16));
+        }
+
+        Ok(r)
+    }
 }
 
 #[cfg(test)]
@@ -86,8 +117,7 @@ mod tests {
 
     #[tokio::test]
     async fn fetch_server_by_dns() {
-        let mut a = ServerManager { socket: Vec::new(), quic: Vec::new() };
-        let a = a.fetch_server_by_dns().await.unwrap();
-        println!("{:#?}", a);
+        let a = ServerManager { socket: Vec::new(), quic: Vec::new() };
+        a.fetch_server_by_dns().await.unwrap();
     }
 }
