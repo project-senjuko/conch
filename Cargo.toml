@@ -13,7 +13,7 @@ path = "crates/conch/main.rs"
 members = [
     "crates/cookie",
     "crates/cookie/cipher/qtea",
-    "crates/cookie/network/protocol/frame/jce",
+    "crates/cookie/network/protocol/jce/frame",
 
     "crates/macaron"
 ]

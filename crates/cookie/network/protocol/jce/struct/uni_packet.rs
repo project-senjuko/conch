@@ -14,11 +14,10 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use tracing::{instrument, trace};
 
-use jce::{JceReader, JceWriter};
-use jce::field::{JByte, JceFieldErr, JceKind, JceStruct, JInt, JMap, JShort, JSList, JString};
+use jce::field::{ JceFieldErr, JceKind, JceStruct, JInt, JMap,  JSList, JString};
 use qtea::QTeaCipher;
 
-use crate::network::protocol::r#struct::jce::r#struct::RequestPacket;
+use super::RequestPacket;
 
 #[derive(Default)]
 pub struct UniPacket {

@@ -9,7 +9,7 @@ path = "lib.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jce = { path = "network/protocol/frame/jce", package = "cookie-jce" }
+jce = { path = "network/protocol/jce/frame", package = "cookie-jce" }
 qtea = { path = "cipher/qtea", package = "cookie-qtea" }
 anyhow = "1.0.62"
 bytes = "1.2.1"
