@@ -4,11 +4,17 @@
 
 ## 文档
 
+### 使用文档
+
 TODO...
+
+### 源代码文档
+
+[![Rust Code Docs](https://img.shields.io/badge/docs-crates-000?style=for-the-badge&logo=rust)](https://qianjunakasumi.github.io/senjuko-conch/conch/index.html)
 
 ## 监视器
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/qianjunakasumi/senjuko-conch/RustWorkspaceTest/main?style=for-the-badge)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/qianjunakasumi/senjuko-conch/RustWorkspaceTest/main?style=for-the-badge&logo=github)
 
 ## 贡献
 
