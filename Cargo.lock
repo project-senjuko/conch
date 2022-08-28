@@ -68,6 +68,7 @@ dependencies = [
  "anyhow",
  "bytes",
  "cookie-jce",
+ "cookie-qtea",
  "reqwest",
  "thiserror",
  "tokio",
@@ -84,7 +85,6 @@ name = "cookie-jce"
 version = "1.0.0"
 dependencies = [
  "bytes",
- "cookie-qtea",
  "rustc-hash",
  "tracing",
 ]

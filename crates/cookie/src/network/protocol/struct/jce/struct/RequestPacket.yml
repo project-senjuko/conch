@@ -1,0 +1,31 @@
+# nonk8s
+apiVersion: generator/v1
+kind: Jce
+metadata:
+  name: RequestPacket
+  upstreamVersion: 8845
+  source: com.qq.taf.RequestPacket
+  description: Jce 请求数据包
+spec:
+  startTag: 1
+  field:
+    - name: version
+      type: JShort
+    - name: packet_type
+      type: JByte
+    - name: message_type
+      type: JInt
+    - name: request_id
+      type: JInt
+    - name: servant_name
+      type: JString
+    - name: func_name
+      type: JString
+    - name: buffer
+      type: JSList
+    - name: timeout
+      type: JInt
+    - name: context
+      type: JMap<JString, JString>
+    - name: status
+      type: JMap<JString, JString>
