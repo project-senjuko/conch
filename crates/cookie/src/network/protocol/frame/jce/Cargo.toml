@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-qtea = { path = "../../../../cipher/qtea", package = "cookie-qtea" }
+
 bytes = "1.2.1"
 rustc-hash = "1.1.0"
 tracing = "0.1.36"

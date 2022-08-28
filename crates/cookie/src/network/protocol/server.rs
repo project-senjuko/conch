@@ -13,10 +13,10 @@ use bytes::Bytes;
 use tracing::{error, instrument};
 
 use jce::field::{JceFieldErr, JLong};
-use jce::packet::JcePacketV3;
 
 use crate::config::app_setting::APP_ID;
-use crate::network::protocol::r#struct::jce::{HttpServerListReq, HttpServerListRes};
+use crate::network::protocol::r#struct::jce::r#struct::{HttpServerListReq, HttpServerListRes};
+use crate::network::protocol::r#struct::jce::uni_packet::UniPacket;
 
 const KEY: [u32; 4] = [4030996319, 4096632207, 3707212954, 3127038993];
 
@@ -25,7 +25,7 @@ const ERR: &str = "请求服务器列表失败";
 /// 获取 HTTP 服务器列表
 #[instrument]
 pub async fn get_http_server_list() -> Result<HttpServerListRes> {
-    let mut p = JcePacketV3::new(0, "HttpServerListReq", "HttpServerListReq");
+    let mut p = UniPacket::new(0, "HttpServerListReq", "HttpServerListReq");
     p.put("HttpServerListReq", HttpServerListReq {
         timeout: 60,
         c: 1,
@@ -48,7 +48,7 @@ pub async fn get_http_server_list() -> Result<HttpServerListRes> {
         error!(msg = ERR, "网络读取原因：{}", res.as_ref().err().unwrap());
     }
 
-    let p = JcePacketV3::from(&mut res?, KEY);
+    let p = UniPacket::from(&mut res?, KEY);
     if p.is_err() {
         error!(msg = ERR, "Jce包 解析原因：{}", p.as_ref().err().unwrap());
     }

@@ -8,30 +8,30 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-//! Jce 包模块，
-//! 定义 `Jce 请求包` 结构体、
-//! 实现 Jce 数据在 `Jce 请求包` 中的编解码。
+//! Uni 数据包模块，
+//! 实现 Jce 数据在 `Uni 数据包` 中的编解码。
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use tracing::{instrument, trace};
 
+use jce::{JceReader, JceWriter};
+use jce::field::{JByte, JceFieldErr, JceKind, JceStruct, JInt, JMap, JShort, JSList, JString};
 use qtea::QTeaCipher;
 
-use crate::{JceReader, JceWriter};
-use crate::field::{JByte, JceFieldErr, JceKind, JceStruct, JInt, JMap, JShort, JSList, JString};
+use crate::network::protocol::r#struct::jce::r#struct::RequestPacket;
 
 #[derive(Default)]
-pub struct JcePacketV3 {
-    p: JcePacket,
+pub struct UniPacket {
+    p: RequestPacket,
     data: JMap<JString, JSList>,
 }
 
-impl JcePacketV3 {
-    /// 新建一个基本的 `Jce 请求包(ver.3)`
+impl UniPacket {
+    /// 新建一个基本的 `Uni 数据包(ver.3)`
     #[inline(always)]
     pub fn new(rid: JInt, sn: &str, r#fn: &str) -> Self {
         Self {
-            p: JcePacket {
+            p: RequestPacket {
                 version: 3,
                 request_id: rid,
                 servant_name: sn.to_string(),
@@ -42,14 +42,14 @@ impl JcePacketV3 {
         }
     }
 
-    /// 添加 `Jce 类型` 数据至本请求包
+    /// 添加 `Jce 类型` 数据至本数据包
     pub fn put<T: JceKind>(&mut self, n: &str, d: T) {
         let mut buf = BytesMut::new();
         d.to_bytes(&mut buf, 0);
         self.data.insert(n.to_string(), JSList::from(buf));
     }
 
-    /// 将本请求包中所有数据编码为 UniPacket `Jce 字节流`
+    /// 将本数据包中所有数据编码为 UniPacket `Jce 字节流`
     pub fn encode(&mut self, b: &mut BytesMut) {
         let mut buf = BytesMut::new();
         self.data.to_bytes(&mut buf, 0);
@@ -65,7 +65,7 @@ impl JcePacketV3 {
         b.put(up);
     }
 
-    /// 将本请求包中所有数据编码为 UniPacket `Jce 字节流`，
+    /// 将本数据包中所有数据编码为 UniPacket `Jce 字节流`，
     /// 并使用 [`QTeaCipher`] 加密。
     pub fn encode_with_tea(&mut self, key: [u32; 4]) -> BytesMut {
         let mut b = BytesMut::new();
@@ -74,14 +74,14 @@ impl JcePacketV3 {
     }
 }
 
-impl JcePacketV3 {
-    /// 从加密的 UniPacket `Jce 字节流` 中解码为 `Jce 请求包(ver.3)`。
+impl UniPacket {
+    /// 从加密的 UniPacket `Jce 字节流` 中解码为 `Uni 数据包(ver.3)`。
     /// 使用 [`QTeaCipher`] 解密。
     pub fn from(b: &mut Bytes, key: [u32; 4]) -> Result<Self, JceFieldErr> {
         let mut db = QTeaCipher::new(key).decrypt(b);
         db.get_i32(); // length
 
-        let mut s = JcePacket::default();
+        let mut s = RequestPacket::default();
         s.s_from_bytes(&mut db.freeze())?;
 
         let i = s.buffer.get_u8();
@@ -92,7 +92,7 @@ impl JcePacketV3 {
         Ok(Self { data: JMap::from_bytes(&mut s.buffer, 0)?, p: s })
     }
 
-    /// 获取本请求包中 `Jce 类型`
+    /// 获取本数据包中 `Jce 类型`
     #[inline(always)]
     pub fn get<T>(&mut self, n: &str) -> Result<T, JceFieldErr>
         where T: JceKind<Type=T>
@@ -101,55 +101,5 @@ impl JcePacketV3 {
             None => Err(JceFieldErr { expectation: 255, result: 201 }),
             Some(s) => T::from_bytes(&mut s.slice(1..), 0) // 固定字节 10: StructBegin Head
         }
-    }
-}
-
-/// 源 | com.qq.taf.RequestPacket
-#[derive(Default, Debug)]
-pub struct JcePacket {
-    pub version: JShort,
-    pub packet_type: JByte,
-    pub message_type: JInt,
-    pub request_id: JInt,
-    pub servant_name: JString,
-    pub func_name: JString,
-    pub buffer: JSList,
-    pub timeout: JInt,
-    pub context: JMap<JString, JString>,
-    pub status: JMap<JString, JString>,
-}
-
-impl JceStruct for JcePacket {
-    #[instrument]
-    fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(b, 1);
-        w.put(&self.version);
-        w.put(&self.packet_type);
-        w.put(&self.message_type);
-        w.put(&self.request_id);
-        w.put(&self.servant_name);
-        w.put(&self.func_name);
-        w.put(&self.buffer);
-        w.put(&self.timeout);
-        w.put(&self.context);
-        w.put(&self.status);
-        trace!(dsc = "「Jce 请求包」编码为「Jce 字节流」完成", data = ?self);
-    }
-
-    #[instrument]
-    fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
-        let mut r = JceReader::with_tag(b, 1);
-        self.version = r.get()?;
-        self.packet_type = r.get()?;
-        self.message_type = r.get()?;
-        self.request_id = r.get()?;
-        self.servant_name = r.get()?;
-        self.func_name = r.get()?;
-        self.buffer = r.get()?;
-        self.timeout = r.get()?;
-        self.context = r.get()?;
-        self.status = r.get()?;
-        trace!(dsc = "「Jce 请求包」解码为「Jce 字节流」完成", data = ?self);
-        Ok(())
     }
 }
