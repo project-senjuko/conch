@@ -42,7 +42,7 @@ mod tests {
 
     use super::super::{HeadData, JceFieldErr, JceKind, JceStruct, STRING1, STRUCT_BEGIN};
 
-    #[derive(Default, PartialEq, Debug)]
+    #[derive(Debug, Default, PartialEq)]
     struct Q {
         name: String,
     }

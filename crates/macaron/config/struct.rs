@@ -16,18 +16,18 @@ pub struct Config {
     pub network: NetworkTable,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Deserialize)]
 pub struct QQTable {
     pub account: QQAccountTable,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Deserialize)]
 pub struct QQAccountTable {
     pub number: u64,
     pub password: String,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Deserialize)]
 pub struct NetworkTable {
     #[serde(default = "network_table_dns_default")]
     pub dns: Vec<NetworkDNSTable>,
@@ -39,7 +39,7 @@ fn network_table_dns_default() -> Vec<NetworkDNSTable> {
     ]
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Debug, Deserialize)]
 pub struct NetworkDNSTable {
     pub address: String,
 }
