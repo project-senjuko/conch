@@ -6,3 +6,4 @@
 **/*.rs.bk
 
 # senjuko-conch
+Config.toml
