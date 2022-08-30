@@ -80,8 +80,10 @@ dependencies = [
 name = "conch-macaron"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "serde",
  "toml",
+ "tracing",
 ]
 
 [[package]]
