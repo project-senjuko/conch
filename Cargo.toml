@@ -14,9 +14,11 @@ members = [
     "crates/cookie",
     "crates/cookie/cipher/qtea",
     "crates/cookie/network/protocol/jce/frame",
-
     "crates/macaron"
 ]
 
 [dependencies]
-conch-cookie = { path = "crates/cookie" }
+cookie = { path = "crates/cookie", package = "conch-cookie" }
+macaron = { path = "crates/macaron", package = "conch-macaron" }
+tracing = "0.1.36"
+tracing-subscriber = "0.3.15"
