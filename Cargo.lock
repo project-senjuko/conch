@@ -857,6 +857,7 @@ dependencies = [
 name = "senjuko-conch"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "conch-cookie",
  "conch-macaron",
  "tracing",
