@@ -21,4 +21,4 @@ members = [
 cookie = { path = "crates/cookie", package = "conch-cookie" }
 macaron = { path = "crates/macaron", package = "conch-macaron" }
 tracing = "0.1.36"
-tracing-subscriber = "0.3.15"
+tracing-subscriber = { version = "0.3.15", features = ["env-filter"] }
