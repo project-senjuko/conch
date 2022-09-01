@@ -12,7 +12,7 @@ use std::env::{var, VarError};
 use std::fs::read;
 
 use anyhow::{Error, Result};
-use tracing::{error, instrument};
+use tracing::{debug, error, instrument, trace};
 
 use r#struct::Config;
 
@@ -32,36 +32,41 @@ mod r#struct;
 /// 若读取失败将抛出错误，可能会导致程序停止。
 #[instrument(fields(act = "加载配置文件"))]
 pub fn load_config() -> Result<Config> {
-    let v = var("SJKCONCH_CONFIG");
-    match v {
-        Ok(s) => { _load_config(s) }
+    let r = match var("SJKCONCH_CONFIG") {
+        Ok(s) => {
+            trace!(brc = "环境变量");
+            _load_config(s)
+        }
         Err(e) => {
             match e {
-                VarError::NotPresent => { _load_config("Config.toml".to_string()) }
+                VarError::NotPresent => {
+                    trace!(brc = "默认位置");
+                    _load_config("Config.toml".to_string())
+                }
                 VarError::NotUnicode(_) => {
-                    const ERR: &str = "读取环境变量中配置文件路径失败";
+                    const ERR: &str = "读取环境变量失败";
                     error!(dsc = ERR, err = %e);
                     Err(Error::msg(ERR))
                 }
             }
         }
-    }
+    };
+    if r.is_ok() { debug!(dsc = "加载成功"); }
+
+    r
 }
 
 #[instrument]
 fn _load_config(p: String) -> Result<Config> {
     let b = read(&p);
     if b.is_err() {
-        error!(
-            dsc = "读取配置文件失败", path = p,
-            err = %b.as_ref().unwrap_err(),
-        );
-    }
+        error!(dsc = "读取失败", path = p, err = %b.as_ref().unwrap_err());
+    } else { trace!(dsc = "读取成功"); }
 
     let c = toml::from_slice(&*b?);
     if c.is_err() {
-        error!(dsc = "解析配置文件失败", err = %c.as_ref().unwrap_err())
-    }
+        error!(dsc = "解析失败", err = %c.as_ref().unwrap_err())
+    } else { trace!(dsc = "解析成功"); }
 
     Ok(c?)
 }
