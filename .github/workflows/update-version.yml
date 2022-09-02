@@ -23,8 +23,8 @@ jobs:
         working-directory: ./actions/stepper
         run: |
           go run -v ./...
-          echo "::set-output name=fileName::$(cat download_filename)}"
-          echo "::set-output name=url::$(cat download_url)}"
+          echo "::set-output name=fileName::$(cat download_filename)"
+          echo "::set-output name=url::$(cat download_url)"
           rm -f download_filename
           rm -f download_url
       - name: Create Pull Request
