@@ -27,13 +27,20 @@ func main() {
 	url := readDownloadURL(body)
 	us := strings.Split(url, "/")
 
-	err := os.Setenv("DOWNLOAD_URL", us[len(us)-1])
+	err := os.WriteFile("download_url", []byte(url), 0644)
 
 	if err != nil {
-		fmt.Println("[ERR] 设置环境变量失败 ", err)
+		fmt.Println("[ERR] ", err)
+		return
 	}
 
-	code, appId := parseDownloadURL(url)
+	err = os.WriteFile("download_filename", []byte(us[len(us)-1]), 0644)
+	if err != nil {
+		fmt.Println("[ERR] ", err)
+		return
+	}
+
+	code, appId := parseDownloadURL(readDownloadURL(body))
 	nv := VersionConf{
 		Version: readVersion(body),
 		Code:    code,

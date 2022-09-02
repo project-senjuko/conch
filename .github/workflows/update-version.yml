@@ -12,32 +12,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.18
+      - uses: actions/checkout@v3
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
 
-    - name: Update Version
-      working-directory: ./actions/stepper
-      run: go run -v ./...
-
-    - name: Create Pull Request
-      uses: peter-evans/create-pull-request@v4
-      with:
-        commit-message: pref👽️version 同步至上游版本
-        signoff: true
-        branch: pref/bump-version
-        delete-branch: true
-        title: auto⚙️action 同步至上游版本
-        body: |
-          ## 检查清单
-          
-          - [ ] JceStruct 已是最新
-          
-          <details>
-          <summary>开发者工具</summary>
-          - 下载链接: $DOWNLOAD_URL
-          </details>
-        assignees: qianjunakasumi
-        reviewers: qianjunakasumi
+      - name: Update Version
+        id: update-version
+        working-directory: ./actions/stepper
+        run: |
+          go run -v ./...
+          echo "::set-output name=fileName::$(cat download_filename)}"
+          echo "::set-output name=url::$(cat download_url)}"
+          rm -f download_filename
+          rm -f download_url
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          commit-message: pref👽️version 同步至上游版本
+          signoff: true
+          branch: pref/bump-version
+          delete-branch: true
+          title: auto⚙️action 同步至上游版本
+          body: |
+            ## 检查清单
+            
+            - [ ] JceStruct 已是最新
+            
+            <details>
+            <summary>开发者工具</summary>
+            
+            - 下载链接: [${{ steps.update-version.outputs.fileName }}](${{ steps.update-version.outputs.url }})   
+            </details>
