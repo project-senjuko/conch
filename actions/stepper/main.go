@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -23,7 +24,16 @@ func main() {
 	v := readVersionConf()
 
 	body := requestHTML()
-	code, appId := parseDownloadURL(readDownloadURL(body))
+	url := readDownloadURL(body)
+	us := strings.Split(url, "/")
+
+	err := os.Setenv("DOWNLOAD_URL", us[len(us)-1])
+
+	if err != nil {
+		fmt.Println("[ERR] 设置环境变量失败 ", err)
+	}
+
+	code, appId := parseDownloadURL(url)
 	nv := VersionConf{
 		Version: readVersion(body),
 		Code:    code,
