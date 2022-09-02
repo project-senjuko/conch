@@ -6,9 +6,10 @@ metadata:
   upstreamVersion: 8845
   source: com.qq.taf.RequestPacket
   description: Jce 请求数据包
+  fieldCount: 10
 spec:
   startTag: 1
-  field:
+  fields:
     - name: version
       type: JShort
     - name: packet_type

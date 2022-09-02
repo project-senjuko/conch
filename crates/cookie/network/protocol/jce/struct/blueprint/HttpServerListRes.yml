@@ -6,9 +6,10 @@ metadata:
   upstreamVersion: 8845
   source: com.tencent.msf.service.protocol.serverconfig.e
   description: HTTP 服务器列表响应结构体
+  fieldCount: 21
 spec:
   startTag: 1
-  field:
+  fields:
     - name: a
       type: JInt
     - name: socket_mobile_ipv4

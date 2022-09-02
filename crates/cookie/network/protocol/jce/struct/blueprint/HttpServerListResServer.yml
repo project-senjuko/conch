@@ -6,9 +6,10 @@ metadata:
   upstreamVersion: 8845
   source: com.tencent.msf.service.protocol.serverconfig.i
   description: HTTP 服务器列表响应服务器结构体
+  fieldCount: 10
 spec:
   startTag: 1
-  field:
+  fields:
     - name: ip
       type: JString
     - name: port

@@ -68,7 +68,7 @@ func format(j *JceSpec) (b strings.Builder) {
 
 func formatStruct(j *JceSpec) string {
 	var b strings.Builder
-	for i, v := range j.Spec.Field {
+	for i, v := range j.Spec.Fields {
 		b.WriteString("    pub ")
 		b.WriteString(v.Name)
 		b.WriteString(": ")
@@ -81,7 +81,7 @@ func formatStruct(j *JceSpec) string {
 		}
 
 		b.WriteString(",")
-		if i != len(j.Spec.Field) {
+		if i != len(j.Spec.Fields) {
 			b.WriteString(`
 `)
 		}
@@ -91,7 +91,7 @@ func formatStruct(j *JceSpec) string {
 
 func formatImplToBytes(j *JceSpec) string {
 	var b strings.Builder
-	for i, v := range j.Spec.Field {
+	for i, v := range j.Spec.Fields {
 		if v.Tag != nil && *v.Tag != uint8(i)+j.Spec.StartTag {
 			b.WriteString("        w.set_tag(")
 			b.WriteString(strconv.FormatUint(uint64(*v.Tag), 10))
@@ -123,7 +123,7 @@ func formatImplToBytes(j *JceSpec) string {
 
 func formatImplFromBytes(j *JceSpec) string {
 	var b strings.Builder
-	for i, v := range j.Spec.Field {
+	for i, v := range j.Spec.Fields {
 		if v.Tag != nil && *v.Tag != uint8(i)+j.Spec.StartTag {
 			b.WriteString("        r.set_tag(")
 			b.WriteString(strconv.FormatUint(uint64(*v.Tag), 10))
@@ -140,7 +140,7 @@ func formatImplFromBytes(j *JceSpec) string {
 			b.WriteString("r.get_optional()?;")
 		}
 
-		if i != len(j.Spec.Field) {
+		if i != len(j.Spec.Fields) {
 			b.WriteString(`
 `)
 		}

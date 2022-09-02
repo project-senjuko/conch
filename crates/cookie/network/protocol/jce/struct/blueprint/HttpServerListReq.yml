@@ -6,9 +6,10 @@ metadata:
   upstreamVersion: 8845
   source: com.tencent.msf.service.protocol.serverconfig.d
   description: HTTP 服务器列表请求结构体
+  fieldCount: 14
 spec:
   startTag: 1
-  field:
+  fields:
     - name: uin
       type: JLong
     - name: timeout
