@@ -27,15 +27,11 @@ func main() {
 	url := readDownloadURL(body)
 	us := strings.Split(url, "/")
 
-	err := os.WriteFile("download_url", []byte(url), 0644)
-
-	if err != nil {
+	if err := os.WriteFile("download_url", []byte(url), 0644); err != nil {
 		fmt.Println("[ERR] ", err)
 		return
 	}
-
-	err = os.WriteFile("download_filename", []byte(us[len(us)-1]), 0644)
-	if err != nil {
+	if err := os.WriteFile("download_filename", []byte(us[len(us)-1]), 0644); err != nil {
 		fmt.Println("[ERR] ", err)
 		return
 	}
@@ -56,8 +52,7 @@ func main() {
 	fmt.Println("== 开始更新 ==")
 
 	for _, a := range arm {
-		err := a(v, &nv)
-		if err != nil {
+		if err := a(v, &nv); err != nil {
 			fmt.Println("[ERR] ", err)
 		}
 	}
