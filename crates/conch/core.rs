@@ -8,19 +8,14 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use tracing::{info, instrument};
+use anyhow::Result;
+use tracing::instrument;
 
-use self::core::init_core;
-use self::logger::init_logger;
+use macaron::config::load_config;
 
-mod logger;
-mod core;
-
+/// 核心服务初始化
 #[instrument]
-fn main() {
-    let _h = init_logger();
-    match init_core() {
-        Ok(_) => { info!(dsc = "核心服务初始化成功") }
-        Err(_) => { panic!("核心服务初始化失败！请检查错误日志并解决后再行启动") }
-    }
+pub fn init_core() -> Result<()> {
+    let _c = load_config()?;
+    Ok(())
 }
