@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -23,6 +24,18 @@ func main() {
 	v := readVersionConf()
 
 	body := requestHTML()
+	url := readDownloadURL(body)
+	us := strings.Split(url, "/")
+
+	if err := os.WriteFile("download_url", []byte(url), 0644); err != nil {
+		fmt.Println("[ERR] ", err)
+		return
+	}
+	if err := os.WriteFile("download_filename", []byte(us[len(us)-1]), 0644); err != nil {
+		fmt.Println("[ERR] ", err)
+		return
+	}
+
 	code, appId := parseDownloadURL(readDownloadURL(body))
 	nv := VersionConf{
 		Version: readVersion(body),
@@ -39,8 +52,7 @@ func main() {
 	fmt.Println("== 开始更新 ==")
 
 	for _, a := range arm {
-		err := a(v, &nv)
-		if err != nil {
+		if err := a(v, &nv); err != nil {
 			fmt.Println("[ERR] ", err)
 		}
 	}
