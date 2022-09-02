@@ -11,10 +11,10 @@ path = "lib.rs"
 [dependencies]
 jce = { path = "network/protocol/jce/frame", package = "cookie-jce" }
 qtea = { path = "cipher/qtea", package = "cookie-qtea" }
-anyhow = "1.0.62"
+anyhow = "1.0.63"
 bytes = "1.2.1"
 reqwest = "0.11.11"
-thiserror = "1.0.32"
+thiserror = "1.0.33"
 tokio = { version = "1.20.1", features = ["full"] }
 tracing = "0.1.36"
 trust-dns-resolver = "0.21.2"
