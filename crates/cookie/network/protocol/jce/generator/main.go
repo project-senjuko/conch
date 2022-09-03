@@ -108,7 +108,7 @@ func pack() int {
 }
 
 func write(s strings.Builder) {
-	fp := filepath.Join(filepath.Dir(Con.Spec.Output), "struct.rs")
+	fp := filepath.Join(filepath.Dir(Con.Spec.Output), "packet.rs")
 
 	f, err := os.OpenFile(fp, os.O_WRONLY|os.O_TRUNC|os.O_CREATE, 0200)
 	if err != nil && err == os.ErrExist {
