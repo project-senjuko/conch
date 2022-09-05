@@ -1,0 +1,26 @@
+name: Mark stale issues and pull requests
+
+on:
+  schedule:
+  - cron: '0 11 * * 1,5'
+
+  workflow_dispatch:
+
+jobs:
+  stale:
+
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      pull-requests: write
+
+    steps:
+    - uses: actions/stale@v5
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        days-before-stale: 30
+        days-before-close: 3
+        stale-issue-message: '此 Issue 近期内无任何活动，若持续无响应将在数日后自动关闭'
+        stale-pr-message: '此 PR 近期内无任何活动，若持续无响应将在数日后自动关闭'
+        close-issue-message: '此 Issue 未能在有效期内获得任何响应，被自动关闭'
+        close-pr-message: '此 PR 未能在有效期内获得任何响应，被自动关闭'
