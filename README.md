@@ -7,7 +7,7 @@
 良好的文档是一个不错的开始。  
 我们提供了一个较为精美的手册，请点击下方图标查看。内含源代码文档。
 
-[![Rust Code Docs](https://img.shields.io/badge/docs-Conch%20海螺-success?style=for-the-badge&logo=readthedocs)](https://qianjunakasumi.github.io/senjuko-conch/rust-docs/conch/index.html)
+[![Docs](https://img.shields.io/badge/docs-Conch%20海螺-success?style=for-the-badge&logo=readthedocs)](https://qianjunakasumi.github.io/senjuko-conch/)
 
 ## 监视器
 

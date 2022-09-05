@@ -45,7 +45,7 @@ jobs:
       - name: Generate Rust documents
         run: cargo doc --no-deps --workspace
       - name: Move to Docusaurus
-        run: mv target/doc/* manual/static/rust-docs/.
+        run: mv target/doc manual/static/rust-docs
 
       - name: Generate Docusaurus documents
         working-directory: ./manual
