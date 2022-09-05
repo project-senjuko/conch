@@ -47,6 +47,10 @@ jobs:
       - name: Move to Docusaurus
         run: mv target/doc manual/static/rust-docs
 
+      - name: Install Docusaurus
+        working-directory: ./manual
+        run: npm install
+
       - name: Generate Docusaurus documents
         working-directory: ./manual
         run: npm run build
