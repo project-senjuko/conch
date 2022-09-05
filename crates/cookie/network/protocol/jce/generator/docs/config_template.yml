@@ -1,3 +1,4 @@
+# nonk8s
 apiVersion: generator/v1
 kind: Config
 spec:

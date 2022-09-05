@@ -31,6 +31,7 @@ type JceSpec struct {
 		UpstreamVersion uint32 `yaml:"upstreamVersion"`
 		Source          string `yaml:"source"`
 		Description     string `yaml:"description"`
+		SkipPrint       bool   `yaml:"skipPrint"`
 	} `yaml:"metadata"`
 	Spec JceKind `yaml:"spec"`
 }

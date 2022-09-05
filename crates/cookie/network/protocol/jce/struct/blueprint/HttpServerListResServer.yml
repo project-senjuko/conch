@@ -7,6 +7,7 @@ metadata:
   source: com.tencent.msf.service.protocol.serverconfig.i
   description: HTTP 服务器列表响应服务器结构体
   fieldCount: 10
+  skipPrint: true
 spec:
   startTag: 1
   fields:

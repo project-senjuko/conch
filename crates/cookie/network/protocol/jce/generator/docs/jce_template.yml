@@ -1,3 +1,4 @@
+# nonk8s
 apiVersion: generator/v1
 kind: Jce
 metadata:
@@ -5,6 +6,8 @@ metadata:
   upstreamVersion: 1
   source: ren.qianjunakasumi.jce.Template
   description: Jce 模板
+  fieldCount: 114514
+  skipPrint: true
 spec:
   startTag: 1
   field:

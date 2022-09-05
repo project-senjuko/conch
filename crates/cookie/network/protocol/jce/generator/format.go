@@ -38,8 +38,7 @@ const IMPLMIDDLE1 = ` {
 const IMPLMIDDLE1p1 = `"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, `
-const IMPMMIDDLE2 = `
-    }
+const IMPMMIDDLE2 = `    }
 
 	#[instrument(fields(str = "`
 const IMPMMIDDLE2p1 = `"), skip(self, b))]
@@ -120,7 +119,10 @@ func formatImplToBytes(j *JceSpec) string {
 		b.WriteString(`
 `)
 	}
-	b.WriteString(`        trace!(dsc = "编码完成");`)
+	if !j.Metadata.SkipPrint {
+		b.WriteString(`        trace!(dsc = "编码完成");
+`)
+	}
 
 	return b.String()
 }
@@ -149,9 +151,12 @@ func formatImplFromBytes(j *JceSpec) string {
 `)
 		}
 	}
-	b.WriteString(`        trace!(dsc = "解码完成");
+	if !j.Metadata.SkipPrint {
+		b.WriteString(`        trace!(dsc = "解码完成");
 `)
+	}
 	b.WriteString(`        Ok(())
 `)
+
 	return b.String()
 }

@@ -271,7 +271,6 @@ impl JceStruct for HttpServerListResServer {
             Some(v) => w.put(v),
             None => {}
         }
-        trace!(dsc = "编码完成");
     }
 
 	#[instrument(fields(str = "HTTP 服务器列表响应服务器结构体"), skip(self, b))]
@@ -287,7 +286,6 @@ impl JceStruct for HttpServerListResServer {
         self.region = r.get_optional()?;
         self.oper = r.get_optional()?;
         self.ability = r.get_optional()?;
-        trace!(dsc = "解码完成");
         Ok(())
     }
 }
