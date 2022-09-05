@@ -34,13 +34,15 @@ const STRUCTEND = `}
 
 impl JceStruct for `
 const IMPLMIDDLE1 = ` {
-	#[instrument]
+	#[instrument(fields(str = "`
+const IMPLMIDDLE1p1 = `"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, `
 const IMPMMIDDLE2 = `
     }
 
-	#[instrument]
+	#[instrument(fields(str = "`
+const IMPMMIDDLE2p1 = `"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, `
 const END = `    }
@@ -55,10 +57,14 @@ func format(j *JceSpec) (b strings.Builder) {
 	b.WriteString(STRUCTEND)
 	b.WriteString(j.Metadata.Name)
 	b.WriteString(IMPLMIDDLE1)
+	b.WriteString(j.Metadata.Description)
+	b.WriteString(IMPLMIDDLE1p1)
 	b.WriteString(t)
 	b.WriteString(SEP)
 	b.WriteString(formatImplToBytes(j))
 	b.WriteString(IMPMMIDDLE2)
+	b.WriteString(j.Metadata.Description)
+	b.WriteString(IMPMMIDDLE2p1)
 	b.WriteString(t)
 	b.WriteString(SEP)
 	b.WriteString(formatImplFromBytes(j))
@@ -114,9 +120,7 @@ func formatImplToBytes(j *JceSpec) string {
 		b.WriteString(`
 `)
 	}
-	b.WriteString(`        trace!(dsc = "「`)
-	b.WriteString(j.Metadata.Description)
-	b.WriteString(`」编码为「Jce 字节流」完成", data = ?self);`)
+	b.WriteString(`        trace!(dsc = "编码完成");`)
 
 	return b.String()
 }
@@ -145,9 +149,7 @@ func formatImplFromBytes(j *JceSpec) string {
 `)
 		}
 	}
-	b.WriteString(`        trace!(dsc = "「`)
-	b.WriteString(j.Metadata.Description)
-	b.WriteString(`」解码为「Jce 字节流」完成", data = ?self);
+	b.WriteString(`        trace!(dsc = "解码完成");
 `)
 	b.WriteString(`        Ok(())
 `)
