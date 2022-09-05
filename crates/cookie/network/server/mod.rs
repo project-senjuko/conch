@@ -30,8 +30,8 @@ pub struct ServerManager {
 
 impl ServerManager {
     /// 更新服务器列表
-    #[instrument]
-    async fn update_server_list(&mut self) -> Result<()> {
+    #[instrument(skip(self))]
+    pub async fn update_server_list(&mut self) -> Result<()> {
         let r = join!(
             self.fetch_server_by_protocol(),
             self.fetch_server_by_dns(),
@@ -57,7 +57,7 @@ impl ServerManager {
     }
 
     /// 通过 DNS 获取服务器列表
-    #[instrument]
+    #[instrument(skip(self))]
     async fn fetch_server_by_dns(&self) -> Result<Vec<SocketAddr>> {
         let mut rc = ResolverConfig::new();
         rc.add_name_server(NameServerConfig {
@@ -93,7 +93,7 @@ impl ServerManager {
     }
 
     /// 通过 协议 获取服务器列表
-    #[instrument]
+    #[instrument(skip(self))]
     async fn fetch_server_by_protocol(&self) -> Result<Vec<SocketAddr>> {
         let s = fetch_server_list().await?;
 
@@ -108,16 +108,5 @@ impl ServerManager {
         }
 
         Ok(r)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::ServerManager;
-
-    #[tokio::test]
-    async fn fetch_server_by_dns() {
-        let a = ServerManager { socket: Vec::new(), quic: Vec::new() };
-        a.fetch_server_by_dns().await.unwrap();
     }
 }

@@ -14,7 +14,7 @@ use std::fs::read;
 use anyhow::{Error, Result};
 use tracing::{debug, error, instrument, trace};
 
-use r#struct::Config;
+pub use r#struct::*;
 
 mod r#struct;
 
@@ -61,12 +61,12 @@ fn _load_config(p: String) -> Result<Config> {
     let b = read(&p);
     if b.is_err() {
         error!(dsc = "读取失败", path = p, err = %b.as_ref().unwrap_err());
-    } else { trace!(dsc = "读取成功"); }
+    }
 
     let c = toml::from_slice(&*b?);
     if c.is_err() {
         error!(dsc = "解析失败", err = %c.as_ref().unwrap_err())
-    } else { trace!(dsc = "解析成功"); }
+    }
 
     Ok(c?)
 }
