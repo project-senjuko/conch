@@ -1,9 +1,9 @@
-name: DeployRustDocToPages
+name: Deploy to Pages
 
 on:
   push:
-    branches: ["main"]
-  
+    branches: [ "main" ]
+
   workflow_dispatch:
 
 env:
@@ -20,25 +20,39 @@ concurrency:
 
 jobs:
   deploy:
-  
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    
+
+    strategy:
+      matrix:
+        node-version: [ 16.x ]
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        
-      - name: Generate documents
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Generate Rust documents
         run: cargo doc --no-deps --workspace
-        
+      - name: Move to Docusaurus
+        run: mv target/doc/* manual/static/rust-docs/.
+
+      - name: Generate Docusaurus documents
+        run: npm run build
+
       - name: Setup Pages
         uses: actions/configure-pages@v1
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: 'target/doc/.'
+          path: 'manual/build/.'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
