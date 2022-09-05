@@ -17,7 +17,7 @@ updates:
     reviewers: [ "qianjunakasumi" ]
 
   - package-ecosystem: "gomod"
-    directory: "/crates/cookie/src/network/protocol/frame/jce/generator"
+    directory: "/crates/cookie/network/protocol/jce/generator"
     schedule:
       interval: "daily"
     assignees: [ "qianjunakasumi" ]
@@ -33,6 +33,28 @@ updates:
     assignees: [ "qianjunakasumi" ]
     commit-message:
       prefix: "pref⬆️gomod "
+    open-pull-requests-limit: 114
+    rebase-strategy: "disabled"
+    reviewers: [ "qianjunakasumi" ]
+
+  - package-ecosystem: "pub"
+    directory: "/dashboard"
+    schedule:
+      interval: "daily"
+    assignees: [ "qianjunakasumi" ]
+    commit-message:
+      prefix: "pref⬆️pub "
+    open-pull-requests-limit: 114
+    rebase-strategy: "disabled"
+    reviewers: [ "qianjunakasumi" ]
+
+  - package-ecosystem: "npm"
+    directory: "/manual"
+    schedule:
+      interval: "daily"
+    assignees: [ "qianjunakasumi" ]
+    commit-message:
+      prefix: "pref⬆️yarn "
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
     reviewers: [ "qianjunakasumi" ]
