@@ -34,6 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
+        working-directory: ./manual
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
@@ -45,6 +46,7 @@ jobs:
         run: mv target/doc/* manual/static/rust-docs/.
 
       - name: Generate Docusaurus documents
+        working-directory: ./manual
         run: npm run build
 
       - name: Setup Pages
