@@ -9,14 +9,22 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use anyhow::Result;
-use tracing::instrument;
 
-use cookie::client::Client;
-use macaron::config::load_config;
+use macaron::config::Config;
 
-/// 核心服务初始化
-#[instrument]
-pub async fn init_core() -> Result<()> {
-    let mut c = Client::new(load_config()?);
-    c.run().await
+use super::network::server::ServerManager;
+
+pub struct Client {
+    server_manager: ServerManager,
+    config: Config,
+}
+
+impl Client {
+    pub fn new(c: Config) -> Self {
+        Self { server_manager: Default::default(), config: c }
+    }
+
+    pub async fn run(&mut self) -> Result<()> {
+        self.server_manager.update_server_list().await
+    }
 }

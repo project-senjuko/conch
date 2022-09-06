@@ -10,6 +10,7 @@ path = "lib.rs"
 
 [dependencies]
 jce = { path = "network/protocol/jce/frame", package = "cookie-jce" }
+macaron = { path = "../macaron", package = "conch-macaron" }
 qtea = { path = "cipher/qtea", package = "cookie-qtea" }
 anyhow = "1.0.64"
 bytes = "1.2.1"

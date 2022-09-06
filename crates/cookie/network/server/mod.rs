@@ -13,7 +13,7 @@ use std::str::FromStr;
 
 use anyhow::Result;
 use tokio::{join, try_join};
-use tracing::{error, instrument, warn};
+use tracing::{debug, error, instrument, trace, warn};
 use trust_dns_resolver::config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts};
 use trust_dns_resolver::TokioAsyncResolver;
 
@@ -38,7 +38,7 @@ impl ServerManager {
         );
         if r.0.is_err() && r.1.is_err() {
             error!(
-                dsc = "无法通过 网络 更新服务器列表",
+                dsc = "All 更新失败",
                 protobufErr = %r.0.as_ref().unwrap_err(), dnsErr = %r.1.as_ref().unwrap_err(),
             );
             return Err(r.0.unwrap_err());
@@ -46,13 +46,14 @@ impl ServerManager {
 
         match r.0 {
             Ok(s) => { self.socket.extend_from_slice(&*s); }
-            Err(e) => { warn!(dsc = "无法通过 Protobuf 更新服务器列表", err = %e); }
+            Err(e) => { warn!(dsc = "Protobuf 更新失败", err = %e); }
         }
         match r.1 {
             Ok(s) => { self.socket.extend_from_slice(&*s); }
-            Err(e) => { warn!(dsc = "无法通过 DNS 更新服务器列表", err = %e); }
+            Err(e) => { warn!(dsc = "DNS 更新失败", err = %e); }
         }
 
+        debug!(dsc = "成功");
         Ok(())
     }
 
@@ -101,7 +102,8 @@ impl ServerManager {
         for s in s.socket_wifi_ipv4.iter() {
             let i = IpAddr::from_str(&*s.ip);
             if i.is_err() {
-                error!(dsc = "解析 HttpServerListRes.socket_wifi_ipv4.ip 为 IpAddr 失败", err = %i.as_ref().unwrap_err());
+                trace!(dsc = "解析 HttpServerListRes.socket_wifi_ipv4.ip 为 IpAddr 失败", err = %i.as_ref().unwrap_err(), ip = &*s.ip); // 此错误等级低
+                continue;
             }
 
             r.push(SocketAddr::new(i?, s.port as u16));

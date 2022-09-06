@@ -76,6 +76,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "bytes",
+ "conch-macaron",
  "cookie-jce",
  "cookie-qtea",
  "reqwest",
@@ -860,6 +861,7 @@ dependencies = [
  "anyhow",
  "conch-cookie",
  "conch-macaron",
+ "tokio",
  "tracing",
  "tracing-subscriber",
 ]

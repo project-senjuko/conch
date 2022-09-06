@@ -8,6 +8,8 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
+use anyhow::Result;
+use tokio;
 use tracing::{info, instrument};
 
 use self::core::init_core;
@@ -17,10 +19,13 @@ mod logger;
 mod core;
 
 #[instrument]
-fn main() {
-    let _h = init_logger();
-    match init_core() {
+#[tokio::main]
+async fn main() -> Result<()> {
+    let _h = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
+    match init_core().await {
         Ok(_) => { info!(dsc = "核心服务初始化成功") }
         Err(_) => { panic!("核心服务初始化失败！请检查错误日志并解决后再行启动") }
     }
+
+    Ok(())
 }

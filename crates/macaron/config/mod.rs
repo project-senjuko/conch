@@ -30,7 +30,7 @@ mod r#struct;
 ///
 /// 读取该环境变量指示的文件，
 /// 若读取失败将抛出错误，可能会导致程序停止。
-#[instrument(fields(act = "加载配置文件"))]
+#[instrument]
 pub fn load_config() -> Result<Config> {
     let r = match var("SJKCONCH_CONFIG") {
         Ok(s) => {
@@ -51,12 +51,12 @@ pub fn load_config() -> Result<Config> {
             }
         }
     };
-    if r.is_ok() { debug!(dsc = "加载成功"); }
+    if r.is_ok() { debug!(dsc = "成功"); }
 
     r
 }
 
-#[instrument]
+#[instrument(skip(p))]
 fn _load_config(p: String) -> Result<Config> {
     let b = read(&p);
     if b.is_err() {
