@@ -1016,7 +1016,7 @@ dependencies = [
 
 [[package]]
 name = "senjuko-conch"
-version = "0.1.114514-alpha.1"
+version = "0.1.0"
 dependencies = [
  "anyhow",
  "conch-cookie",
