@@ -14,8 +14,9 @@
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 use tracing::{instrument, trace};
 
-use jce::field::{ JceFieldErr, JceKind, JceStruct, JInt, JMap,  JSList, JString};
-use qtea::QTeaCipher;
+use jce::field::{JceFieldErr, JceKind, JceStruct, JInt, JMap, JSList, JString};
+
+use crate::cipher::qtea::QTeaCipher;
 
 use super::RequestPacket;
 

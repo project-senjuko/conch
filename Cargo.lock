@@ -90,7 +90,6 @@ dependencies = [
  "bytes",
  "conch-macaron",
  "cookie-jce",
- "cookie-qtea",
  "reqwest",
  "thiserror",
  "tokio",
@@ -141,13 +140,6 @@ dependencies = [
  "bytes",
  "rustc-hash",
  "tracing",
-]
-
-[[package]]
-name = "cookie-qtea"
-version = "0.1.0"
-dependencies = [
- "bytes",
 ]
 
 [[package]]
