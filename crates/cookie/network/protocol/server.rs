@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use anyhow::Result;
-use bytes::Bytes;
+use bytes::BytesMut;
 use tracing::{error, instrument};
 
 use jce::field::{JceFieldErr, JLong};
@@ -48,7 +48,7 @@ pub async fn fetch_server_list() -> Result<HttpServerListRes> {
         error!(msg = ERR, "网络读取原因：{}", res.as_ref().err().unwrap());
     }
 
-    let p = UniPacket::from(&mut res?, KEY);
+    let p = UniPacket::from(BytesMut::from(res?.as_ref()), KEY);
     if p.is_err() {
         error!(msg = ERR, "Jce包 解析原因：{}", p.as_ref().err().unwrap());
     }
@@ -58,17 +58,4 @@ pub async fn fetch_server_list() -> Result<HttpServerListRes> {
     }
 
     Ok(d?)
-}
-
-#[cfg(test)]
-mod tests {
-    use anyhow::Result;
-
-    use super::fetch_server_list;
-
-    #[tokio::test]
-    async fn to_bytes() -> Result<()> {
-        fetch_server_list().await?;
-        Ok(())
-    }
 }

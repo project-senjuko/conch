@@ -8,7 +8,7 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{Buf, BytesMut};
 
 use super::tea::TeaCipher;
 
@@ -16,37 +16,58 @@ pub struct QCBChaining {
     c: TeaCipher,
 }
 
-impl QCBChaining { pub fn new(c: TeaCipher) -> QCBChaining { QCBChaining { c } } }
+impl QCBChaining { pub fn new(c: TeaCipher) -> Self { Self { c } } }
 
 impl QCBChaining {
-    pub fn encrypt(&self, b: &mut Bytes) -> BytesMut {
-        let mut bm = BytesMut::with_capacity(b.remaining());
-        let (mut iv, mut av) = (0, 0);
-        while b.remaining() > 0 {
-            let before = b.get_u64() ^ iv; // pt ^ iv
+    /// 加密
+    pub fn encrypt(&self, mut b: BytesMut) -> BytesMut {
+        let (r, mut i, mut iv, mut av) = (b.remaining(), 0, 0, 0);
+
+        while r >= i + 8 {
+            let before = Self::get_u64(&b, i) ^ iv; // pt ^ iv
             iv = self.c.encrypt(before) ^ av; // after ^ av = ct
             av = before;
-            bm.put_u64(iv);
+            Self::put_u64(&mut b, i, iv);
+            i += 8;
         }
-        bm
+
+        b
     }
 
-    pub fn decrypt(&self, b: &mut Bytes) -> BytesMut {
-        let mut bm = BytesMut::with_capacity(b.remaining());
-        let (mut iv, mut av) = (0, 0);
-        while b.remaining() > 0 {
-            let ct = b.get_u64();
+    /// 解密
+    pub fn decrypt(&self, mut b: BytesMut) -> BytesMut {
+        let (r, mut i, mut iv, mut av) = (b.remaining(), 0, 0, 0);
+
+        while r >= i + 8 {
+            let ct = Self::get_u64(&b, i);
             av = self.c.decrypt(ct ^ av); // before
-            bm.put_u64(av ^ iv); // pt
+            Self::put_u64(&mut b, i, av ^ iv); // pt
             iv = ct;
+            i += 8;
         }
-        bm
+
+        b
+    }
+
+    /// 获取一个大端序无符号的 64 位整数类型，
+    /// 从索引 i 开始读取 8 个字节。
+    #[inline(always)]
+    fn get_u64(b: &BytesMut, i: usize) -> u64 {
+        let s: &[u8; 8] = b[i..i + 8].try_into().unwrap();
+        u64::from_be_bytes(*s)
+    }
+
+    /// 写入一个大端序无符号类型的 64 位整数，
+    /// 从索引 i 开始写入 8 个字节。
+    #[inline(always)]
+    fn put_u64(b: &mut BytesMut, i: usize, n: u64) {
+        b[i..i + 8].swap_with_slice(&mut u64::to_be_bytes(n));
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::BytesMut;
 
     use super::{QCBChaining, TeaCipher};
 
@@ -55,7 +76,7 @@ mod tests {
     #[test]
     fn encrypt() {
         assert_eq!(
-            C.encrypt(&mut Bytes::from(vec![2, 0, 2, 2, 2, 2, 0, 2, 5, 2, 0, 1, 3, 1, 4, 0])),
+            C.encrypt(BytesMut::from(&[2, 0, 2, 2, 2, 2, 0, 2, 5, 2, 0, 1, 3, 1, 4, 0][..])),
             vec![244, 123, 62, 197, 118, 127, 124, 229, 24, 107, 105, 26, 152, 90, 161, 238],
         );
     }
@@ -63,7 +84,7 @@ mod tests {
     #[test]
     fn decrypt() {
         assert_eq!(
-            C.decrypt(&mut Bytes::from(vec![244, 123, 62, 197, 118, 127, 124, 229, 24, 107, 105, 26, 152, 90, 161, 238])),
+            C.decrypt(BytesMut::from(&[244, 123, 62, 197, 118, 127, 124, 229, 24, 107, 105, 26, 152, 90, 161, 238][..])),
             vec![2, 0, 2, 2, 2, 2, 0, 2, 5, 2, 0, 1, 3, 1, 4, 0],
         );
     }

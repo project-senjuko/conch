@@ -8,25 +8,24 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{Buf, BufMut, BytesMut};
 
 use self::{qcbc::QCBChaining, tea::TeaCipher};
 
-mod tea;
 mod qcbc;
+mod tea;
 
 pub struct QTeaCipher {
     c: QCBChaining,
 }
 
 impl QTeaCipher {
-    pub fn new(key: [u32; 4]) -> QTeaCipher {
-        QTeaCipher { c: QCBChaining::new(TeaCipher::new(key)) }
-    }
+    #[inline(always)]
+    pub fn new(key: [u32; 4]) -> Self { Self { c: QCBChaining::new(TeaCipher::new(key)) } }
 }
 
 impl QTeaCipher {
-    pub fn encrypt(&self, b: &Bytes) -> BytesMut {
+    pub fn encrypt(&self, b: BytesMut) -> BytesMut {
         let len = b.remaining();
         let fixed = 10 + len;
         let mut fill = fixed % 8;
@@ -36,13 +35,13 @@ impl QTeaCipher {
         let mut bm = BytesMut::with_capacity(fixed + fill);
         bm.put_u8(fill as u8 | 248);
         bm.put_bytes(75, head); // 75 = senju
-        bm.put_slice(b);
+        bm.put_slice(&*b);
         bm.put_bytes(0, 7);
 
-        self.c.encrypt(&mut bm.freeze())
+        self.c.encrypt(bm)
     }
 
-    pub fn decrypt(&self, b: &mut Bytes) -> BytesMut {
+    pub fn decrypt(&self, b: BytesMut) -> BytesMut {
         let mut bm = self.c.decrypt(b);
         let len = bm.remaining();
         let head = ((bm.get_u8() & 7) + 3) as usize;
@@ -52,7 +51,7 @@ impl QTeaCipher {
 
 #[cfg(test)]
 mod tests {
-    use bytes::Bytes;
+    use bytes::BytesMut;
 
     use super::QTeaCipher;
 
@@ -60,7 +59,7 @@ mod tests {
     fn encrypt() {
         assert_eq!(
             QTeaCipher::new([75, 7565, 6576, 76]). // senjunakasumi
-                encrypt(&Bytes::from(vec![2, 0, 2, 2])),
+                encrypt(BytesMut::from(&[2, 0, 2, 2][..])).to_vec(),
             vec![159, 224, 47, 148, 141, 93, 112, 191, 185, 78, 235, 150, 76, 140, 182, 252],
         );
     }
@@ -69,7 +68,7 @@ mod tests {
     fn decrypt() {
         assert_eq!(
             QTeaCipher::new([75, 7565, 6576, 76]).
-                decrypt(&mut Bytes::from(vec![159, 224, 47, 148, 141, 93, 112, 191, 185, 78, 235, 150, 76, 140, 182, 252])),
+                decrypt(BytesMut::from(&[159, 224, 47, 148, 141, 93, 112, 191, 185, 78, 235, 150, 76, 140, 182, 252][..])),
             vec![2, 0, 2, 2],
         );
     }

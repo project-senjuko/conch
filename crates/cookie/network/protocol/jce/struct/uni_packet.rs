@@ -11,7 +11,7 @@
 //! Uni 数据包模块，
 //! 实现 Jce 数据在 `Uni 数据包` 中的编解码。
 
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{Buf, BufMut, BytesMut};
 use tracing::{instrument, trace};
 
 use jce::field::{JceFieldErr, JceKind, JceStruct, JInt, JMap, JSList, JString};
@@ -70,14 +70,14 @@ impl UniPacket {
     pub fn encode_with_tea(&mut self, key: [u32; 4]) -> BytesMut {
         let mut b = BytesMut::new();
         self.encode(&mut b);
-        QTeaCipher::new(key).encrypt(&b.freeze())
+        QTeaCipher::new(key).encrypt(b)
     }
 }
 
 impl UniPacket {
     /// 从加密的 UniPacket `Jce 字节流` 中解码为 `Uni 数据包(ver.3)`。
     /// 使用 [`QTeaCipher`] 解密。
-    pub fn from(b: &mut Bytes, key: [u32; 4]) -> Result<Self, JceFieldErr> {
+    pub fn from(b: BytesMut, key: [u32; 4]) -> Result<Self, JceFieldErr> {
         let mut db = QTeaCipher::new(key).decrypt(b);
         db.get_i32(); // length
 
