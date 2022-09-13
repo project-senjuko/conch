@@ -8,7 +8,28 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-pub mod jce;
-pub mod tlv;
+use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-pub mod server;
+pub mod r#struct;
+
+pub struct TlvField {
+    pub command: u16,
+    pub payload: Bytes,
+}
+
+impl TlvField {
+    pub fn put_self(self, b: &mut BytesMut) {
+        b.put_u16(self.command);
+        b.put_u16(self.payload.remaining() as u16);
+        b.put(self.payload);
+    }
+}
+
+pub trait TlvTStruct {
+    fn get_command() -> u16;
+
+    fn to_tlv_payload(&self) -> Bytes;
+    fn to_tlv_filed(&self) -> TlvField {
+        TlvField { command: Self::get_command(), payload: self.to_tlv_payload() }
+    }
+}
