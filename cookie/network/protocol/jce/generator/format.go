@@ -34,7 +34,7 @@ const STRUCTEND = `}
 
 impl JceStruct for `
 const IMPLMIDDLE1 = ` {
-	#[instrument(fields(str = "`
+    #[instrument(fields(str = "`
 const IMPLMIDDLE1p1 = `"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, `
