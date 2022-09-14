@@ -40,7 +40,7 @@ const IMPLMIDDLE1p1 = `"), skip(self, b))]
         let mut w = JceWriter::new(b, `
 const IMPMMIDDLE2 = `    }
 
-	#[instrument(fields(str = "`
+    #[instrument(fields(str = "`
 const IMPMMIDDLE2p1 = `"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, `
