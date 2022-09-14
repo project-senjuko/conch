@@ -9,7 +9,6 @@ metadata:
   fieldCount: 10
   skipPrint: true
 spec:
-  startTag: 1
   fields:
     - name: ip
       type: JString

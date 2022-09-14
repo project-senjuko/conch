@@ -48,7 +48,11 @@ const END = `    }
 }`
 
 func format(j *JceSpec) (b strings.Builder) {
-	t := strconv.FormatUint(uint64(j.Spec.StartTag), 10)
+	t := "1"
+	if st := j.Spec.StartTag; st != nil {
+		t = strconv.FormatUint(uint64(*st), 10)
+	}
+
 	b.WriteString(STRUCT)
 	b.WriteString(j.Metadata.Name)
 	b.WriteString(STRUCTSTART)
@@ -97,7 +101,7 @@ func formatStruct(j *JceSpec) string {
 func formatImplToBytes(j *JceSpec) string {
 	var b strings.Builder
 	for i, v := range j.Spec.Fields {
-		if v.Tag != nil && *v.Tag != uint8(i)+j.Spec.StartTag {
+		if v.Tag != nil && *v.Tag != uint8(i)+*j.Spec.StartTag {
 			b.WriteString("        w.set_tag(")
 			b.WriteString(strconv.FormatUint(uint64(*v.Tag), 10))
 			b.WriteString(`);
@@ -130,7 +134,7 @@ func formatImplToBytes(j *JceSpec) string {
 func formatImplFromBytes(j *JceSpec) string {
 	var b strings.Builder
 	for i, v := range j.Spec.Fields {
-		if v.Tag != nil && *v.Tag != uint8(i)+j.Spec.StartTag {
+		if v.Tag != nil && *v.Tag != uint8(i)+*j.Spec.StartTag {
 			b.WriteString("        r.set_tag(")
 			b.WriteString(strconv.FormatUint(uint64(*v.Tag), 10))
 			b.WriteString(`);

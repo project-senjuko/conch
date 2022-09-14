@@ -8,7 +8,6 @@ metadata:
   description: Jce 请求数据包
   fieldCount: 10
 spec:
-  startTag: 1
   fields:
     - name: version
       type: JShort
