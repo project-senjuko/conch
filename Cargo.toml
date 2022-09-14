@@ -8,23 +8,21 @@ build = "build.rs"
 
 [[bin]]
 name = "conch"
-path = "crates/conch/main.rs"
+path = "conch/main.rs"
 
 [workspace]
 members = [
-    "crates/cookie",
-    "crates/cookie/network/protocol/jce/frame",
-    "crates/macaron"
+    "cookie",
+    "cookie/network/protocol/jce/frame",
 ]
 
 [dependencies]
-cookie = { path = "crates/cookie", package = "conch-cookie" }
-macaron = { path = "crates/macaron", package = "conch-macaron" }
+cookie = { path = "cookie", package = "conch-cookie" }
 anyhow = "1.0.64"
+shadow-rs = "0.16.3"
 tokio = { version = "1.21.1", features = ["full"] }
 tracing = "0.1.36"
 tracing-subscriber = { version = "0.3.15", features = ["env-filter"] }
-shadow-rs = "0.16.3"
 
 [build-dependencies]
 shadow-rs = "0.16.3"

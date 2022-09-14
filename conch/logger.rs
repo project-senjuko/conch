@@ -8,9 +8,9 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
+use shadow_rs::shadow;
 use tracing::{info, instrument};
 use tracing_subscriber::{EnvFilter, filter, fmt, layer, prelude::*, Registry, reload};
-use shadow_rs::shadow;
 
 shadow!(build);
 

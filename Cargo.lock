@@ -104,23 +104,14 @@ dependencies = [
  "anyhow",
  "bytes",
  "chrono",
- "conch-macaron",
  "cookie-jce",
  "reqwest",
+ "serde",
  "thiserror",
  "tokio",
- "tracing",
- "trust-dns-resolver",
-]
-
-[[package]]
-name = "conch-macaron"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "serde",
  "toml",
  "tracing",
+ "trust-dns-resolver",
 ]
 
 [[package]]
@@ -1047,7 +1038,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "conch-cookie",
- "conch-macaron",
  "shadow-rs",
  "tokio",
  "tracing",

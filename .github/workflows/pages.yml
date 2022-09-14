@@ -1,4 +1,4 @@
-name: Deploy to Pages
+name: Deploy to pages
 
 on:
   push:
@@ -34,7 +34,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Copy to Root
+      - name: Copy to root
         run: cp manual/package.json ./package.json && cp manual/yarn.lock ./yarn.lock
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -47,13 +47,9 @@ jobs:
       - name: Move to Docusaurus
         run: mv target/doc manual/static/rust-docs
 
-      - name: Install Docusaurus
+      - name: Install and generate Docusaurus documents
         working-directory: ./manual
-        run: npm install
-
-      - name: Generate Docusaurus documents
-        working-directory: ./manual
-        run: npm run build
+        run: npm install && npm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v1

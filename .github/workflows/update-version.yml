@@ -1,4 +1,4 @@
-name: UpdateVersion
+name: Update version
 
 on:
   schedule:
@@ -18,7 +18,7 @@ jobs:
         with:
           go-version: 1.18
 
-      - name: Update Version
+      - name: Update version
         id: update-version
         working-directory: ./actions/stepper
         run: |
@@ -27,7 +27,7 @@ jobs:
           echo "::set-output name=url::$(cat download_url)"
           rm -f download_filename
           rm -f download_url
-      
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:

@@ -1,60 +1,62 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
-
 version: 2
 updates:
-  - package-ecosystem: "cargo" # See documentation for possible values
-    directory: "/" # Location of package manifests
+
+  - package-ecosystem: "cargo"
+    directory: "/"
     schedule:
       interval: "daily"
+
+    reviewers: [ "qianjunakasumi" ]
     assignees: [ "qianjunakasumi" ]
+    open-pull-requests-limit: 114
+    rebase-strategy: "disabled"
     commit-message:
       prefix: "pref⬆️cargo "
-    open-pull-requests-limit: 114
-    rebase-strategy: "disabled"
-    reviewers: [ "qianjunakasumi" ]
 
   - package-ecosystem: "gomod"
-    directory: "/crates/cookie/network/protocol/jce/generator"
+    directory: "/cookie/network/protocol/jce/generator"
     schedule:
       interval: "daily"
+
+    reviewers: [ "qianjunakasumi" ]
     assignees: [ "qianjunakasumi" ]
-    commit-message:
-      prefix: "pref⬆️gomod "
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
-    reviewers: [ "qianjunakasumi" ]
+    commit-message:
+      prefix: "pref⬆️gomod "
+
   - package-ecosystem: "gomod"
     directory: "/actions/stepper"
     schedule:
       interval: "daily"
+
+    reviewers: [ "qianjunakasumi" ]
     assignees: [ "qianjunakasumi" ]
-    commit-message:
-      prefix: "pref⬆️gomod "
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
-    reviewers: [ "qianjunakasumi" ]
+    commit-message:
+      prefix: "pref⬆️gomod "
 
   - package-ecosystem: "pub"
     directory: "/dashboard"
     schedule:
       interval: "daily"
+
+    reviewers: [ "qianjunakasumi" ]
     assignees: [ "qianjunakasumi" ]
-    commit-message:
-      prefix: "pref⬆️pub "
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
-    reviewers: [ "qianjunakasumi" ]
+    commit-message:
+      prefix: "pref⬆️pub "
 
   - package-ecosystem: "npm"
     directory: "/manual"
     schedule:
       interval: "daily"
+
+    reviewers: [ "qianjunakasumi" ]
     assignees: [ "qianjunakasumi" ]
-    commit-message:
-      prefix: "pref⬆️yarn "
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
-    reviewers: [ "qianjunakasumi" ]
+    commit-message:
+      prefix: "pref⬆️yarn "

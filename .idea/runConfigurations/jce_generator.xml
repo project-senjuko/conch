@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="jce-generator" type="GoApplicationRunConfiguration" factoryName="Go Application">
     <module name="senjuko-conch" />
-    <working_directory value="$PROJECT_DIR$/crates/cookie/network/protocol/jce/generator" />
+    <working_directory value="$PROJECT_DIR$/cookie/network/protocol/jce/generator" />
     <kind value="PACKAGE" />
     <package value="qianjunakasumi/senjuko-conch/jce-generator" />
     <directory value="$PROJECT_DIR$" />
-    <filePath value="$PROJECT_DIR$/crates/cookie/network/protocol/jce/generator/main.go" />
+    <filePath value="$PROJECT_DIR$/cookie/network/protocol/jce/generator/main.go" />
     <method v="2" />
   </configuration>
 </component>

@@ -28,7 +28,7 @@ pub struct HttpServerListReq {
 }
 
 impl JceStruct for HttpServerListReq {
-	#[instrument(fields(str = "HTTP 服务器列表请求结构体"), skip(self, b))]
+    #[instrument(fields(str = "HTTP 服务器列表请求结构体"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.uin);
@@ -69,7 +69,7 @@ impl JceStruct for HttpServerListReq {
         trace!(dsc = "编码完成");
     }
 
-	#[instrument(fields(str = "HTTP 服务器列表请求结构体"), skip(self, b))]
+    #[instrument(fields(str = "HTTP 服务器列表请求结构体"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.uin = r.get()?;
@@ -119,7 +119,7 @@ pub struct HttpServerListRes {
 }
 
 impl JceStruct for HttpServerListRes {
-	#[instrument(fields(str = "HTTP 服务器列表响应结构体"), skip(self, b))]
+    #[instrument(fields(str = "HTTP 服务器列表响应结构体"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.a);
@@ -194,7 +194,7 @@ impl JceStruct for HttpServerListRes {
         trace!(dsc = "编码完成");
     }
 
-	#[instrument(fields(str = "HTTP 服务器列表响应结构体"), skip(self, b))]
+    #[instrument(fields(str = "HTTP 服务器列表响应结构体"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.a = r.get()?;
@@ -240,7 +240,7 @@ pub struct HttpServerListResServer {
 }
 
 impl JceStruct for HttpServerListResServer {
-	#[instrument(fields(str = "HTTP 服务器列表响应服务器结构体"), skip(self, b))]
+    #[instrument(fields(str = "HTTP 服务器列表响应服务器结构体"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.ip);
@@ -273,7 +273,7 @@ impl JceStruct for HttpServerListResServer {
         }
     }
 
-	#[instrument(fields(str = "HTTP 服务器列表响应服务器结构体"), skip(self, b))]
+    #[instrument(fields(str = "HTTP 服务器列表响应服务器结构体"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.ip = r.get()?;
@@ -307,7 +307,7 @@ pub struct RequestPacket {
 }
 
 impl JceStruct for RequestPacket {
-	#[instrument(fields(str = "Jce 请求数据包"), skip(self, b))]
+    #[instrument(fields(str = "Jce 请求数据包"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
         w.put(&self.version);
@@ -323,7 +323,7 @@ impl JceStruct for RequestPacket {
         trace!(dsc = "编码完成");
     }
 
-	#[instrument(fields(str = "Jce 请求数据包"), skip(self, b))]
+    #[instrument(fields(str = "Jce 请求数据包"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
         self.version = r.get()?;

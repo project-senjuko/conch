@@ -43,7 +43,7 @@ func updateJceVersion(o, n *VersionConf) (err error) {
 	fmt.Println("正在更新 " + d)
 
 	return ReadReplaceAndWrite(
-		"../../crates/cookie/network/protocol/jce/struct/version.yml",
+		"../../cookie/network/protocol/jce/struct/version.yml",
 		d,
 		ReplaceCode(o, n, "  current: "),
 	)
@@ -52,7 +52,7 @@ func updateJceVersion(o, n *VersionConf) (err error) {
 func updateJceStructVersion(o, n *VersionConf) (err error) {
 	wg := sync.WaitGroup{}
 	err = filepath.WalkDir(
-		"../../crates/cookie/network/protocol/jce/struct/blueprint",
+		"../../cookie/network/protocol/jce/struct/blueprint",
 		func(p string, d fs.DirEntry, err error) error {
 			if err != nil {
 				return errors.New("[ERR][updateJceStructVersion] " + err.Error())
@@ -89,7 +89,7 @@ func updateAppSetting(o, n *VersionConf) (err error) {
 	fmt.Println("正在更新 " + d)
 
 	return ReadReplaceAndWrite(
-		"../../crates/cookie/config/app_setting.rs",
+		"../../cookie/config/app_setting.rs",
 		d,
 		ReplaceCode(o, n, "/// APP_ID: 版本 | "),
 		ReplaceAppId(o, n, "pub const APP_ID: u32 = "),

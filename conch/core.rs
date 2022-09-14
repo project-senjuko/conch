@@ -8,4 +8,15 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-pub mod config;
+use anyhow::Result;
+use tracing::instrument;
+
+use cookie::client::Client;
+use cookie::config::load_config;
+
+/// 核心服务初始化
+#[instrument]
+pub async fn init_core() -> Result<()> {
+    let mut c = Client::new(load_config()?);
+    c.run().await
+}

@@ -1,4 +1,4 @@
-name: RustWorkspaceTest
+name: Rust workspace test
 
 on:
   push:

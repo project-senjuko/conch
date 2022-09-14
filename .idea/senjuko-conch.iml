@@ -4,11 +4,10 @@
   <component name="NewModuleRootManager" inherit-compiler-output="true">
     <exclude-output />
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/crates/cookie" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/crates/cookie/network/protocol/jce/frame" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/crates/macaron" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cookie" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/cookie/network/protocol/jce/frame" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
-      <excludeFolder url="file://$MODULE_DIR$/crates/cookie/network/protocol/jce/frame/target" />
+      <excludeFolder url="file://$MODULE_DIR$/cookie/network/protocol/jce/frame/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
