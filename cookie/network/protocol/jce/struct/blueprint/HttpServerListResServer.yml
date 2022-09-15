@@ -9,6 +9,7 @@ metadata:
   fieldCount: 10
   skipPrint: true
 spec:
+  product: r
   fields:
     - name: ip
       type: JString
