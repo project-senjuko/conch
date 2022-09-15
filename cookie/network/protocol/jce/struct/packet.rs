@@ -5,7 +5,7 @@ use bytes::{Bytes, BytesMut};
 use tracing::{instrument, trace};
 
 use jce::{JceReader, JceWriter};
-use jce::field::{JBool, JByte, JceFieldErr, JceStruct, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};
+use jce::field::{JBool, JByte, JceFieldErr, JceKindReader, JceKindWriter, JceStructReader, JceStructWriter, JDouble, JFloat, JInt, JList, JLong, JMap, JShort, JSList, JString};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -27,7 +27,7 @@ pub struct HttpServerListReq {
     pub n: Option<JBool>,
 }
 
-impl JceStruct for HttpServerListReq {
+impl JceStructWriter for HttpServerListReq {
     #[instrument(fields(str = "HTTP 服务器列表请求结构体"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
@@ -68,27 +68,6 @@ impl JceStruct for HttpServerListReq {
         }
         trace!(dsc = "编码完成");
     }
-
-    #[instrument(fields(str = "HTTP 服务器列表请求结构体"), skip(self, b))]
-    fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
-        let mut r = JceReader::with_tag(b, 1);
-        self.uin = r.get()?;
-        self.timeout = r.get()?;
-        self.c = r.get()?;
-        self.imsi = r.get()?;
-        self.is_wifi_conn = r.get()?;
-        self.app_id = r.get()?;
-        self.imei = r.get()?;
-        self.h = r.get_optional()?;
-        self.i = r.get_optional()?;
-        self.j = r.get_optional()?;
-        self.k = r.get_optional()?;
-        self.l = r.get_optional()?;
-        self.m = r.get_optional()?;
-        self.n = r.get_optional()?;
-        trace!(dsc = "解码完成");
-        Ok(())
-    }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -118,82 +97,7 @@ pub struct HttpServerListRes {
     pub u: Option<JByte>,
 }
 
-impl JceStruct for HttpServerListRes {
-    #[instrument(fields(str = "HTTP 服务器列表响应结构体"), skip(self, b))]
-    fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(b, 1);
-        w.put(&self.a);
-        w.put(&self.socket_mobile_ipv4);
-        w.put(&self.socket_wifi_ipv4);
-        w.put(&self.d);
-        w.put(&self.e);
-        match &self.f {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.g {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.h {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.i {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.j {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.k {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.http_mobile_ipv4 {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.http_wifi_ipv4 {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.speedtest_info {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.socket_ipv6 {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.http_ipv6 {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.quic_ipv6 {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.net_type {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.he_threshold {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.policy_id {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.u {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        trace!(dsc = "编码完成");
-    }
-
+impl JceStructReader for HttpServerListRes {
     #[instrument(fields(str = "HTTP 服务器列表响应结构体"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
@@ -239,40 +143,7 @@ pub struct HttpServerListResServer {
     pub ability: Option<JLong>,
 }
 
-impl JceStruct for HttpServerListResServer {
-    #[instrument(fields(str = "HTTP 服务器列表响应服务器结构体"), skip(self, b))]
-    fn s_to_bytes(&self, b: &mut BytesMut) {
-        let mut w = JceWriter::new(b, 1);
-        w.put(&self.ip);
-        w.put(&self.port);
-        w.put(&self.c);
-        w.put(&self.d);
-        match &self.e {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.f {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.g {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.region {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.oper {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.ability {
-            Some(v) => w.put(v),
-            None => {}
-        }
-    }
-
+impl JceStructReader for HttpServerListResServer {
     #[instrument(fields(str = "HTTP 服务器列表响应服务器结构体"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);
@@ -306,7 +177,7 @@ pub struct RequestPacket {
     pub status: JMap<JString, JString>,
 }
 
-impl JceStruct for RequestPacket {
+impl JceStructWriter for RequestPacket {
     #[instrument(fields(str = "Jce 请求数据包"), skip(self, b))]
     fn s_to_bytes(&self, b: &mut BytesMut) {
         let mut w = JceWriter::new(b, 1);
@@ -322,7 +193,9 @@ impl JceStruct for RequestPacket {
         w.put(&self.status);
         trace!(dsc = "编码完成");
     }
+}
 
+impl JceStructReader for RequestPacket {
     #[instrument(fields(str = "Jce 请求数据包"), skip(self, b))]
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
         let mut r = JceReader::with_tag(b, 1);

@@ -96,7 +96,6 @@ func pack() int {
 	s.WriteString(HEAD)
 	for _, k := range keys {
 		s.WriteString(`
-
 ////////////////////////////////////////////////////////////////////////////////
 `)
 		s.WriteString(Rs[k])
