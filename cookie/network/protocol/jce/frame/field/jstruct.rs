@@ -10,21 +10,14 @@
 
 use bytes::{Bytes, BytesMut};
 
-use super::{HeadData, JceFieldErr, JceKind, JceStruct, STRUCT_BEGIN, STRUCT_END};
+use super::{HeadData, JceFieldErr, JceKindReader, JceKindWriter, JceStructReader, JceStructWriter, STRUCT_BEGIN, STRUCT_END};
 
-impl<T> JceKind for T
-    where T: JceStruct + Default
+impl<T> JceKindReader for T
+    where T: JceStructReader + Default
 {
-    type Type = T;
-
-    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(STRUCT_BEGIN, tag).format(b, 0);
-        self.s_to_bytes(b);
-        HeadData::new(STRUCT_END, 0).format(b, 0);
-    }
-
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> {
-        let mut t = Self::Type::default();
+    type T = T;
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::T, JceFieldErr> {
+        let mut t = T::default();
         t.s_from_bytes(b)?;
         {
             let head = HeadData::parse(b);
@@ -36,25 +29,37 @@ impl<T> JceKind for T
     }
 }
 
+impl<T> JceKindWriter for T
+    where T: JceStructWriter + Default
+{
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        HeadData::new(STRUCT_BEGIN, tag).format(b, 0);
+        self.s_to_bytes(b);
+        HeadData::new(STRUCT_END, 0).format(b, 0);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::super::{HeadData, JceFieldErr, JceKind, JceStruct, STRING1, STRUCT_BEGIN};
+    use super::super::{HeadData, JceFieldErr, JceKindReader, JceKindWriter, JceStructReader, JceStructWriter, STRING1, STRUCT_BEGIN};
 
     #[derive(Debug, Default, PartialEq)]
     struct Q {
         name: String,
     }
 
-    impl JceStruct for Q {
-        fn s_to_bytes(&self, b: &mut BytesMut) { self.name.to_bytes(b, 0); }
-
+    impl JceStructReader for Q {
         fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr> {
             let _ = HeadData::parse(b);
             self.name = String::from_bytes(b, STRING1)?;
             Ok(())
         }
+    }
+
+    impl JceStructWriter for Q {
+        fn s_to_bytes(&self, b: &mut BytesMut) { self.name.to_bytes(b, 0); }
     }
 
     #[test]

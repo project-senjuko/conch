@@ -10,24 +10,11 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{HeadData, JceFieldErr, JceKind, JString, STRING1, STRING4};
+use super::{HeadData, JceFieldErr, JceKindReader, JceKindWriter, JString, STRING1, STRING4};
 
-impl JceKind for JString {
-    type Type = JString;
-
-    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        let l = self.len();
-        if l <= 255 {
-            HeadData::new(STRING1, tag).format(b, l);
-            b.put_u8(l as u8);
-        } else {
-            HeadData::new(STRING4, tag).format(b, l);
-            b.put_i32(l as i32);
-        };
-        b.put_slice(self.as_ref());
-    }
-
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr> {
+impl JceKindReader for JString {
+    type T = JString;
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::T, JceFieldErr> {
         let len = match r#type {
             STRING1 => Ok(b.get_u8() as usize),
             STRING4 => Ok(b.get_i32() as usize),
@@ -43,11 +30,25 @@ impl JceKind for JString {
     }
 }
 
+impl JceKindWriter for JString {
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        let l = self.len();
+        if l <= 255 {
+            HeadData::new(STRING1, tag).format(b, l);
+            b.put_u8(l as u8);
+        } else {
+            HeadData::new(STRING4, tag).format(b, l);
+            b.put_i32(l as i32);
+        };
+        b.put_slice(self.as_ref());
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{JceKind, JString, STRING1, STRING4};
+    use super::super::{JceKindReader, JceKindWriter, JString, STRING1, STRING4};
 
     #[test]
     fn to_bytes1() {

@@ -15,13 +15,13 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, DOUBLE, FLOAT, INT, JceFieldErr, JceKind, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END};
+use super::{BYTE, DOUBLE, FLOAT, INT, JceFieldErr, JceKindReader, JInt, LIST, LONG, MAP, SHORT, SIMPLE_LIST, STRING1, STRING4, STRUCT_BEGIN, STRUCT_END};
 
 /// Jce 头数据，
 /// 属于 `TT(L)V` 中 `TT` 部分、
 /// 提供编码为 `Jce 字节流` 和解码为
 /// `Jce 头数据` 的方法。
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub struct HeadData {
     pub r#type: u8,
     pub tag: u8,

@@ -10,19 +10,11 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, JceFieldErr, JceKind, JSList, SIMPLE_LIST};
+use super::{BYTE, HeadData, JceFieldErr, JceKindReader, JceKindWriter, JSList, SIMPLE_LIST};
 
-impl JceKind for JSList {
-    type Type = JSList;
-
-    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(SIMPLE_LIST, tag).format(b, self.remaining());
-        HeadData::new(BYTE, 0).format(b, 0);
-        (self.remaining() as i32).to_bytes(b, 0);
-        b.put_slice(self);
-    }
-
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> {
+impl JceKindReader for JSList {
+    type T = JSList;
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::T, JceFieldErr> {
         {
             let head = HeadData::parse(b);
             if head.tag != 0 || head.r#type != 0 {
@@ -36,11 +28,20 @@ impl JceKind for JSList {
     }
 }
 
+impl JceKindWriter for JSList {
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        HeadData::new(SIMPLE_LIST, tag).format(b, self.remaining());
+        HeadData::new(BYTE, 0).format(b, 0);
+        (self.remaining() as i32).to_bytes(b, 0);
+        b.put_slice(self);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{JceKind, JSList, SIMPLE_LIST};
+    use super::super::{JceKindReader, JceKindWriter, JSList, SIMPLE_LIST};
 
     #[test]
     fn to_bytes() {

@@ -14,7 +14,7 @@
 use bytes::{Buf, BufMut, BytesMut};
 use tracing::{instrument, trace};
 
-use jce::field::{JceFieldErr, JceKind, JceStruct, JInt, JMap, JSList, JString};
+use jce::field::{JceFieldErr,  JceKindReader, JceKindWriter,  JceStructReader, JceStructWriter, JInt, JMap, JSList, JString};
 
 use crate::cipher::qtea::QTeaCipher;
 
@@ -43,7 +43,7 @@ impl UniPacket {
     }
 
     /// 添加 `Jce 类型` 数据至本数据包
-    pub fn put<T: JceKind>(&mut self, n: &str, d: T) {
+    pub fn put<T: JceKindWriter>(&mut self, n: &str, d: T) {
         let mut buf = BytesMut::new();
         d.to_bytes(&mut buf, 0);
         self.data.insert(n.to_string(), JSList::from(buf));
@@ -95,7 +95,7 @@ impl UniPacket {
     /// 获取本数据包中 `Jce 类型`
     #[inline(always)]
     pub fn get<T>(&mut self, n: &str) -> Result<T, JceFieldErr>
-        where T: JceKind<Type=T>
+        where T: JceKindReader<T=T>
     {
         match self.data.get(n) {
             None => Err(JceFieldErr { expectation: 255, result: 201 }),

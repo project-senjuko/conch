@@ -10,18 +10,11 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, JceFieldErr, JceKind, JShort, SHORT, ZERO_TAG};
+use super::{BYTE, HeadData, JceFieldErr, JceKindReader, JceKindWriter, JShort, SHORT, ZERO_TAG};
 
-impl JceKind for JShort {
-    type Type = JShort;
-
-    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        if *self < 128 && *self >= -128 { return (*self as i8).to_bytes(b, tag); }
-        HeadData::new(SHORT, tag).format(b, 2);
-        b.put_i16(*self);
-    }
-
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr> {
+impl JceKindReader for JShort {
+    type T = JShort;
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::T, JceFieldErr> {
         match r#type {
             BYTE => Ok(b.get_i8() as i16),
             SHORT => Ok(b.get_i16()),
@@ -31,12 +24,19 @@ impl JceKind for JShort {
     }
 }
 
+impl JceKindWriter for JShort {
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        if *self < 128 && *self >= -128 { return (*self as i8).to_bytes(b, tag); }
+        HeadData::new(SHORT, tag).format(b, 2);
+        b.put_i16(*self);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{BYTE, JceKind, JShort, SHORT, ZERO_TAG};
-    use super::super::INT;
+    use super::super::{BYTE, INT, JceKindReader, JceKindWriter, JShort, SHORT, ZERO_TAG};
 
     #[test]
     fn to_bytes() {
