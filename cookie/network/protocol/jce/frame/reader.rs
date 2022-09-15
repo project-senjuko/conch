@@ -14,7 +14,7 @@
 use bytes::{Buf, Bytes};
 use rustc_hash::FxHashMap;
 
-use crate::field::{HeadData, JceFieldErr, JceKind};
+use crate::field::{HeadData, JceFieldErr, JceKindReader};
 
 /// Jce 字节流读取器
 pub struct JceReader<'a> {
@@ -43,7 +43,7 @@ impl JceReader<'_> {
     /// 获取 `Jce 类型`
     #[inline(always)]
     pub fn get<T>(&mut self) -> Result<T, JceFieldErr>
-        where T: JceKind<Type=T>
+        where T: JceKindReader<T=T>
     {
         match self.get_optional()? as Option<T> {
             Some(o) => Ok(o),
@@ -53,7 +53,7 @@ impl JceReader<'_> {
 
     /// 获取可选存在的 `Jce 类型`
     pub fn get_optional<T>(&mut self) -> Result<Option<T>, JceFieldErr>
-        where T: JceKind<Type=T>
+        where T: JceKindReader<T=T>
     {
         let r = self._get_optional();
         self.set_tag(self.tag + 1);
@@ -62,7 +62,7 @@ impl JceReader<'_> {
 
     #[inline(always)]
     fn _get_optional<T>(&mut self) -> Result<Option<T>, JceFieldErr>
-        where T: JceKind<Type=T>
+        where T: JceKindReader<T=T>
     {
         if !self.b.has_remaining() {
             return match self.cache.get(&self.tag).map(

@@ -8,6 +8,7 @@ metadata:
   description: HTTP 服务器列表响应结构体
   fieldCount: 21
 spec:
+  product: r
   fields:
     - name: a
       type: JInt

@@ -13,24 +13,14 @@ use std::hash::Hash;
 
 use bytes::{Buf, Bytes, BytesMut};
 
-use super::{HeadData, JceFieldErr, JceKind, JMap, MAP};
+use super::{HeadData, JceFieldErr, JceKindReader, JceKindWriter, JMap, MAP};
 
-impl<T, U> JceKind for JMap<T, U>
-    where T: JceKind<Type=T> + Eq + Hash,
-          U: JceKind<Type=U>
+impl<T, U> JceKindReader for JMap<T, U>
+    where T: JceKindReader<T=T> + Eq + Hash,
+          U: JceKindReader<T=U>
 {
-    type Type = JMap<T, U>;
-
-    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        HeadData::new(MAP, tag).format(b, 0);
-        (self.len() as i32).to_bytes(b, 0);
-        for (k, v) in self.iter() {
-            k.to_bytes(b, 0);
-            v.to_bytes(b, 1);
-        }
-    }
-
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> {
+    type T = JMap<T, U>;
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::T, JceFieldErr> {
         let len = HeadData::parse_ttl4(b)?;
         let mut map: HashMap<T, U> = HashMap::with_capacity(b.remaining());
         {
@@ -48,11 +38,25 @@ impl<T, U> JceKind for JMap<T, U>
     }
 }
 
+impl<T, U> JceKindWriter for JMap<T, U>
+    where T: JceKindWriter + Eq + Hash,
+          U: JceKindWriter
+{
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        HeadData::new(MAP, tag).format(b, 0);
+        (self.len() as i32).to_bytes(b, 0);
+        for (k, v) in self.iter() {
+            k.to_bytes(b, 0);
+            v.to_bytes(b, 1);
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::super::{JByte, JceKind, JMap, JString, MAP};
+    use super::super::{JByte, JceKindReader, JceKindWriter, JMap, JString, MAP};
 
     #[test]
     fn to_bytes() {

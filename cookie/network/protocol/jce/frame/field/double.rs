@@ -10,24 +10,25 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{DOUBLE, HeadData, JceFieldErr, JceKind, JDouble};
+use super::{DOUBLE, HeadData, JceFieldErr, JceKindReader, JceKindWriter, JDouble};
 
-impl JceKind for JDouble {
-    type Type = JDouble;
+impl JceKindReader for JDouble {
+    type T = JDouble;
+    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::T, JceFieldErr> { Ok(b.get_f64()) }
+}
 
+impl JceKindWriter for JDouble {
     fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
         HeadData::new(DOUBLE, tag).format(b, 8);
         b.put_f64(*self);
     }
-
-    fn from_bytes(b: &mut Bytes, _: u8) -> Result<Self::Type, JceFieldErr> { Ok(b.get_f64()) }
 }
 
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{DOUBLE, JceKind, JDouble};
+    use super::super::{DOUBLE, JceKindReader, JceKindWriter, JDouble};
 
     #[test]
     fn to_bytes() {

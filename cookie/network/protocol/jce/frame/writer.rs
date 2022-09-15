@@ -13,7 +13,7 @@
 
 use bytes::BytesMut;
 
-use crate::field::JceKind;
+use crate::field::JceKindWriter;
 
 /// Jce 字节流写入器
 pub struct JceWriter<'a> {
@@ -34,7 +34,7 @@ impl JceWriter<'_> {
 
     /// 添加 `Jce 类型` 数据至本写入器
     #[inline(always)]
-    pub fn put<T: JceKind>(&mut self, t: &T) {
+    pub fn put<T: JceKindWriter>(&mut self, t: &T) {
         t.to_bytes(self.b, self.tag);
         self.set_tag(self.tag + 1);
     }

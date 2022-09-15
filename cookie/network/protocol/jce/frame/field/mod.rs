@@ -12,6 +12,14 @@
 //! 定义 `Jce 原子类型` 和对应标签值、
 //! 提供 `Jce 字段` 与 `Jce 字节流` 的序列化与反序列化特征、
 //! 实现 `Jce 类型错误` 结构体。
+//!
+//! # `Kind` 与 `Struct`
+//!
+//! [`JceKindReader`] 和 [`JceKindWriter`] 基于 Jce 原子类型对其序列化与反序列化，支持的类型广泛普遍。
+//! 当序列化或反序列化 `Jce 结构体` 类型时，调用 [`JceStructReader`] 或 [`JceStructWriter`] 特征中
+//! 序列化或反序列化方法并封装或解封装 [`STRUCT_BEGIN`] 和 [`STRUCT_END`] 标记，并标有 tag。
+//! 若直接通过 [`JceStructReader`] 或 [`JceStructWriter`] 生成，则不进行任何封装或解封装。生成的标准
+//! `Jce 字节流` 可以直接作为最终产物使用，例：`RequestPack`。
 
 use std::collections::HashMap;
 use std::error;
@@ -66,43 +74,42 @@ pub const ZERO_TAG: u8 = 12;
 pub const SIMPLE_LIST: u8 = 13;
 
 
-/// Jce 类型特征，
-/// 提供 `Jce 类型` 与 `Jce 字节流` 之间序列化与反序列化、
-/// 描述 Jce 类型应实现方法的签名。
-///
-/// 与 [`JceStruct`] 特征不同，本特征是 `JceStruct` 的基石。
-/// 基于 Jce 原子类型对其序列化与反序列化，支持的类型广泛且普遍。
-/// 序列化或反序列化 `Jce 结构体` 类型时，先调用 [`JceStruct`] 特征中
-/// 序列化或反序列化方法，将其字节流输出封装于或解封装
-/// [`STRUCT_BEGIN`] 和 [`STRUCT_END`] 标记，并有 tag。
-pub trait JceKind {
-    /// Jce 类型
-    type Type;
-
-    /// 将支持的 `Jce 类型` 序列化为 `Jce 字节流`。
-    /// 序列化结果直接写入 b: &mut [`BytesMut`] 中。
-    fn to_bytes(&self, b: &mut BytesMut, tag: u8);
+/// Jce 类型读取器特征，
+/// 提供 `Jce 字节流` 反序列化为 `Jce 类型` 的方法抽象。所有的 Jce 类型都必须实现本特征。
+pub trait JceKindReader {
+    /// Jce 类型，
+    /// 指定 [`JceKindReader::from_bytes`] 方法返回参数的实体类型。
+    type T;
 
     /// 将 `Jce 字节流` 反序列化为支持的 `Jce 类型`。
-    /// r#type 视反序列化目标类型不同，可能会被忽略。
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr>;
+    /// `Jce 字节流` 中首个可被识别的内容块必须是 Jce 值的元数据。`r#type` 视反序列化目标类型的不同，可能会被忽略。
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::T, JceFieldErr>;
 }
 
-/// Jce 结构体特征。
-/// 提供 `Jce 结构体` 与 `Jce 字节流` 之间序列化与反序列化、
-/// 描述 `Jce 结构体` 应实现方法的签名。
-///
-/// 与 [`JceKind`] 特征不同，本特征基于 `JceKind`。
-/// 序列化或反序列化时，直接写入或读取 Jce 原子类型，
-/// 而不进行任何封装或解封装。用于直接生成封装在
-/// [`STRUCT_BEGIN`] 和 [`STRUCT_END`] 标记中的标准 `Jce 字节流`。
-pub trait JceStruct {
-    /// 将支持的 `Jce 结构体` 直接序列化为 `Jce 字节流`。
-    /// 序列化结果直接写入 b: &mut [`BytesMut`] 中。
-    fn s_to_bytes(&self, b: &mut BytesMut);
+/// Jce 类型写入器特征，
+/// 提供 `Jce 类型` 序列化为 `Jce 字节流` 的方法抽象。所有的 Jce 类型都必须实现本特征。
+pub trait JceKindWriter {
+    /// 将支持的 `Jce 类型` 序列化为 `Jce 字节流`。
+    /// 序列化结果按实际大小(+1)预留容量后直接写入 `b` 缓冲区中。
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8);
+}
 
-    /// 将 `Jce 字节流` 反序列化为支持的 `Jce 结构体`
+/// Jce 结构体读取器特征。
+/// 提供 `Jce 字节流` 反序列化为 `Jce 结构体` 的方法抽象。不是所有的 `Jce 结构体` 都实现了本特征，例如
+/// 在只读不写的情况下 不实现本特征可以减小二进制内容大小。
+pub trait JceStructReader {
+    /// 将 `Jce 字节流` 反序列化为支持的 `Jce 结构体`。
+    /// `Jce 字节流` 中首个可被识别的内容块必须是 Jce 头数据。
     fn s_from_bytes(&mut self, b: &mut Bytes) -> Result<(), JceFieldErr>;
+}
+
+/// Jce 结构体写入器特征。
+/// 提供 `Jce 结构体` 序列化为 `Jce 字节流` 的方法抽象。不是所有的 `Jce 结构体` 都实现了本特征，例如
+/// 在只写不读的情况下 不实现本特征可以减小二进制内容大小。
+pub trait JceStructWriter {
+    /// 将支持的 `Jce 结构体` 序列化为 `Jce 字节流`。
+    /// 序列化结果按实际大小(+1)预留容量后直接写入 `b` 缓冲区中。
+    fn s_to_bytes(&self, b: &mut BytesMut);
 }
 
 /// Jce 字段错误，

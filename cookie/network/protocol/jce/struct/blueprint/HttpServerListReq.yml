@@ -8,6 +8,7 @@ metadata:
   description: HTTP 服务器列表请求结构体
   fieldCount: 14
 spec:
+  product: w
   fields:
     - name: uin
       type: JLong

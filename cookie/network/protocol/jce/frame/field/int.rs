@@ -10,18 +10,11 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-use super::{BYTE, HeadData, INT, JceFieldErr, JceKind, JInt, SHORT, ZERO_TAG};
+use super::{BYTE, HeadData, INT, JceFieldErr, JceKindReader, JceKindWriter, JInt, SHORT, ZERO_TAG};
 
-impl JceKind for JInt {
-    type Type = JInt;
-
-    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
-        if *self < 32768 && *self >= -32768 { return (*self as i16).to_bytes(b, tag); }
-        HeadData::new(INT, tag).format(b, 4);
-        b.put_i32(*self);
-    }
-
-    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::Type, JceFieldErr> {
+impl JceKindReader for JInt {
+    type T = JInt;
+    fn from_bytes(b: &mut Bytes, r#type: u8) -> Result<Self::T, JceFieldErr> {
         match r#type {
             BYTE => Ok(b.get_i8() as i32),
             SHORT => Ok(b.get_i16() as i32),
@@ -32,12 +25,19 @@ impl JceKind for JInt {
     }
 }
 
+impl JceKindWriter for JInt {
+    fn to_bytes(&self, b: &mut BytesMut, tag: u8) {
+        if *self < 32768 && *self >= -32768 { return (*self as i16).to_bytes(b, tag); }
+        HeadData::new(INT, tag).format(b, 4);
+        b.put_i32(*self);
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use bytes::{Bytes, BytesMut};
 
-    use super::{INT, JceKind, JInt, SHORT, ZERO_TAG};
-    use super::super::LONG;
+    use super::super::{INT, JceKindReader, JceKindWriter, JInt, LONG, SHORT, ZERO_TAG};
 
     #[test]
     fn to_bytes() {

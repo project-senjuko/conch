@@ -49,6 +49,7 @@ type VersionKind struct {
 }
 
 type JceKind struct {
+	Product  string `yaml:"product"`
 	StartTag *uint8 `yaml:"startTag"`
 	Fields   []*struct {
 		Name   string `yaml:"name"`

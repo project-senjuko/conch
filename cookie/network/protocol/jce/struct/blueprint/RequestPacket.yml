@@ -8,6 +8,7 @@ metadata:
   description: Jce 请求数据包
   fieldCount: 10
 spec:
+  product: rw
   fields:
     - name: version
       type: JShort
