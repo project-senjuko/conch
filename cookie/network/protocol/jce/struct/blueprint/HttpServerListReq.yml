@@ -3,7 +3,7 @@ apiVersion: generator/v1
 kind: Jce
 metadata:
   name: HttpServerListReq
-  upstreamVersion: 9135
+  upstreamVersion: 9145
   source: com.tencent.msf.service.protocol.serverconfig.d
   description: HTTP 服务器列表请求结构体
   fieldCount: 14

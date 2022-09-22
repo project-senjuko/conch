@@ -3,7 +3,7 @@ apiVersion: generator/v1
 kind: Jce
 metadata:
   name: RequestPacket
-  upstreamVersion: 9135
+  upstreamVersion: 9145
   source: com.qq.taf.RequestPacket
   description: Jce 请求数据包
   fieldCount: 10
