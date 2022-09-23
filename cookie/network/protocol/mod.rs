@@ -12,3 +12,4 @@ pub mod jce;
 pub mod tlv;
 
 pub mod server;
+pub mod keyrotate;
