@@ -1,0 +1,54 @@
+name: Release crazy build
+
+on:
+  schedule:
+    - cron: '0 1 * * 4'
+
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    name: Build product and upload it
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build
+        run: cargo clean && cargo build --release
+
+      - name: Upload build product
+        uses: actions/upload-artifact@v3
+        with:
+          name: conch_v0.0.0-crazy
+          path: target/release/conch
+
+  upload-to-dockerhub:
+    name: Pack image and upload it to DockerHub
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Download build product
+        uses: actions/download-artifact@v3
+        with:
+          name: conch_v0.0.0-crazy
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: qianjunakasumi
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: qianjunakasumi/senjuko-conch:crazy
