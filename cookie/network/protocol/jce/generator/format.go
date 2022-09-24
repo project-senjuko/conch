@@ -110,12 +110,11 @@ impl JceStructWriter for `)
 			b.WriteString(v.Name)
 			b.WriteString(");")
 		} else {
-			b.WriteString("        match &self.")
+			b.WriteString(`        if self.`)
 			b.WriteString(v.Name)
-			b.WriteString(` {
-            Some(v) => w.put(v),
-            None => {}
-        }`)
+			b.WriteString(`.is_some() { w.put(&self.`)
+			b.WriteString(v.Name)
+			b.WriteString(`.unwrap()) }`)
 		}
 		b.WriteString(`
 `)

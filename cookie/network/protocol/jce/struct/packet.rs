@@ -38,34 +38,13 @@ impl JceStructWriter for HttpServerListReq {
         w.put(&self.is_wifi_conn);
         w.put(&self.app_id);
         w.put(&self.imei);
-        match &self.h {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.i {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.j {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.k {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.l {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.m {
-            Some(v) => w.put(v),
-            None => {}
-        }
-        match &self.n {
-            Some(v) => w.put(v),
-            None => {}
-        }
+        if self.h.is_some() { w.put(&self.h.unwrap()) }
+        if self.i.is_some() { w.put(&self.i.unwrap()) }
+        if self.j.is_some() { w.put(&self.j.unwrap()) }
+        if self.k.is_some() { w.put(&self.k.unwrap()) }
+        if self.l.is_some() { w.put(&self.l.unwrap()) }
+        if self.m.is_some() { w.put(&self.m.unwrap()) }
+        if self.n.is_some() { w.put(&self.n.unwrap()) }
         trace!(dsc = "编码完成");
     }
 }
