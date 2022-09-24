@@ -23,9 +23,17 @@ fn hook(file: &File) -> SdResult<()> {
 }
 
 fn append_maintainer_info(mut file: &File) -> SdResult<()> {
-    let maintainer_name = env::var("SJKCONCH_MAINTAINER_NAME")?;
-    let maintainer_email = env::var("SJKCONCH_MAINTAINER_EMAIL")?;
-    writeln!(file, "{}", String::from(r#"pub const SJKCONCH_MAINTAINER_NAME: &str = ""#) + &maintainer_name + r#"";"#)?;
-    writeln!(file, "{}", String::from(r#"pub const SJKCONCH_MAINTAINER_EMAIL: &str = ""#) + &maintainer_email + r#"";"#)?;
+    let maintainer_name = env::var("SJKCONCH_MAINTAINER_NAME");
+    let maintainer_email = env::var("SJKCONCH_MAINTAINER_EMAIL");
+    writeln!(file, "{}", String::from(r#"pub const SJKCONCH_MAINTAINER_NAME: &str = ""#) + (if maintainer_name.is_err() {
+        "<unknown>"
+    } else {
+        maintainer_name.as_ref().unwrap()
+    }) + r#"";"#)?;
+    writeln!(file, "{}", String::from(r#"pub const SJKCONCH_MAINTAINER_EMAIL: &str = ""#) + (if maintainer_email.is_err() {
+        "<unknown>"
+    } else {
+        maintainer_email.as_ref().unwrap()
+    }) + r#"";"#)?;
     Ok(())
 }
