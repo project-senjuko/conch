@@ -18,16 +18,14 @@ fn main() -> SdResult<()> {
 }
 
 fn hook(file: &File) -> SdResult<()> {
-    append_write_const(file)?;
+    append_maintainer_info(file)?;
     Ok(())
 }
 
-fn append_write_const(mut file: &File) -> SdResult<()> {
+fn append_maintainer_info(mut file: &File) -> SdResult<()> {
     let maintainer_name = env::var("SJKCONCH_MAINTAINER_NAME")?;
     let maintainer_email = env::var("SJKCONCH_MAINTAINER_EMAIL")?;
-    let maintainer_name_const: String = String::from(r#"pub const SJKCONCH_MAINTAINER_NAME: &str = ""#) + &maintainer_name + r#"";"#;
-    let maintainer_email_const: String = String::from(r#"pub const SJKCONCH_MAINTAINER_EMAIL: &str = ""#) + &maintainer_email + r#"";"#;
-    writeln!(file, "{}", maintainer_name_const)?;
-    writeln!(file, "{}", maintainer_email_const)?;
+    writeln!(file, "{}", String::from(r#"pub const SJKCONCH_MAINTAINER_NAME: &str = ""#) + &maintainer_name + r#"";"#)?;
+    writeln!(file, "{}", String::from(r#"pub const SJKCONCH_MAINTAINER_EMAIL: &str = ""#) + &maintainer_email + r#"";"#)?;
     Ok(())
 }
