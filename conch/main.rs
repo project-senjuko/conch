@@ -9,8 +9,8 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use anyhow::Result;
-use tokio;
-use tracing::{info, instrument};
+use tokio::signal::ctrl_c;
+use tracing::{error, info, instrument, warn};
 
 use self::core::init_core;
 use self::logger::init_logger;
@@ -27,5 +27,13 @@ async fn main() -> Result<()> {
         Err(_) => { panic!("核心服务初始化失败！请检查错误日志并解决后再行启动") }
     }
 
+    match ctrl_c().await {
+        Ok(()) => { warn!(dsc = "收到退出请求，开始清理") }
+        Err(e) => { error!(dsc = "监听退出请求失败", err = %e) }
+    }
+
+    // 通知各模块停止服务
+
+    info!(dsc = "プログラムは停止しますた、次回をお楽しみにじゃ");
     Ok(())
 }
