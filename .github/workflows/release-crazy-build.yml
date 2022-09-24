@@ -18,6 +18,9 @@ jobs:
       - name: Build
         run: cargo clean && cargo build --release
 
+      - name: Rename
+        run: mv target/release/conch target/release/conch_v0.0.0-crazy
+
       - name: Upload build product
         uses: actions/upload-artifact@v3
         with:
