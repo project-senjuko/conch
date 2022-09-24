@@ -8,6 +8,26 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-fn main() -> shadow_rs::SdResult<()> {
-    shadow_rs::new()
+use std::env;
+use std::fs::File;
+use std::io::Write;
+use shadow_rs::SdResult;
+
+fn main() -> SdResult<()> {
+    shadow_rs::new_hook(hook)
+}
+
+fn hook(file: &File) -> SdResult<()> {
+    append_write_const(file)?;
+    Ok(())
+}
+
+fn append_write_const(mut file: &File) -> SdResult<()> {
+    let maintainer_name = env::var("SJKCONCH_MAINTAINER_NAME")?;
+    let maintainer_email = env::var("SJKCONCH_MAINTAINER_EMAIL")?;
+    let maintainer_name_const: String = String::from(r#"pub const SJKCONCH_MAINTAINER_NAME: &str = ""#) + &maintainer_name + r#"";"#;
+    let maintainer_email_const: String = String::from(r#"pub const SJKCONCH_MAINTAINER_EMAIL: &str = ""#) + &maintainer_email + r#"";"#;
+    writeln!(file, "{}", maintainer_name_const)?;
+    writeln!(file, "{}", maintainer_email_const)?;
+    Ok(())
 }

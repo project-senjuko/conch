@@ -39,7 +39,9 @@ async fn main() -> Result<()> {
         BuildTarget = build::BUILD_TARGET,
         RustVersion = build::RUST_VERSION,
         BuildTime = build::BUILD_TIME_3339,
-        BuildRustChannel = build::BUILD_RUST_CHANNEL
+        BuildRustChannel = build::BUILD_RUST_CHANNEL,
+        SJKConchMaintainerName = build::SJKCONCH_MAINTAINER_NAME,
+        SJKConchMaintainerEmail = build::SJKCONCH_MAINTAINER_EMAIL,
     );
 
     match init_core().await {
