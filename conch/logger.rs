@@ -8,15 +8,12 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use shadow_rs::shadow;
-use tracing::{info, instrument};
+use tracing::instrument;
 use tracing_subscriber::{EnvFilter, filter, fmt, layer, prelude::*, Registry, reload};
-
-shadow!(build);
 
 /// 日志记录器初始化
 #[instrument]
-pub fn init_logger() -> reload::Handle<EnvFilter, layer::Layered<fmt::Layer<Registry>, Registry>> {
+pub fn init_logger() -> (String, reload::Handle<EnvFilter, layer::Layered<fmt::Layer<Registry>, Registry>>) {
     let e = EnvFilter::builder()
         .with_default_directive(filter::LevelFilter::INFO.into())
         .with_env_var("SJKCONCH_LOG")
@@ -29,21 +26,5 @@ pub fn init_logger() -> reload::Handle<EnvFilter, layer::Layered<fmt::Layer<Regi
         .with(lay)
         .init();
 
-    info!(
-        dsc = "いらっしゃいません！せんじゅうこコンチプロジェクトいます！ 今、進行中なので、少し我慢してくださいね？",
-        LogLevel = lev,
-        PKGVersion = build::PKG_VERSION,
-        Branch = build::BRANCH,
-        CommitHash = build::COMMIT_HASH,
-        CommitDate = build::COMMIT_DATE_3339,
-        CommitAuthor = build::COMMIT_AUTHOR,
-        CommitEmail = build::COMMIT_EMAIL,
-        BuildOS = build::BUILD_OS,
-        BuildTarget = build::BUILD_TARGET,
-        RustVersion = build::RUST_VERSION,
-        BuildTime = build::BUILD_TIME_3339,
-        BuildRustChannel = build::BUILD_RUST_CHANNEL
-    );
-
-    h
+    (lev, h)
 }

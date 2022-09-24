@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use anyhow::Result;
+use shadow_rs::shadow;
 use tokio::signal::ctrl_c;
 use tracing::{error, info, instrument, warn};
 
@@ -18,10 +19,29 @@ use self::logger::init_logger;
 mod logger;
 mod core;
 
+shadow!(build);
+
 #[instrument]
 #[tokio::main]
 async fn main() -> Result<()> {
-    let _h = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
+    let (lev, _h) = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
+
+    info!(
+        dsc = "いらっしゃいません！せんじゅうこコンチプロジェクトいます！ 今、進行中なので、少し我慢してくださいね？",
+        LogLevel = lev,
+        PKGVersion = build::PKG_VERSION,
+        Branch = build::BRANCH,
+        CommitHash = build::COMMIT_HASH,
+        CommitDate = build::COMMIT_DATE_3339,
+        CommitAuthor = build::COMMIT_AUTHOR,
+        CommitEmail = build::COMMIT_EMAIL,
+        BuildOS = build::BUILD_OS,
+        BuildTarget = build::BUILD_TARGET,
+        RustVersion = build::RUST_VERSION,
+        BuildTime = build::BUILD_TIME_3339,
+        BuildRustChannel = build::BUILD_RUST_CHANNEL
+    );
+
     match init_core().await {
         Ok(_) => { info!(dsc = "核心服务初始化成功") }
         Err(_) => { panic!("核心服务初始化失败！请检查错误日志并解决后再行启动") }
