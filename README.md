@@ -5,7 +5,7 @@
 ## 文档
 
 良好的文档是一个不错的开始。  
-我们提供了一个较为精美的手册，请点击下方图标查看。内含源代码文档。
+我们提供了一个较为精美的手册，请点击下方徽标查看。内含源代码文档。
 
 [![Docs](https://img.shields.io/badge/docs-Conch%20海螺-success?style=for-the-badge&logo=readthedocs)](https://qianjunakasumi.github.io/senjuko-conch/)
 
@@ -20,6 +20,10 @@ Issues 和 PRs 大欢迎
 ### 指南
 
 请阅读 [贡献部分](/CONTRIBUTING.md) 了解更多相关信息。
+
+## 鸣谢
+
+请阅读 [鸣谢部分](/ACKNOWLEDGEMENTS.md) 了解更多相关信息。
 
 ## 标准化
 
