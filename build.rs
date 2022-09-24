@@ -9,43 +9,42 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use shadow_rs::SdResult;
+use std::borrow::Cow;
 use std::env;
 use std::fs::File;
 use std::io::Write;
+
+const MAINTAINER_NAME: &str = "SJKCONCH_MAINTAINER_NAME";
+const MAINTAINER_EMAIL: &str = "SJKCONCH_MAINTAINER_EMAIL";
 
 fn main() -> SdResult<()> {
     shadow_rs::new_hook(hook)
 }
 
 fn hook(file: &File) -> SdResult<()> {
-    append_maintainer_info(file)?;
+    append_build_info(file)?;
     Ok(())
 }
 
-fn append_maintainer_info(mut file: &File) -> SdResult<()> {
-    let maintainer_name = env::var("SJKCONCH_MAINTAINER_NAME");
-    let maintainer_email = env::var("SJKCONCH_MAINTAINER_EMAIL");
-    writeln!(
-        file,
-        "{}",
-        String::from(r#"pub const SJKCONCH_MAINTAINER_NAME: &str = ""#)
-            + (if maintainer_name.is_err() {
-                "<unknown>"
-            } else {
-                maintainer_name.as_ref().unwrap()
-            })
-            + r#"";"#
-    )?;
-    writeln!(
-        file,
-        "{}",
-        String::from(r#"pub const SJKCONCH_MAINTAINER_EMAIL: &str = ""#)
-            + (if maintainer_email.is_err() {
-                "<unknown>"
-            } else {
-                maintainer_email.as_ref().unwrap()
-            })
-            + r#"";"#
-    )?;
+fn append_build_info(file: &File) -> SdResult<()> {
+    let maintainer_name: Cow<'static, str> = env::var(MAINTAINER_NAME)
+        .map(Into::into)
+        .unwrap_or_else(|_| "<unknown>".into());
+    let maintainer_email: Cow<'static, str> = env::var(MAINTAINER_EMAIL)
+        .map(Into::into)
+        .unwrap_or_else(|_| "<unknown>".into());
+
+    write_const(file, MAINTAINER_NAME, &maintainer_name)?;
+    write_const(file, MAINTAINER_EMAIL, &maintainer_email)?;
+
     Ok(())
+}
+
+#[inline]
+fn write_const(mut file: &File, const_name: &str, content: &str) -> std::io::Result<()> {
+    writeln!(
+        file,
+        "{}",
+        (String::from(r#"pub const "#) + const_name + r#": &str = ""# + content + r#"";"#)
+    )
 }
