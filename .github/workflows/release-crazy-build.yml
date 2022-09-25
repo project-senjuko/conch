@@ -41,7 +41,7 @@ jobs:
           name: conch_v0.0.0-crazy
 
       - name: Move to target
-        run: mkdir target/release/ && mv conch_v0.0.0-crazy target/release/conch
+        run: mkdir -p target/release/ && mv conch_v0.0.0-crazy target/release/conch
 
       - name: Login to DockerHub
         uses: docker/login-action@v2
