@@ -1,3 +1,3 @@
 FROM alpine:3.16.2
-COPY ./target/release/conch /conch/conch
-CMD chmod +x /conch/conch && /conch/conch
+COPY ./target/release/conch /bin/conch
+CMD chmod +x /bin/conch && conch
