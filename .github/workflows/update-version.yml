@@ -18,6 +18,13 @@ jobs:
         with:
           go-version: 1.18
 
+      - uses: tibdex/github-app-token@v1
+        name: Generate token
+        id: generate-token
+        with:
+          app_id: 242446
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: Update version
         id: update-version
         working-directory: ./actions/stepper
@@ -31,6 +38,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
+          token: ${{ steps.generate-token.outputs.token }}
           commit-message: pref👽️version 同步至上游版本
           signoff: true
           branch: pref/bump-version
