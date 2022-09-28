@@ -60,3 +60,15 @@ updates:
     rebase-strategy: "disabled"
     commit-message:
       prefix: "pref⬆️yarn "
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+    reviewers: [ "qianjunakasumi" ]
+    assignees: [ "qianjunakasumi" ]
+    open-pull-requests-limit: 114
+    rebase-strategy: "disabled"
+    commit-message:
+      prefix: "pref⬆️action "
