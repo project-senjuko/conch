@@ -35,7 +35,7 @@ pub async fn fetch_server_list() -> Result<HttpServerListRes> {
         ..Default::default()
     });
 
-    let res = reqwest::Client::new()
+    let res = reqwest::Client::builder().danger_accept_invalid_certs(true).build().unwrap()
         .post("https://configsvr.msf.3g.qq.com/configsvr/serverlist.jsp?mType=getssolist")
         .body(p.encode_with_tea(KEY).freeze())
         .send()
