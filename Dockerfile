@@ -1,3 +1,3 @@
-FROM ubuntu:22.10
+FROM debian:bullseye
 COPY ./target/release/conch /bin/conch
 CMD chmod +x /bin/conch && conch
