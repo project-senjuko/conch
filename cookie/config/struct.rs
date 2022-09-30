@@ -29,6 +29,8 @@ pub struct QQAccountTable {
 
 #[derive(Debug, Deserialize)]
 pub struct NetworkTable {
+    #[serde(rename = "enable-ipv6", default)]
+    pub enable_ipv6: bool,
     #[serde(default = "network_table_dns_default")]
     pub dns: Vec<NetworkDNSTable>,
 }

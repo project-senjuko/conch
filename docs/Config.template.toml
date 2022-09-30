@@ -1,8 +1,9 @@
-[qq.account]                                    # QQ 帐号设置
-number = 1145141919                             # QQ 号
-password = "85b535ee67d0dc327a799d07333a5f78"   # QQ 密码，必须是 md5
+[qq.account]                                   # QQ 帐号设置
+number = 1145141919                            # QQ 号
+password = "85b535ee67d0dc327a799d07333a5f78"  # QQ 密码，必须是 md5
 
-[network]                                       # 网络设置
+[network]                                      # 网络设置
+enable-ipv6 = false                            # （可选）启用 ipv6
 
-[[network.dns]]                                 # (可选) DNS 设置
-address = "119.29.29.29"                        # DNS 地址
+[[network.dns]]                                # (可选) DNS 设置
+address = "119.29.29.29"                       # DNS 地址
