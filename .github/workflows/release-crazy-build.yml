@@ -15,34 +15,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build
-        run: cargo clean && cargo build --release
-
-      - name: Rename
-        run: mv target/release/conch target/release/conch_v0.0.0-crazy
-
-      - name: Upload build product
-        uses: actions/upload-artifact@v3
-        with:
-          name: conch_v0.0.0-crazy
-          path: target/release/conch_v0.0.0-crazy
-
-  push-to-registries:
-    name: Pack image and push it to multi registries
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Download build product
-        uses: actions/download-artifact@v3
-        with:
-          name: conch_v0.0.0-crazy
-
-      - name: Move to target
-        run: mkdir -p target/release/ && mv conch_v0.0.0-crazy target/release/conch
-
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
 
