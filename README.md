@@ -12,6 +12,7 @@
 ## 监视器
 
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/qianjunakasumi/senjuko-conch/RustWorkspaceTest/main?style=for-the-badge&logo=github)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_shield)
 
 ## 贡献
 
@@ -44,6 +45,9 @@ Copyright (c) 2022 qianjunakasumi <i@qianjunakasumi.ren>
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ```
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_large)
 
 ### AGPL 通知
 
