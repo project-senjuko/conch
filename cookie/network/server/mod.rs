@@ -109,7 +109,9 @@ impl ServerManager {
         for s in s.socket_wifi_ipv4.iter() {
             let i = IpAddr::from_str(&*s.ip);
             if i.is_err() {
-                trace!(dsc = "解析 HttpServerListRes.socket_wifi_ipv4.ip 为 IpAddr 失败", err = %i.as_ref().unwrap_err(), ip = &*s.ip); // 此错误等级低
+                if s.ip != "msfwifi.3g.qq.com" {
+                    trace!(dsc = "解析 HttpServerListRes.socket_wifi_ipv4.ip 为 IpAddr 失败", err = %i.as_ref().unwrap_err(), ip = &*s.ip);
+                }
                 continue;
             }
 
