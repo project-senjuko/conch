@@ -8,6 +8,6 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-/// APP_ID: 版本 | 9570
+/// APP_ID: 版本 | 9580
 /// 源 | com.tencent.common.config.AppSetting.f
-pub const APP_ID: u32 = 537140158;
+pub const APP_ID: u32 = 537140542;
