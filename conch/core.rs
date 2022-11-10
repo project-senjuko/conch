@@ -18,8 +18,11 @@ use cookie::config::load_config;
 /// 核心服务初始化
 #[instrument(skip(sh))]
 pub async fn init_core(sh: SubsystemHandle) -> Result<()> {
-    let mut c = Client::new(load_config()?);
-    c.run().await.expect("核心服务初始化失败！请检查错误日志并解决后再行启动");
+    load_config().expect("加载配置内容失败");
+
+    let mut c = Client::new();
+    c.run().await.expect("核心服务初始化失败");
+
     info!(dsc = "核心服务初始化成功");
 
     sh.on_shutdown_requested().await;

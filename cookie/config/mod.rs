@@ -19,8 +19,12 @@ pub use r#struct::*;
 pub mod app_setting;
 pub mod r#struct;
 
-/// 加载配置文件，
+/// 全局配置
+static mut CONFIG: Option<&Config> = None;
+
+/// 加载配置文件到全局配置，
 /// 读取文件行为取决于环境变量 `SJKCONCH_CONFIG` 是否设置。
+/// 必须确保此函数在全局配置取值器函数调用前调用。
 ///
 /// ## 未设置环境变量
 ///
@@ -32,7 +36,7 @@ pub mod r#struct;
 /// 读取该环境变量指示的文件，
 /// 若读取失败将抛出错误，可能会导致程序停止。
 #[instrument]
-pub fn load_config() -> Result<Config> {
+pub fn load_config() -> Result<()> {
     let r = match var("SJKCONCH_CONFIG") {
         Ok(s) => {
             trace!(brc = "环境变量");
@@ -52,11 +56,13 @@ pub fn load_config() -> Result<Config> {
             }
         }
     };
-    if r.is_ok() { debug!(dsc = "成功"); }
+    if r.is_ok() { debug!(dsc = "配置内容全局化完成"); }
+    unsafe { CONFIG = Some(Box::leak(Box::new(r?))); }
 
-    r
+    Ok(())
 }
 
+/// 加载配置文件的底层函数
 #[instrument(skip(p))]
 fn _load_config(p: String) -> Result<Config> {
     let b = read(&p);
@@ -71,3 +77,10 @@ fn _load_config(p: String) -> Result<Config> {
 
     Ok(c?)
 }
+
+/// 获取配置
+///
+/// # Safety
+///
+/// 必须确保 [`load_config`] 函数已被调用。
+pub fn get_config() -> &'static Config { unsafe { CONFIG.unwrap() } }

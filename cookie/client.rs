@@ -15,12 +15,11 @@ use super::network::server::ServerManager;
 
 pub struct Client {
     server_manager: ServerManager,
-    config: Config,
 }
 
 impl Client {
-    pub fn new(c: Config) -> Self {
-        Self { server_manager: Default::default(), config: c }
+    pub fn new() -> Self {
+        Self { server_manager: Default::default() }
     }
 
     pub async fn run(&mut self) -> Result<()> {
