@@ -16,7 +16,6 @@ use tracing::{debug, error, instrument, trace};
 
 pub use r#struct::*;
 
-pub mod app_setting;
 pub mod r#struct;
 
 /// 全局配置

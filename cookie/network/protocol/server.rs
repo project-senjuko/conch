@@ -14,9 +14,9 @@ use tracing::{error, instrument};
 
 use jce::field::{JceFieldErr, JLong};
 
-use crate::config::app_setting::APP_ID;
 use crate::network::protocol::jce::r#struct::{HttpServerListReq, HttpServerListRes};
 use crate::network::protocol::jce::r#struct::UniPacket;
+use crate::upstream::app_setting::APP_ID;
 
 const KEY: [u32; 4] = [4030996319, 4096632207, 3707212954, 3127038993];
 
