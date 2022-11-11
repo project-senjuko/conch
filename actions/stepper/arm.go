@@ -89,7 +89,7 @@ func updateAppSetting(o, n *VersionConf) (err error) {
 	fmt.Println("正在更新 " + d)
 
 	return ReadReplaceAndWrite(
-		"../../cookie/config/app_setting.rs",
+		"../../cookie/upstream/app_setting.rs",
 		d,
 		ReplaceCode(o, n, "/// APP_ID: 版本 | "),
 		ReplaceAppId(o, n, "pub const APP_ID: u32 = "),
