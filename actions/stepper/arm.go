@@ -18,10 +18,12 @@ import (
 	"path/filepath"
 	"sync"
 
+	"senjuko-conch/cell"
+
 	"gopkg.in/yaml.v3"
 )
 
-func updateVERSION(_, n *VersionConf) (err error) {
+func updateVERSION(_, n *cell.VersionConf) (err error) {
 	const d = "VERSION.yml"
 	fmt.Println("正在更新 " + d)
 
@@ -38,7 +40,7 @@ func updateVERSION(_, n *VersionConf) (err error) {
 	return
 }
 
-func updateJceVersion(o, n *VersionConf) (err error) {
+func updateJceVersion(o, n *cell.VersionConf) (err error) {
 	const d = "jce version.yml"
 	fmt.Println("正在更新 " + d)
 
@@ -49,7 +51,7 @@ func updateJceVersion(o, n *VersionConf) (err error) {
 	)
 }
 
-func updateJceStructVersion(o, n *VersionConf) (err error) {
+func updateJceStructVersion(o, n *cell.VersionConf) (err error) {
 	wg := sync.WaitGroup{}
 	err = filepath.WalkDir(
 		"../../cookie/network/protocol/jce/struct/blueprint",
@@ -74,7 +76,7 @@ func updateJceStructVersion(o, n *VersionConf) (err error) {
 	return
 }
 
-func _updateJceStructVersion(p string, o, n *VersionConf, wg *sync.WaitGroup) {
+func _updateJceStructVersion(p string, o, n *cell.VersionConf, wg *sync.WaitGroup) {
 	fmt.Println("正在更新 " + p)
 
 	err := ReadReplaceAndWrite(p, p, ReplaceCode(o, n, "  upstreamVersion: "))
@@ -84,7 +86,7 @@ func _updateJceStructVersion(p string, o, n *VersionConf, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
-func updateAppSetting(o, n *VersionConf) (err error) {
+func updateAppSetting(o, n *cell.VersionConf) (err error) {
 	const d = "AppSetting"
 	fmt.Println("正在更新 " + d)
 

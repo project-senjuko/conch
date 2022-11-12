@@ -8,7 +8,7 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-package main
+package cell
 
 import (
 	"io"
@@ -16,6 +16,29 @@ import (
 	"strconv"
 	"strings"
 )
+
+type UpstreamVersion struct {
+	Version          string
+	Code             uint64
+	AppId            uint64
+	DownloadURL      string
+	DownloadFileName string
+}
+
+func FetchUpstreamVersion() *UpstreamVersion {
+	body := requestHTML()
+	url := readDownloadURL(body)
+	code, appId := parseDownloadURL(url)
+	us := strings.Split(url, "/")
+
+	return &UpstreamVersion{
+		Version:          readVersion(body),
+		Code:             code,
+		AppId:            appId,
+		DownloadURL:      url,
+		DownloadFileName: us[len(us)-1],
+	}
+}
 
 func requestHTML() string {
 	req, _ := http.NewRequest("GET", "https://im.qq.com/mobileqq/touch/android?arch=arm64", nil)
