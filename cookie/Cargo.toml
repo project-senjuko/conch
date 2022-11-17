@@ -13,7 +13,7 @@ jce = { path = "network/protocol/jce/frame", package = "cookie-jce" }
 anyhow = "1.0.66"
 bytes = "1.2.1"
 chrono = "0.4.23"
-reqwest = { version = "0.11.12", features = ["json", "rustls-tls-manual-roots"], default-features = false }
+reqwest = { version = "0.11.13", features = ["json", "rustls-tls-manual-roots"], default-features = false }
 serde = { version = "1.0.147", features = ["derive"] }
 thiserror = "1.0.35"
 tokio = { version = "1.21.2", features = ["full"] }
