@@ -29,9 +29,9 @@ jobs:
         id: update-version
         working-directory: ./actions/stepper
         run: |
-          go run -v ./...
-          echo "fileName=${cat download_filename}" >> $GITHUB_OUTPUT
-          echo "url=${cat download_url}" >> $GITHUB_OUTPUT
+          go run -v ./...(
+          echo "fileName=$(cat download_filename)" >> $GITHUB_OUTPUT
+          echo "url=$(cat download_url)" >> $GITHUB_OUTPUT
           rm -f download_filename
           rm -f download_url
 
