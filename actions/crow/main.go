@@ -12,65 +12,32 @@ package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"strconv"
 
 	"senjuko-conch/cell"
 )
 
-const CIV = "../cache/ci.version"
-
 func main() {
-	cv := readCV()
+	cv := cell.ReadVersionConf()
 	uv := cell.FetchUpstreamVersion()
 
-	if uv.Code <= cv {
-		fmt.Println("=== 当前已同步最新版本信息，无需更新")
-		return
+	if uv.Code <= cv.Code {
+		fmt.Println("=== 当前已同步最新版本信息")
 	} else {
-		fmt.Println("=== 开始更新最新版本缓存")
+		fmt.Println("=== 开始写入最新版本信息")
 	}
 
-	if err := os.WriteFile(
-		"../cache/ci.version",
-		[]byte(strconv.FormatUint(uv.Code, 10)),
-		0644,
-	); err != nil {
-		panic("[ERR] " + err.Error())
-	}
+	writeFile("../temp/ci.version", []byte(strconv.FormatUint(uv.Code, 10)))
+	writeFile("../temp/curr.version", []byte(strconv.FormatUint(cv.Code, 10)))
+	writeFile("../temp/file.name", []byte(uv.DownloadFileName))
+	writeFile("../temp/url", []byte(uv.DownloadURL))
 
-	if err := os.WriteFile(
-		"../temp/old.version",
-		[]byte(strconv.FormatUint(cv, 10)),
-		0644,
-	); err != nil {
-		panic("[ERR] " + err.Error())
-	}
-	if err := os.WriteFile("../temp/file.name", []byte(uv.DownloadFileName), 0644); err != nil {
-		panic("[ERR] " + err.Error())
-	}
-	if err := os.WriteFile("../temp/url", []byte(uv.DownloadURL), 0644); err != nil {
-		panic("[ERR] " + err.Error())
-	}
-
-	fmt.Println("=== 更新完成")
+	fmt.Println("=== 完成")
 }
 
-func readCV() (cv uint64) {
-	cvf, err := os.Open(CIV)
-	if err != nil {
-		panic("[ERR] 打开缓存版本文件失败：" + err.Error())
+func writeFile(p string, b []byte) {
+	if err := os.WriteFile(p, b, 0644); err != nil {
+		panic("[ERR] " + err.Error())
 	}
-
-	cvb, err := io.ReadAll(cvf)
-	if err != nil {
-		panic("[ERR] 读取缓存版本文件失败：" + err.Error())
-	}
-
-	cv, err = strconv.ParseUint(string(cvb), 10, 64)
-	if err != nil {
-		panic("[ERR] 解析缓存版本文件失败：" + err.Error())
-	}
-	return
 }
