@@ -29,6 +29,21 @@ mod r#static;
 #[derive(Debug)]
 pub struct ServerManager {
     server_list: Vec<ServerInfo>,
+    current_index: usize,
+}
+
+impl ServerManager {
+    pub fn on_network_error(&mut self) {
+        self.server_list[self.current_index].increasing_network_err();
+    }
+
+    pub fn on_unreachable(&mut self) {
+        self.server_list[self.current_index].set_unreachable();
+    }
+
+    pub fn delay_sampling_cb(&mut self, d: u16) {
+        self.server_list[self.current_index].set_delay_quality(d);
+    }
 }
 
 impl ServerManager {
