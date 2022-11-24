@@ -28,6 +28,9 @@ impl Default for ServerManager {
                 ServerInfo::with_tcp(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(43, 154, 240, 194)), 8080)),
                 ServerInfo::with_quic(SocketAddr::new(IpAddr::V4(Ipv4Addr::new(58, 251, 106, 174)), 443)),
             ],
+            current_index: 0,
+            quality_disabled: false,
+            quality_threshold: 0f32,
         }
     }
 }

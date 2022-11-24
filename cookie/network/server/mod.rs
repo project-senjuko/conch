@@ -30,17 +30,50 @@ mod r#static;
 pub struct ServerManager {
     server_list: Vec<ServerInfo>,
     current_index: usize,
+
+    quality_disabled: bool,
+    quality_threshold: f32,
 }
 
 impl ServerManager {
+    #[inline]
+    pub fn get_server_addr(&self) -> SocketAddr { self.server_list[self.current_index].socket_addr }
+
+    pub fn next_server(&mut self) {
+        if self.server_list.len() - 1 == self.current_index {
+            warn!(dsc = "所有服务器资源已耗尽，服务器质量评分功能已被禁用");
+            self.quality_disabled = true;
+            self.current_index = 0;
+        }
+
+        if !self.quality_disabled {
+            let s = &self.server_list[self.current_index + 1];
+            // todo 动态计算服务器评分 [0,1]
+            let r = 1f32;
+            if r < self.quality_threshold {
+                debug!(dsc = "已忽略评分低于阈值的服务器");
+                self.current_index += 1;
+                self.next_server();
+                return;
+            }
+        }
+
+        self.current_index += 1;
+    }
+}
+
+impl ServerManager {
+    #[inline]
     pub fn on_network_error(&mut self) {
         self.server_list[self.current_index].increasing_network_err();
     }
 
+    #[inline]
     pub fn on_unreachable(&mut self) {
         self.server_list[self.current_index].set_unreachable();
     }
 
+    #[inline]
     pub fn delay_sampling_cb(&mut self, d: u16) {
         self.server_list[self.current_index].set_delay_quality(d);
     }
