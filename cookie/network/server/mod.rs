@@ -11,7 +11,7 @@
 use std::net::{IpAddr, Ipv4Addr, SocketAddr};
 use std::str::FromStr;
 
-use anyhow::Result;
+use anyhow::{bail, Result};
 use tokio::{join, try_join};
 use tracing::{debug, error, instrument, trace, warn};
 use trust_dns_resolver::config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts};
@@ -35,29 +35,34 @@ impl ServerManager {
     /// 更新服务器列表
     #[instrument(skip(self))]
     pub async fn update_server_list(&mut self) -> Result<()> {
-        let r = join!(
+        let (pr, dr) = join!(
             self.fetch_server_by_protocol(),
             self.fetch_server_by_dns(),
         );
-        if r.0.is_err() && r.1.is_err() {
+        if pr.is_err() && dr.is_err() {
             error!(
                 dsc = "All 更新失败",
-                protobufErr = %r.0.as_ref().unwrap_err(), dnsErr = %r.1.as_ref().unwrap_err(),
+                protobufErr = %pr.as_ref().unwrap_err(), dnsErr = %dr.as_ref().unwrap_err(),
             );
-            return Err(r.0.unwrap_err());
+            bail!("远程服务器列表获取失败");
         }
 
-        match r.0 {
-            Ok(s) => { self.server_list.extend(s); }
-            Err(e) => { warn!(dsc = "Protobuf 更新失败", err = %e); }
+        if pr.is_ok() && dr.is_ok() {
+            self.server_list.reserve(pr.as_ref().unwrap().len() + dr.as_ref().unwrap().len())
         }
-        match r.1 {
-            Ok(s) => { self.server_list.extend(s); }
-            Err(e) => { warn!(dsc = "DNS 更新失败", err = %e); }
-        }
+        self.extend_server_list(pr, "Protobuf".to_string());
+        self.extend_server_list(dr, "DNS".to_string());
 
         debug!(dsc = "成功");
         Ok(())
+    }
+
+    // 扩增服务器列表
+    fn extend_server_list(&mut self, s: Result<Vec<ServerInfo>>, dsc: String) {
+        match s {
+            Ok(s) => { self.server_list.extend(s); }
+            Err(e) => { warn!(dsc = dsc + " 更新失败", err = %e); }
+        }
     }
 
     /// 通过 DNS 获取服务器列表
