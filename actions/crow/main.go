@@ -24,8 +24,11 @@ func main() {
 
 	if uv.Code <= cv.Code {
 		fmt.Println("=== 当前已同步最新版本信息")
+		writeFile("../temp/up.to.date", []byte("true"))
+		return
 	} else {
 		fmt.Println("=== 开始写入最新版本信息")
+		writeFile("../temp/up.to.date", []byte("false"))
 	}
 
 	writeFile("../temp/ci.version", []byte(strconv.FormatUint(uv.Code, 10)))
