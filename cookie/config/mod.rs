@@ -11,7 +11,7 @@
 use std::env::{var, VarError};
 use std::fs::read;
 
-use anyhow::{Error, Result};
+use anyhow::{anyhow, Result};
 use tracing::{debug, error, instrument, trace};
 
 pub use r#struct::*;
@@ -50,7 +50,7 @@ pub fn load_config() -> Result<()> {
                 VarError::NotUnicode(_) => {
                     const ERR: &str = "读取环境变量失败";
                     error!(dsc = ERR, err = %e);
-                    Err(Error::msg(ERR))
+                    Err(anyhow!(ERR))
                 }
             }
         }
@@ -69,7 +69,7 @@ fn _load_config(p: String) -> Result<Config> {
         error!(dsc = "读取失败", path = p, err = %b.as_ref().unwrap_err());
     }
 
-    let c = toml::from_slice(&*b?);
+    let c = toml::from_slice(&b?);
     if c.is_err() {
         error!(dsc = "解析失败", err = %c.as_ref().unwrap_err())
     }
