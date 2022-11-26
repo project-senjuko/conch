@@ -1,11 +1,16 @@
 # Conch 海螺
 
-`Conch 海螺` 是「Project Senjuko」子项目之一，作为事件发布者的基础微服务，提供基于 `QQ for Android*` 的通讯封装和实现，基于 [`NATS`](https://nats.io/) 的消息队列和基于 [`gRPC*`](https://grpc.io/) 的远程过程调用，致力为微服务及普通开发者打造优良的研发体验。
+`Conch 海螺` 是「Project Senjuko」子项目之一，作为事件发布者的基础微服务，提供基于 `QQ for Android*` 的通讯封装和实现，基于
+[`NATS`](https://nats.io/) 的消息队列和基于 [`GraphQL`](https://graphql.org/) 的 API 查询语言，
+致力为微服务及普通开发者打造优良的 QQBot 开发体验。
 
-## 文档
+### WIP 警告
 
-良好的文档是一个不错的开始。  
-我们提供了一个较为精美的手册，请点击下方徽标查看。内含源代码文档。
+此项目还在早期快速开发中，不代表所述功能已经完成。
+
+## 快速上手
+
+良好的文档是一个不错的开始，请点击下方徽标查看。内含源代码文档。
 
 [![Docs](https://img.shields.io/badge/docs-Conch%20海螺-success?style=for-the-badge&logo=readthedocs)](https://qianjunakasumi.github.io/senjuko-conch/)
 
@@ -14,25 +19,19 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/qianjunakasumi/senjuko-conch/RustWorkspaceTest/main?style=for-the-badge&logo=github)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_shield)
 
-## 贡献
+## 参与进来
 
-Issues 和 PRs 大欢迎
-
-### 指南
-
-请阅读 [贡献部分](/CONTRIBUTING.md) 了解更多相关信息。
+Issues 和 PRs 大欢迎。有关如何参与贡献，请阅读 [贡献部分](/CONTRIBUTING.md) 了解更多相关信息。
 
 ## 鸣谢
 
-请阅读 [鸣谢部分](/ACKNOWLEDGEMENTS.md) 了解更多相关信息。
-
-## 标准化
-
-![qianjucommits-v0.1](https://img.shields.io/badge/qianjucommits-v0.1-85f9c7?style=for-the-badge)
+`Conch 海螺` 的发展离不开每个人的支持！请阅读 [鸣谢部分](/ACKNOWLEDGEMENTS.md) 了解更多相关信息。
 
 ## 许可证
 
 `Conch 海螺` ❤ OpenSource，我们提供 [`MPL`](/LICENSE) 或 [`AGPL`](/LICENSE-AGPL) 许可，任君选择。默认情况下以 `MPL` 许可授权。
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_large)
 
 ### MPL 通知
 
@@ -45,9 +44,6 @@ Copyright (c) 2022 qianjunakasumi <i@qianjunakasumi.ren>
     License, v. 2.0. If a copy of the MPL was not distributed with this
     file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ```
-
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_large)
 
 ### AGPL 通知
 
@@ -71,9 +67,4 @@ You should have received a copy of the GNU Affero General Public License
 along with this program.  If not, see https://www.gnu.org/licenses/agpl-3.0.html.
 ```
 
-## 其他
-
-### * 注
-
-- [1] Android 是 Google LLC 的商标
-- [2] gRPC 是 Linux 基金会的商标
+*注： [1] Android 是 Google LLC 的商标。

@@ -8,7 +8,7 @@ authors: qianjunakasumi
 
 `Conch 海螺` 是「Project Senjuko」子项目之一，
 作为事件发布者的基础微服务，提供基于 `QQ for Android` 的通讯封装和实现，
-基于 `NATS` 的消息队列和基于 `gRPC` 的远程过程调用，致力为微服务及普通开发者打造优良的研发体验。
+基于 `NATS` 的消息队列和基于 `GraphQL` 的 API 查询语言，致力为微服务及普通开发者打造优良的 QQBot 开发体验。
 
 <!--truncate-->
 

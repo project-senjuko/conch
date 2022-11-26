@@ -30,11 +30,11 @@ export default function Home(): JSX.Element {
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      description="欢迎使用 Conch 海螺 - 云原生中基于 NATS 和 gRPC 的 QQ 通讯">
-      <HomepageHeader />
-      <main>
-        <HomepageFeatures />
-      </main>
+        description="欢迎使用 Conch 海螺 - 云原生中基于 NATS 和 GraphQL 的 QQ 通讯">
+        <HomepageHeader/>
+        <main>
+            <HomepageFeatures/>
+        </main>
     </Layout>
   );
 }

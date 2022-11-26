@@ -26,7 +26,8 @@
 
 ### 遵守 DCO 协议
 
-为降低整体性风险（包括但不限于著作权归属等问题）、避免冲突与纠纷，您理解并同意：您创建的所有贡献都必须遵循 [`DCO`](/DEVELOPERCERTIFICATE) 协议（或通过 [developercertificate.org](https://developercertificate.org/) 获取副本）。
+为降低整体性风险（包括但不限于著作权归属等问题）、避免冲突与纠纷，您理解并同意：您创建的所有贡献都必须遵循 [`DCO`](/DEVELOPERCERTIFICATE)
+协议（或通过 [developercertificate.org](https://developercertificate.org/) 获取副本）。
 
 ### 以相同的许可贡献
 
@@ -34,7 +35,10 @@
 
 ### 遵循提交规范
 
-优雅的提交消息能愉悦身心，优秀的提交消息能一目了然。我们使用 [qianjucommits](https://github.com/qianjunakasumi/qianjucommits) 规范，请遵循此规范提交。
+![qianjucommits-v0.1](https://img.shields.io/badge/qianjucommits-v0.1-85f9c7?style=for-the-badge)
+
+优雅的提交消息能愉悦身心，优秀的提交消息能一目了然。我们使用 [qianjucommits](https://github.com/qianjunakasumi/qianjucommits)
+规范，请遵循此规范提交。
 
 ### 避免分支污染
 
