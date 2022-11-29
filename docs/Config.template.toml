@@ -7,3 +7,6 @@ enable-ipv6 = false                            # （可选）启用 ipv6
 
 [[network.dns]]                                # (可选) DNS 设置
 address = "119.29.29.29"                       # DNS 地址
+
+[misc]                                         # 杂项
+startup-delay = true                           # （可选）延时启动

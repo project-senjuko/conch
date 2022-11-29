@@ -14,6 +14,7 @@ use serde::Deserialize;
 pub struct Config {
     pub qq: QQTable,
     pub network: NetworkTable,
+    pub misc: MiscTable,
 }
 
 #[derive(Debug, Deserialize)]
@@ -44,4 +45,10 @@ fn network_table_dns_default() -> Vec<NetworkDNSTable> {
 #[derive(Debug, Deserialize)]
 pub struct NetworkDNSTable {
     pub address: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct MiscTable {
+    #[serde(rename = "startup-delay", default)]
+    pub startup_delay: bool,
 }
