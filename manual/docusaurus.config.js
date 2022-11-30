@@ -8,8 +8,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Conch 海螺 - 云原生中的 QQ 通讯',
   tagline: '基于 NATS 和 GraphQL 的事件发布者',
-  url: 'https://qianjunakasumi.github.io',
-  baseUrl: '/senjuko-conch/',
+  url: 'https://senjuko-conch.qianjunakasumi.ren',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
 
