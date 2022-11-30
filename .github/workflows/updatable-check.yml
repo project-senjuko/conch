@@ -54,6 +54,10 @@ jobs:
         uses: JasonEtco/create-an-issue@v2
         env:
           GITHUB_TOKEN: ${{ steps.generate-token.outputs.token }}
+          NEW_VER: ${{needs.update.outputs.newVer}}
+          OLD_VER: ${{needs.update.outputs.oldVer}}
+          FILENAME: ${{needs.update.outputs.fileName}}
+          URL: ${{needs.update.outputs.url}}
         with:
           filename: actions/issue-template/update-from-upstream.md
           update_existing: true
