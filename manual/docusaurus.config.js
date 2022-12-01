@@ -47,6 +47,12 @@ const config = {
       navbar: {
         hideOnScroll: true,
         title: 'Conch 海螺',
+        logo: {
+          alt: 'Conch Logo',
+          src: 'img/conch.png',
+          width: 32,
+          height: 32,
+        },
         items: [
           {
             type: 'doc',

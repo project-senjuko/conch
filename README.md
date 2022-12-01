@@ -1,3 +1,5 @@
+<img src="assets/conch.png" alt="Conch Logo" align="right" width="200">
+
 # Conch 海螺
 
 `Conch 海螺` 是「Project Senjuko」子项目之一，作为事件发布者的基础微服务，提供基于 `QQ for Android*` 的通讯封装和实现，基于
