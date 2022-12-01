@@ -8,10 +8,4 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-pub mod cipher;
-pub mod config;
-pub mod network;
-pub mod runtime;
-pub mod upstream;
-
-pub mod client;
+pub type D2Key = [u32; 4];
