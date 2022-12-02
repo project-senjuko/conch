@@ -8,9 +8,15 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-pub mod cipher;
-pub mod network;
-pub mod runtime;
-pub mod upstream;
+use serde::Deserialize;
 
-pub mod client;
+#[derive(Debug, Deserialize)]
+pub struct QQTable {
+    pub account: QQAccountTable,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct QQAccountTable {
+    pub number: u64,
+    pub password: String,
+}
