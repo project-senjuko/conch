@@ -31,7 +31,7 @@ pub struct KeyRotatePubKeyMetaRsp {
     pub pub_key_sign: String,
 }
 
-#[inline(always)]
+#[inline]
 pub async fn fetch_init_key() -> Result<KeyRotateRsp> { fetch_key(10000).await }
 
 #[instrument]

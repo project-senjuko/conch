@@ -51,7 +51,7 @@ impl QCBChaining {
 
     /// 获取一个大端序无符号的 64 位整数类型，
     /// 从索引 i 开始读取 8 个字节。
-    #[inline(always)]
+    #[inline]
     fn get_u64(b: &BytesMut, i: usize) -> u64 {
         let s: &[u8; 8] = b[i..i + 8].try_into().unwrap();
         u64::from_be_bytes(*s)
@@ -59,7 +59,7 @@ impl QCBChaining {
 
     /// 写入一个大端序无符号类型的 64 位整数，
     /// 从索引 i 开始写入 8 个字节。
-    #[inline(always)]
+    #[inline]
     fn put_u64(b: &mut BytesMut, i: usize, n: u64) {
         b[i..i + 8].swap_with_slice(&mut u64::to_be_bytes(n));
     }

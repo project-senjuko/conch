@@ -21,14 +21,14 @@ impl TeaCipher { pub fn new(key: K) -> Self { Self { key } } }
 
 impl TeaCipher {
     /// 加密
-    #[inline(always)]
+    #[inline]
     pub fn encrypt(&self, v: u64) -> u64 { Self::from(self._encrypt(Self::to(v))) }
 
     /// 解密
-    #[inline(always)]
+    #[inline]
     pub fn decrypt(&self, v: u64) -> u64 { Self::from(self._decrypt(Self::to(v))) }
 
-    #[inline(always)]
+    #[inline]
     fn _encrypt(&self, [mut v0, mut v1]: V) -> V {
         let [k0, k1, k2, k3] = self.key;
         let (mut sum, mut i) = (0u32, 0);
@@ -41,7 +41,7 @@ impl TeaCipher {
         [v0, v1]
     }
 
-    #[inline(always)]
+    #[inline]
     fn _decrypt(&self, [mut v0, mut v1]: V) -> V {
         let [k0, k1, k2, k3] = self.key;
         let (mut sum, mut i) = (0xE377_9B90_u32, 0);
@@ -54,10 +54,10 @@ impl TeaCipher {
         [v0, v1]
     }
 
-    #[inline(always)]
+    #[inline]
     fn to(n: u64) -> V { [(n >> 32) as u32, n as u32] }
 
-    #[inline(always)]
+    #[inline]
     fn from([v0, v1]: V) -> u64 { (v0 as u64) << 32 | v1 as u64 }
 }
 

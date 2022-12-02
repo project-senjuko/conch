@@ -29,7 +29,7 @@ pub struct HeadData {
 
 impl HeadData {
     /// 新建一个完整填充的 [`HeadData`] 结构体
-    #[inline(always)]
+    #[inline]
     pub fn new(r#type: u8, tag: u8) -> Self { Self { r#type, tag } }
 
     /// 将 `Jce 字节流` 解码为 `Jce 头数据`

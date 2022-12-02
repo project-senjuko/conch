@@ -20,7 +20,7 @@ pub struct QTeaCipher {
 }
 
 impl QTeaCipher {
-    #[inline(always)]
+    #[inline]
     pub fn new(key: [u32; 4]) -> Self { Self { c: QCBChaining::new(TeaCipher::new(key)) } }
 }
 

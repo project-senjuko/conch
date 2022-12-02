@@ -25,11 +25,11 @@ pub struct JceReader<'a> {
 
 impl<'a> JceReader<'a> {
     /// 新建一个 tag 指针默认为 0 的 `Jce 字节流读取器`
-    #[inline(always)]
+    #[inline]
     pub fn new(b: &'a mut Bytes) -> Self { Self::with_tag(b, 0) }
 
     /// 新建一个完整填充的 `Jce 字节流读取器`
-    #[inline(always)]
+    #[inline]
     pub fn with_tag(b: &'a mut Bytes, tag: u8) -> Self {
         Self { b, tag, cache: FxHashMap::default() }
     }
@@ -37,11 +37,11 @@ impl<'a> JceReader<'a> {
 
 impl JceReader<'_> {
     /// 设置 tag 指针数值
-    #[inline(always)]
+    #[inline]
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
     /// 获取 `Jce 类型`
-    #[inline(always)]
+    #[inline]
     pub fn get<T>(&mut self) -> Result<T, JceFieldErr>
         where T: JceKindReader<T=T>
     {
@@ -60,7 +60,7 @@ impl JceReader<'_> {
         r
     }
 
-    #[inline(always)]
+    #[inline]
     fn _get_optional<T>(&mut self) -> Result<Option<T>, JceFieldErr>
         where T: JceKindReader<T=T>
     {

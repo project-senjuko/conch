@@ -14,7 +14,7 @@
 use bytes::{Buf, BufMut, BytesMut};
 use tracing::{instrument, trace};
 
-use jce::field::{JceFieldErr,  JceKindReader, JceKindWriter,  JceStructReader, JceStructWriter, JInt, JMap, JSList, JString};
+use jce::field::{JceFieldErr, JceKindReader, JceKindWriter, JceStructReader, JceStructWriter, JInt, JMap, JSList, JString};
 
 use crate::cipher::qtea::QTeaCipher;
 
@@ -28,7 +28,7 @@ pub struct UniPacket {
 
 impl UniPacket {
     /// 新建一个基本的 `Uni 数据包(ver.3)`
-    #[inline(always)]
+    #[inline]
     pub fn new(rid: JInt, sn: &str, r#fn: &str) -> Self {
         Self {
             p: RequestPacket {
@@ -93,7 +93,7 @@ impl UniPacket {
     }
 
     /// 获取本数据包中 `Jce 类型`
-    #[inline(always)]
+    #[inline]
     pub fn get<T>(&mut self, n: &str) -> Result<T, JceFieldErr>
         where T: JceKindReader<T=T>
     {

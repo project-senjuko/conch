@@ -23,17 +23,17 @@ pub struct JceWriter<'a> {
 
 impl<'a> JceWriter<'a> {
     /// 新建一个完整填充的 `Jce 字节流写入器`
-    #[inline(always)]
+    #[inline]
     pub fn new(b: &'a mut BytesMut, tag: u8) -> Self { Self { b, tag } }
 }
 
 impl JceWriter<'_> {
     /// 设置 tag 指针数值
-    #[inline(always)]
+    #[inline]
     pub fn set_tag(&mut self, t: u8) { self.tag = t; }
 
     /// 添加 `Jce 类型` 数据至本写入器
-    #[inline(always)]
+    #[inline]
     pub fn put<T: JceKindWriter>(&mut self, t: &T) {
         t.to_bytes(self.b, self.tag);
         self.set_tag(self.tag + 1);

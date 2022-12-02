@@ -32,21 +32,21 @@ impl ServerInfo {
     }
 
     /// 新建一个使用 TCP 协议的 [`ServerInfo`] 服务器信息
-    #[inline(always)]
+    #[inline]
     pub fn with_tcp(s: SocketAddr) -> Self { Self::new(ServerProtocol::Tcp, s) }
 
     /// 新建一个使用 QUIC 协议的 [`ServerInfo`] 服务器信息
-    #[inline(always)]
+    #[inline]
     pub fn with_quic(s: SocketAddr) -> Self { Self::new(ServerProtocol::Quic, s) }
 }
 
 impl ServerInfo {
-    #[inline(always)]
+    #[inline]
     pub fn increasing_network_err(&mut self) { self.network_error_count += 1; }
 
-    #[inline(always)]
+    #[inline]
     pub fn set_unreachable(&mut self) { self.unreachable = true }
 
-    #[inline(always)]
+    #[inline]
     pub fn set_delay_quality(&mut self, d: u16) { self.delay_quality = d }
 }
