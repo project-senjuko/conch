@@ -8,9 +8,23 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-pub mod cipher;
-pub mod network;
-pub mod runtime;
-pub mod upstream;
+use serde::Deserialize;
 
-pub mod client;
+#[derive(Debug, Deserialize)]
+pub struct NetworkTable {
+    #[serde(rename = "enable-ipv6", default)]
+    pub enable_ipv6: bool,
+    #[serde(default = "network_table_dns_default")]
+    pub dns: Vec<NetworkDNSTable>,
+}
+
+fn network_table_dns_default() -> Vec<NetworkDNSTable> {
+    vec![
+        NetworkDNSTable { address: String::from("119.29.29.29") }
+    ]
+}
+
+#[derive(Debug, Deserialize)]
+pub struct NetworkDNSTable {
+    pub address: String,
+}

@@ -10,7 +10,6 @@
 
 use anyhow::Result;
 
-use super::config::Config;
 use super::network::server::ServerManager;
 
 pub struct Client {

@@ -10,41 +10,17 @@
 
 use serde::Deserialize;
 
+pub use self::network::*;
+pub use self::qq::*;
+
+mod network;
+mod qq;
+
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub qq: QQTable,
     pub network: NetworkTable,
     pub misc: MiscTable,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct QQTable {
-    pub account: QQAccountTable,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct QQAccountTable {
-    pub number: u64,
-    pub password: String,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct NetworkTable {
-    #[serde(rename = "enable-ipv6", default)]
-    pub enable_ipv6: bool,
-    #[serde(default = "network_table_dns_default")]
-    pub dns: Vec<NetworkDNSTable>,
-}
-
-fn network_table_dns_default() -> Vec<NetworkDNSTable> {
-    vec![
-        NetworkDNSTable { address: String::from("119.29.29.29") }
-    ]
-}
-
-#[derive(Debug, Deserialize)]
-pub struct NetworkDNSTable {
-    pub address: String,
 }
 
 #[derive(Debug, Deserialize)]
