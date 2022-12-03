@@ -8,20 +8,22 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, BytesMut};
-use tracing::{error, instrument};
+use bytes::{Buf, Bytes, BytesMut};
 
-use super::Bytes2String;
+use super::{Bytes2String, GetSized};
 
 impl Bytes2String for BytesMut {
-    #[instrument(skip(self))]
+    //noinspection DuplicatedCode
     fn get_string(&mut self, len: usize) -> String {
-        let s = String::from_utf8(self[..len].to_owned());
-        if s.is_err() {
-            error!(dsc = "解析为 utf8 字符串失败", err = %s.as_ref().unwrap_err());
-        }
+        let b = self.get_sized(len);
+        String::from_utf8_lossy(b.chunk()).to_string()
+    }
+}
 
-        self.advance(len);
-        s.unwrap_or_default()
+impl Bytes2String for Bytes {
+    //noinspection DuplicatedCode
+    fn get_string(&mut self, len: usize) -> String {
+        let b = self.get_sized(len);
+        String::from_utf8_lossy(b.chunk()).to_string()
     }
 }

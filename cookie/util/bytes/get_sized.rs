@@ -8,16 +8,23 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, BytesMut};
-use tracing::instrument;
+use bytes::{Buf, Bytes, BytesMut};
 
 use super::GetSized;
 
 impl GetSized for BytesMut {
-    #[instrument(skip(self))]
     fn get_sized(&mut self, len: usize) -> Self {
         let mut b = BytesMut::zeroed(len);
         b.swap_with_slice(&mut self[..len]);
+        self.advance(len);
+
+        b
+    }
+}
+
+impl GetSized for Bytes {
+    fn get_sized(&mut self, len: usize) -> Self {
+        let b = self.slice(..len);
         self.advance(len);
 
         b
