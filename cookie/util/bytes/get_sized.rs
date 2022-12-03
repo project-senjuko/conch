@@ -8,10 +8,18 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-pub mod cipher;
-pub mod network;
-pub mod runtime;
-pub mod upstream;
-pub mod util;
+use bytes::{Buf, BytesMut};
+use tracing::instrument;
 
-pub mod client;
+use super::GetSized;
+
+impl GetSized for BytesMut {
+    #[instrument(skip(self))]
+    fn get_sized(&mut self, len: usize) -> Self {
+        let mut b = BytesMut::zeroed(len);
+        b.swap_with_slice(&mut self[..len]);
+        self.advance(len);
+
+        b
+    }
+}
