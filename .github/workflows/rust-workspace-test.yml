@@ -16,6 +16,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v3
-    - name: Run tests
-      run: cargo test --workspace --verbose
+      - uses: actions/checkout@v3
+      - name: Install Rust Beta
+        run: |
+          rustup toolchain install beta --profile minimal --no-self-update
+          rustup default beta
+      - uses: Swatinem/rust-cache@v2
+      - name: Run tests
+        run: cargo test --workspace --verbose
