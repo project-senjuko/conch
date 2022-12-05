@@ -2,5 +2,5 @@
 apiVersion: generator/v1
 kind: Version
 spec:
-  current: 9860
+  current: 9865
   minimal: 8555
