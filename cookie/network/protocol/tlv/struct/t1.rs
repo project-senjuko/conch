@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use bytes::{BufMut, Bytes, BytesMut};
-use chrono::Utc;
+use time::{OffsetDateTime};
 
 use super::TlvTStruct;
 
@@ -25,7 +25,7 @@ impl TlvTStruct for TlvT1 {
         b.put_u16(1);
         b.put_u32(757575); // 75 = senju
         b.put_u32(self.uin);
-        b.put_u32(Utc::now().timestamp() as u32);
+        b.put_u32(OffsetDateTime::now_utc().unix_timestamp() as u32);
         b.put_bytes(0, 4);
         b.put_u16(0);
         b.freeze()
