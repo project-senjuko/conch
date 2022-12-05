@@ -12,7 +12,7 @@ path = "lib.rs"
 jce = { path = "network/protocol/jce/frame", package = "cookie-jce" }
 anyhow = "1.0.66"
 bytes = "1.3.0"
-chrono = "0.4.23"
+time = "0.3.17"
 reqwest = { version = "0.11.13", features = ["json", "rustls-tls-manual-roots"], default-features = false }
 serde = { version = "1.0.148", features = ["derive"] }
 thiserror = "1.0.35"
