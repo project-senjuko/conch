@@ -29,7 +29,11 @@ async fn main() -> Result<()> {
     let (lev, _h) = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
 
     info!(
-        dsc = "いらっしゃいません！せんじゅうこコンチプロジェクトいます！ 今、進行中なので、少し我慢してくださいね？",
+        dsc = "いらっしゃいません～",
+        PROJECT = "Project Senjuko - Conch 海螺",
+        GITHUB = "https://github.com/qianjunakasumi/senjuko-conch",
+        LICENSES = "MPL-2.0 or AGPL-3.0",
+        COPYRIGHT = "Copyright (C) 2022  qianjunakasumi <i@qianjunakasumi.ren>",
         LogLevel = lev,
         PKGVersion = build::PKG_VERSION,
         Branch = build::BRANCH,
@@ -53,6 +57,6 @@ async fn main() -> Result<()> {
         .await
         .expect("启动服务失败");
 
-    info!(dsc = "プログラムは停止しますた、次回をお楽しみにじゃ");
+    info!(dsc = "プログラムは停止しますた、次回をお楽しみなのじゃ");
     Ok(())
 }
