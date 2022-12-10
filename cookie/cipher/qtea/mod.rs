@@ -35,7 +35,7 @@ impl QTeaCipher {
         let mut bm = BytesMut::with_capacity(fixed + fill);
         bm.put_u8(fill as u8 | 248);
         bm.put_bytes(75, head); // 75 = senju
-        bm.put_slice(&*b);
+        bm.put_slice(&b);
         bm.put_bytes(0, 7);
 
         self.c.encrypt(bm)
