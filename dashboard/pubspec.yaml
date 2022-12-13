@@ -32,6 +32,9 @@ dependencies:
   flutter:
     sdk: flutter
 
+  get: ^4.6.5
+  hive: ^2.2.3
+
 
 dev_dependencies:
   flutter_test:
