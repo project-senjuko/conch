@@ -33,7 +33,7 @@ impl Packet {
         let mut payload = p.decrypt(b);
         let mut h = payload.get_4sized();
 
-        p.sequence_number = h.get_i32();
+        p.sequence_number = h.get_u32();
         Packet::result_code_from(&mut h)?;
         Packet::error_msg_from(&mut h)?;
         p.cmd = h.get_4string();

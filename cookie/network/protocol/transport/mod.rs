@@ -22,7 +22,7 @@ mod respond;
 pub struct Packet {
     flag: Flag,
     encryption_method: EncryptionMethod,
-    sequence_number: i32,
+    sequence_number: u32,
     uin: u64,
     cmd: String,
     buffer: BytesMut,
