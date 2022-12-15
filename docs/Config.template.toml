@@ -1,12 +1,30 @@
-[qq.account]                                   # QQ 帐号设置
-number = 1145141919                            # QQ 号
-password = "85b535ee67d0dc327a799d07333a5f78"  # QQ 密码，必须是 md5
+# 查看配置详情，请点击
+# https://senjuko-conch.qianjunakasumi.ren/docs/reference/configuration-parameters
 
-[network]                                      # 网络设置
-enable-ipv6 = false                            # （可选）启用 ipv6
+[qq.account]
+number = 1145141919
+password = "85b535ee67d0dc327a799d07333a5f78"
 
-[[network.dns]]                                # (可选) DNS 设置
-address = "119.29.29.29"                       # DNS 地址
+[network]
+enable-ipv6 = false
 
-[misc]                                         # 杂项
-startup-delay = true                           # （可选）延时启动
+[[network.dns]]
+address = "119.29.29.29"
+
+[device]
+model = "Conch 1"
+manufacturer = "Senjuko"
+board = "superconch"
+device = "conch"
+product = "conch"
+ssid = "海螺YYDS"
+ipv4 = "1.1.1.1"
+ipv6 = "fe80::114:514:1919:810"
+mac = "0f:f0:ab:ba:cd:dc"
+fingerprint = "Senjuko/conch/conch:13/SJK1.221024.007/V50.6.6.6.WDNMD:user/release-keys"
+imei = "26148d621ef74844"
+imsi = "44007"
+system_http_ua = "Dalvik/2.1.0 (Linux; U; Android 13; Conch 1 Build/SJK1.221024.007)"
+
+[misc]
+startup-delay = true

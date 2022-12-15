@@ -10,24 +10,19 @@
 
 use serde::Deserialize;
 
-pub use self::device::*;
-pub use self::network::*;
-pub use self::qq::*;
-
-mod device;
-mod network;
-mod qq;
-
 #[derive(Debug, Deserialize)]
-pub struct Config {
-    pub qq: QQTable,
-    pub network: NetworkTable,
-    pub device: DeviceTable,
-    pub misc: MiscTable,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct MiscTable {
-    #[serde(rename = "startup-delay", default)]
-    pub startup_delay: bool,
+pub struct DeviceTable {
+    #[serde(default)] pub model: String,
+    #[serde(default)] pub manufacturer: String,
+    #[serde(default)] pub board: String,
+    #[serde(default)] pub device: String,
+    #[serde(default)] pub product: String,
+    #[serde(default)] pub ssid: String,
+    #[serde(default)] pub ipv4: String,
+    #[serde(default)] pub ipv6: String,
+    #[serde(default)] pub mac: String,
+    #[serde(default)] pub fingerprint: String,
+    #[serde(default)] pub imei: String,
+    #[serde(default)] pub imsi: String,
+    #[serde(rename = "system-http-ua", default)] pub system_http_ua: String,
 }
