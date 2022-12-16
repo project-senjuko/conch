@@ -10,7 +10,9 @@
 
 use bytes::{Buf, BufMut, BytesMut};
 
-use self::{qcbc::QCBChaining, tea::TeaCipher};
+use qcbc::QCBChaining;
+pub use tea::K;
+use tea::TeaCipher;
 
 mod qcbc;
 mod tea;
@@ -21,7 +23,10 @@ pub struct QTeaCipher {
 
 impl QTeaCipher {
     #[inline]
-    pub fn new(key: [u32; 4]) -> Self { Self { c: QCBChaining::new(TeaCipher::new(key)) } }
+    pub fn new(key: K) -> Self { Self { c: QCBChaining::new(TeaCipher::new(key)) } }
+
+    #[inline]
+    pub fn with_empty_key() -> Self { Self::new(<K as Default>::default()) }
 }
 
 impl QTeaCipher {

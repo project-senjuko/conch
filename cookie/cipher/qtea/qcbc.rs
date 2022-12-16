@@ -10,7 +10,7 @@
 
 use bytes::{Buf, BytesMut};
 
-use super::tea::TeaCipher;
+use super::TeaCipher;
 
 pub struct QCBChaining {
     c: TeaCipher,

@@ -12,11 +12,10 @@
 //! 实现 Jce 数据在 `Uni 数据包` 中的编解码。
 
 use bytes::{Buf, BufMut, BytesMut};
-use tracing::{instrument, trace};
 
 use jce::field::{JceFieldErr, JceKindReader, JceKindWriter, JceStructReader, JceStructWriter, JInt, JMap, JSList, JString};
 
-use crate::cipher::qtea::QTeaCipher;
+use crate::cipher::qtea::{K, QTeaCipher};
 
 use super::RequestPacket;
 
@@ -67,7 +66,7 @@ impl UniPacket {
 
     /// 将本数据包中所有数据编码为 UniPacket `Jce 字节流`，
     /// 并使用 [`QTeaCipher`] 加密。
-    pub fn encode_with_tea(&mut self, key: [u32; 4]) -> BytesMut {
+    pub fn encode_with_tea(&mut self, key: K) -> BytesMut {
         let mut b = BytesMut::new();
         self.encode(&mut b);
         QTeaCipher::new(key).encrypt(b)
@@ -77,7 +76,7 @@ impl UniPacket {
 impl UniPacket {
     /// 从加密的 UniPacket `Jce 字节流` 中解码为 `Uni 数据包(ver.3)`。
     /// 使用 [`QTeaCipher`] 解密。
-    pub fn from(b: BytesMut, key: [u32; 4]) -> Result<Self, JceFieldErr> {
+    pub fn from(b: BytesMut, key: K) -> Result<Self, JceFieldErr> {
         let mut db = QTeaCipher::new(key).decrypt(b);
         db.get_i32(); // length
 

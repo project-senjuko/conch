@@ -72,10 +72,8 @@ impl Packet {
             EncryptionMethod::UnEncrypted => b,
             EncryptionMethod::D2Encrypted =>
                 QTeaCipher::new(Runtime::get_d2key()).decrypt(b),
-            EncryptionMethod::EmptyKeyEncrypted => {
-                let k: [u32; 4] = Default::default();
-                QTeaCipher::new(k).decrypt(b)
-            }
+            EncryptionMethod::EmptyKeyEncrypted =>
+                QTeaCipher::with_empty_key().decrypt(b),
         }
     }
 
