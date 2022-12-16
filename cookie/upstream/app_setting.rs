@@ -12,8 +12,8 @@
 /// 源 | com.tencent.common.config.AppSetting.f
 pub const APP_ID: u32 = 537143481;
 
-pub const APP_SHORT_VER: String = "8.9.25".to_string();
+pub const APP_SHORT_VER: &str = "8.9.25";
 
 /// APP_ID: 版本 | 10005
 /// 源 | com.tencent.common.config.AppSetting.c
-pub const APP_COMMIT: String = "416e6fd1".to_string();
+pub const APP_COMMIT: &str = "416e6fd1";

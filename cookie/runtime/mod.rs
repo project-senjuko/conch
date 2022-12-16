@@ -67,16 +67,16 @@ impl Runtime {
     pub fn get_config() -> &'static Config { &Runtime::get_var().config }
 
     /// 获取 d2
-    pub fn get_d2() -> &Bytes { &Runtime::get_var().d2 }
+    pub fn get_d2() -> Bytes { Runtime::get_var().d2.clone() }
 
     /// 获取 d2key
     pub fn get_d2key() -> D2Key { Runtime::get_var().d2key }
 
     /// 获取 tgt
-    pub fn get_tgt() -> &Bytes { &Runtime::get_var().tgt }
+    pub fn get_tgt() -> Bytes { Runtime::get_var().tgt.clone() }
 
     /// 获取 msg_cookie
-    pub fn get_msg_cookie() -> &Bytes { &Runtime::get_var().msg_cookie }
+    pub fn get_msg_cookie() -> Bytes { Runtime::get_var().msg_cookie.clone() }
 }
 
 impl Runtime {
