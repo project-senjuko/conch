@@ -23,6 +23,8 @@ use cookie::runtime::Runtime;
 pub async fn init_core(sh: SubsystemHandle) -> Result<()> {
     Runtime::init();
 
+    info!(dsc = format!("使用许可协议 {:?}", Runtime::get_config().eula.as_ref().expect("使用前，请先在配置文件中的 `eula` 项下填写欲使用的协议")));
+
     if Runtime::get_config().misc.startup_delay {
         info!(dsc = "默认情况下的正式启动前您有⑨秒预览配置文件，欲关闭此功能请在配置文件中设置 `startup-delay = false` 详见文档", cfg = ?Runtime::get_config());
         sleep(Duration::from_secs(9)).await;
