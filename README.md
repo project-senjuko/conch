@@ -18,7 +18,7 @@
 
 ## 监视器
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/qianjunakasumi/senjuko-conch/RustWorkspaceTest/main?style=for-the-badge&logo=github)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/qianjunakasumi/senjuko-conch/rust-workspace-test.yml?branch=main&style=for-the-badge&logo=github)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_shield)
 
 ## 参与进来
