@@ -20,10 +20,18 @@ mod qq;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
+    pub eula: License,
     pub qq: QQTable,
     pub network: NetworkTable,
     pub device: DeviceTable,
     pub misc: MiscTable,
+}
+
+#[derive(Debug, Deserialize)]
+pub enum License {
+    #[serde(rename = "AGPL")] Agpl,
+    #[serde(rename = "MPL")] Mpl,
+    Apache,
 }
 
 #[derive(Debug, Deserialize)]
