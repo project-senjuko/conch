@@ -8,6 +8,7 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
+use std::fmt;
 use serde::Deserialize;
 
 pub use self::device::*;
@@ -29,9 +30,17 @@ pub struct Config {
 
 #[derive(Debug, Deserialize)]
 pub enum License {
-    AGPL,
-    MPL,
+    #[serde(rename = "AGPL")]
+    Agpl,
+    #[serde(rename = "MPL")]
+    Mpl,
     Apache
+}
+
+impl std::fmt::Display for License {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }
 
 #[derive(Debug, Deserialize)]
