@@ -8,6 +8,21 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use crate::cipher::qtea;
+use serde::Deserialize;
 
-pub type D2Key = qtea::K;
+#[derive(Debug, Deserialize)]
+pub struct DeviceTable {
+    #[serde(default)] pub model: String,
+    #[serde(default)] pub manufacturer: String,
+    #[serde(default)] pub board: String,
+    #[serde(default)] pub device: String,
+    #[serde(default)] pub product: String,
+    #[serde(default)] pub ssid: String,
+    #[serde(default)] pub ipv4: String,
+    #[serde(default)] pub ipv6: String,
+    #[serde(default)] pub mac: String,
+    #[serde(default)] pub fingerprint: String,
+    #[serde(default)] pub imei: String,
+    #[serde(default)] pub imsi: String,
+    #[serde(rename = "system-http-ua", default)] pub system_http_ua: String,
+}

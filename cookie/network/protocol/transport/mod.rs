@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use anyhow::{bail, Result};
-use bytes::{Buf, BytesMut};
+use bytes::{Buf, BufMut, BytesMut};
 use tracing::error;
 
 use crate::util::bytes::{Bytes2String, GetSized};
@@ -22,20 +22,20 @@ mod respond;
 pub struct Packet {
     flag: Flag,
     encryption_method: EncryptionMethod,
-    sequence_number: i32,
+    sequence_number: u32,
     uin: u64,
     cmd: String,
     buffer: BytesMut,
 }
 
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Eq, PartialEq)]
 pub enum Flag {
     Login,
     #[default] Naive,
 }
 
 /// 加密模式
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Eq, PartialEq)]
 pub enum EncryptionMethod {
     /// 未加密
     UnEncrypted,
@@ -94,6 +94,8 @@ impl EncryptionMethod {
 trait PacketBytes {
     /// 获取 4 字节标识长度的 utf8 字符串
     fn get_4string(&mut self) -> String;
+    fn put_4string(&mut self, s: &str);
+    fn put_2string(&mut self, s: &str);
 
     fn get_4sized(&mut self) -> Self;
 }
@@ -102,6 +104,16 @@ impl PacketBytes for BytesMut {
     fn get_4string(&mut self) -> String {
         let l = self.get_u32() as usize - 4;
         self.get_string(l)
+    }
+
+    fn put_4string(&mut self, s: &str) {
+        self.put_u32((4 + s.len()) as u32);
+        self.put_slice(s.as_bytes());
+    }
+
+    fn put_2string(&mut self, s: &str) {
+        self.put_u16((2 + s.len()) as u16);
+        self.put_slice(s.as_bytes());
     }
 
     fn get_4sized(&mut self) -> Self {

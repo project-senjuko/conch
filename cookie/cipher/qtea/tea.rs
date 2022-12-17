@@ -11,7 +11,7 @@
 const DELTA: u32 = 0x9E37_79B9;
 
 type V = [u32; 2];
-type K = [u32; 4];
+pub type K = [u32; 4];
 
 pub struct TeaCipher {
     pub key: K,

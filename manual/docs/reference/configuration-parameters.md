@@ -11,6 +11,12 @@ sidebar_position: 1
 您可以在 [GitHub Docs](https://github.com/qianjunakasumi/senjuko-conch/blob/main/docs/Config.template.toml)
 中取得一个配置文件模板。它包含以下内容：
 
+### eula
+
+使用 `Conch 海螺` 时的许可协议。在使用前**必须选择一个许可协议**。
+
+可供选择的协议类型有：`AGPL`、`MPL` 和 `Apache`。您可以在项目仓库中查看这些许可协议的详细内容。
+
 ### [qq.account]
 
 | 键        | 值     | 可选  | 备注                         |
@@ -23,6 +29,24 @@ sidebar_position: 1
 | 键           | 值       | 可选  | 备注                                 |
 |-------------|---------|:---:|------------------------------------|
 | enable-ipv6 | 启用 IPv6 |  √  | 启用后若服务器支持 IPv6 则按此协议连接（不支持单栈 IPv6） |
+
+### [device]
+
+| 键              | 描述           | 可选  | 备注  |
+|----------------|--------------|:---:|-----|
+| model          | 型号           |  √  |     |
+| manufacturer   | 制造商          |  √  |     |
+| board          | 主板           |  √  |     |
+| device         | 设备           |  √  |     |
+| product        | 产品           |  √  |     |
+| ssid           | WIFI SSID    |  √  |     |
+| ipv4           | ipv4         |  √  |     |
+| ipv6           | ipv6         |  √  |     |
+| mac            | MAC 地址       |  √  |     |
+| fingerprint    | 系统指纹         |  √  |     |
+| imei           | IMEI         |  √  |     |
+| imsi           | IMSI         |  √  |     |
+| system_http_ua | 系统 HTTP 用户代理 |  √  |     |
 
 ### [misc]
 

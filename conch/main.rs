@@ -15,6 +15,8 @@ use shadow_rs::shadow;
 use tokio_graceful_shutdown::Toplevel;
 use tracing::{info, instrument};
 
+use cookie::runtime::Runtime;
+
 use self::core::init_core;
 use self::logger::init_logger;
 
@@ -26,13 +28,15 @@ shadow!(build);
 #[instrument]
 #[tokio::main]
 async fn main() -> Result<()> {
+    Runtime::init();
+
     let (lev, _h) = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
 
     info!(
         dsc = "いらっしゃいません～",
         PROJECT = "Project Senjuko - Conch 海螺",
         GITHUB = "https://github.com/qianjunakasumi/senjuko-conch",
-        LICENSES = "MPL-2.0 or AGPL-3.0",
+        LICENSES = ?Runtime::get_config().eula,
         COPYRIGHT = "Copyright (C) 2022  qianjunakasumi <i@qianjunakasumi.ren>",
         LogLevel = lev,
         PKGVersion = build::PKG_VERSION,

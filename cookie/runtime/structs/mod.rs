@@ -10,17 +10,28 @@
 
 use serde::Deserialize;
 
+pub use self::device::*;
 pub use self::network::*;
 pub use self::qq::*;
 
+mod device;
 mod network;
 mod qq;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
+    pub eula: License,
     pub qq: QQTable,
     pub network: NetworkTable,
+    pub device: DeviceTable,
     pub misc: MiscTable,
+}
+
+#[derive(Debug, Deserialize)]
+pub enum License {
+    #[serde(rename = "AGPL")] Agpl,
+    #[serde(rename = "MPL")] Mpl,
+    Apache,
 }
 
 #[derive(Debug, Deserialize)]

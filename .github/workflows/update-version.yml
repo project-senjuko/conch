@@ -48,6 +48,7 @@ jobs:
             ## 检查清单
             
             - [ ] JceStruct 已是最新
+            - [ ] 更新 hash 和 ver
             
             <details>
             <summary>开发者工具</summary>
