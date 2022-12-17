@@ -20,7 +20,7 @@ mod qq;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    pub eula: Option<License>,
+    pub eula: License,
     pub qq: QQTable,
     pub network: NetworkTable,
     pub device: DeviceTable,
