@@ -7,9 +7,9 @@
 //     License, v. 2.0. If a copy of the MPL was not distributed with this     /
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
-import 'package:dashboard/app.dart';
-import 'package:flutter/material.dart';
+import 'package:dashboard/pages/login/login.dart';
+import 'package:get/get.dart';
 
-void main() {
-  runApp(const DashboardApp());
-}
+List<GetPage> get pages => [
+      GetPage(name: '/login', page: () => const LoginPage()),
+    ];

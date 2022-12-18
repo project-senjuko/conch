@@ -7,9 +7,22 @@
 //     License, v. 2.0. If a copy of the MPL was not distributed with this     /
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
-import 'package:dashboard/app.dart';
+import 'package:dashboard/router.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-void main() {
-  runApp(const DashboardApp());
+class DashboardApp extends StatelessWidget {
+  const DashboardApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      title: 'Conch Dashboard',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      initialRoute: "/login",
+      getPages: pages,
+    );
+  }
 }
