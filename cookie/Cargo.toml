@@ -10,7 +10,7 @@ path = "lib.rs"
 
 [dependencies]
 jce = { path = "network/protocol/jce/frame", package = "cookie-jce" }
-anyhow = "1.0.66"
+anyhow = "1.0.68"
 bytes = "1.3.0"
 time = "0.3.17"
 reqwest = { version = "0.11.13", features = ["json", "rustls-tls-manual-roots"], default-features = false }
