@@ -17,7 +17,7 @@ members = [
 ]
 
 [dependencies]
-async-graphql = "5.0.3"
+async-graphql = "5.0.4"
 axum = "0.6.1"
 cookie = { path = "cookie", package = "conch-cookie" }
 anyhow = "1.0.66"
