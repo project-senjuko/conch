@@ -18,8 +18,6 @@ jobs:
     - uses: actions/stale@v7
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        days-before-stale: 30
-        days-before-close: 3
         stale-issue-message: '此 Issue 近期内无任何活动，若持续无响应将在数日后自动关闭'
         stale-pr-message: '此 PR 近期内无任何活动，若持续无响应将在数日后自动关闭'
         close-issue-message: '此 Issue 未能在有效期内获得任何响应，被自动关闭'
