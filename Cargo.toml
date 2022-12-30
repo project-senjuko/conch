@@ -21,11 +21,11 @@ async-graphql = "5.0.4"
 axum = "0.6.1"
 cookie = { path = "cookie", package = "conch-cookie" }
 anyhow = "1.0.68"
-shadow-rs = "0.19.0"
+shadow-rs = "0.20.0"
 tokio = { version = "1.23.0", features = ["full"] }
 tokio-graceful-shutdown = "0.11.1"
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 
 [build-dependencies]
-shadow-rs = "0.19.0"
+shadow-rs = "0.20.0"
