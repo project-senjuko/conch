@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2022 qianjunakasumi <i@qianjunakasumi.ren>                    /
+// Copyright (c) 2022-2023 qianjunakasumi <i@qianjunakasumi.ren>               /
 //                     qianjunakasumi <qianjunakasumi@outlook.com>             /
 //                     https://github.com/qianjunakasumi                       /
 //                                                                             /
@@ -8,11 +8,12 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use shadow_rs::SdResult;
 use std::borrow::Cow;
 use std::env;
 use std::fs::File;
 use std::io::Write;
+
+use shadow_rs::SdResult;
 
 const MAINTAINER_NAME: &str = "SJKCONCH_MAINTAINER_NAME";
 const MAINTAINER_EMAIL: &str = "SJKCONCH_MAINTAINER_EMAIL";

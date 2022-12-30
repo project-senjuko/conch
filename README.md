@@ -39,7 +39,7 @@ Issues 和 PRs 大欢迎。有关如何参与贡献，请阅读 [贡献部分](/
 ### MPL 通知
 
 ```
-Copyright (c) 2022 qianjunakasumi <i@qianjunakasumi.ren>
+Copyright (c) 2022-2023 qianjunakasumi <i@qianjunakasumi.ren>
                     qianjunakasumi <qianjunakasumi@outlook.com>
                     https://github.com/qianjunakasumi
 
@@ -52,7 +52,7 @@ Copyright (c) 2022 qianjunakasumi <i@qianjunakasumi.ren>
 
 ```
 Conch: A basic micro-service, as the publisher of QQ for Android events.
-Copyright (C) 2022  qianjunakasumi <i@qianjunakasumi.ren>
+Copyright (C) 2022-2023  qianjunakasumi <i@qianjunakasumi.ren>
                      qianjunakasumi <qianjunakasumi@outlook.com>
                      https://github.com/qianjunakasumi
 
@@ -78,7 +78,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/agpl-3.0.html
 授权终止，即使您的衍生作品采用更宽松的许可模式。
 
 ```
-Copyright 2022 qianjunakasumi <i@qianjunakasumi.ren>
+Copyright 2022-2023 qianjunakasumi <i@qianjunakasumi.ren>
                 qianjunakasumi <qianjunakasumi@outlook.com>
                 https://github.com/qianjunakasumi
 
