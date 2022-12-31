@@ -21,6 +21,10 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/qianjunakasumi/senjuko-conch/rust-workspace-test.yml?branch=main&style=for-the-badge&logo=github)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_shield)
 
+## 为什么海螺
+
+`Conch 海螺` 是 `Project Senjuko` 生态中的基础设施，面向 QQ 收发消息以及提供其他高级功能。 `Conch 海螺` 被设计为用于人工智能学术与技术项目研究的消息事件源，期望作为可靠的设施以提供大数据的生产，输出丰富的自然用户语料数据，重点是面向自然语言处理领域。 `Conch 海螺` 支持项目生产落地实践，将研究成果反哺用户使用。
+
 ## 参与进来
 
 Issues 和 PRs 大欢迎。有关如何参与贡献，请阅读 [贡献部分](/CONTRIBUTING.md) 了解更多相关信息。
