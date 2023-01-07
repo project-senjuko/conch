@@ -9,4 +9,4 @@ sidebar_position: 2
 
 ## Rust 源代码文档
 
-[![Rust Code Docs](https://img.shields.io/badge/docs-crates-000?style=for-the-badge&logo=rust)](pathname:///senjuko-conch/rust-docs/conch/index.html)
+[![Rust Code Docs](https://img.shields.io/badge/docs-crates-000?style=for-the-badge&logo=rust)](pathname:///rust-docs/conch/index.html)
