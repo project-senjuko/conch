@@ -3,6 +3,7 @@ name: Rust workspace test
 on:
   push:
     branches: [ "main", "pref/bump-version" ]
+    paths: [ "**.rs", "**/Cargo.toml", "**/Cargo.lock" ]
 
   pull_request:
     branches: [ "main" ]
