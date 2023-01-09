@@ -1,8 +1,9 @@
-name: Release crazy build
+name: Release testing channel
 
 on:
-  schedule:
-    - cron: '0 1 * * 4'
+  push:
+    branches: [ "main" ]
+    paths: [ "**.rs" ]
 
   workflow_dispatch:
 
@@ -40,7 +41,5 @@ jobs:
           context: .
           push: true
           tags: |
-            qianjunakasumi/senjuko-conch:crazy
-            ghcr.io/qianjunakasumi/senjuko-conch:crazy
-            qianjunakasumi/senjuko-conch:latest
-            ghcr.io/qianjunakasumi/senjuko-conch:latest
+            qianjunakasumi/senjuko-conch:testing
+            ghcr.io/qianjunakasumi/senjuko-conch:testing
