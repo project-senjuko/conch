@@ -18,7 +18,7 @@ members = [
 
 [dependencies]
 async-graphql = "5.0.5"
-axum = "0.6.1"
+axum = "0.6.2"
 cookie = { path = "cookie", package = "conch-cookie" }
 anyhow = "1.0.68"
 shadow-rs = "0.20.0"
