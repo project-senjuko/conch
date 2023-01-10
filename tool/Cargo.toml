@@ -1,0 +1,10 @@
+[package]
+name = "conch-tool"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "conch-tool"
+path = "main.rs"
+
+[dependencies]

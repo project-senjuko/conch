@@ -14,6 +14,7 @@ path = "conch/main.rs"
 members = [
     "cookie",
     "cookie/network/protocol/jce/frame",
+    "tool",
 ]
 
 [dependencies]
