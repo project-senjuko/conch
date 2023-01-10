@@ -8,11 +8,8 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use std::time::Duration;
-
 use anyhow::Result;
 use shadow_rs::shadow;
-use tokio_graceful_shutdown::Toplevel;
 use tracing::{info, instrument};
 
 use cookie::runtime::Runtime;
@@ -36,7 +33,7 @@ async fn main() -> Result<()> {
         dsc = "いらっしゃいません～",
         PROJECT = "Project Senjuko - Conch 海螺",
         GITHUB = "https://github.com/qianjunakasumi/senjuko-conch",
-        LICENSES = ?Runtime::get_config().eula,
+        LICENSE = ?Runtime::get_config().eula,
         COPYRIGHT = "Copyright (C) 2022-2023  qianjunakasumi <i@qianjunakasumi.ren>",
         LogLevel = lev,
         PKGVersion = build::PKG_VERSION,
@@ -54,13 +51,25 @@ async fn main() -> Result<()> {
         SJKConchMaintainerEmail = build::SJKCONCH_MAINTAINER_EMAIL,
     );
 
-    Toplevel::new()
-        .start("core", init_core)
-        .catch_signals()
-        .handle_shutdown_requests(Duration::from_secs(3))
-        .await
-        .expect("启动服务失败");
+    init_core().await.expect("核心服务初始化失败");
+
+    wait_signal().await;
+
+    // 通知停机
 
     info!(dsc = "プログラムは停止しますた、次回をお楽しみなのじゃ");
     Ok(())
+}
+
+#[cfg(unix)]
+async fn wait_signal() {
+    use tokio::signal::unix::{signal, SignalKind};
+
+    signal(SignalKind::terminate()).expect("监听 SIGTERM 信号失败").recv().await;
+}
+
+#[cfg(windows)]
+async fn wait_signal() {
+    use tokio::signal::ctrl_c;
+    ctrl_c().await.expect("监听 Ctrl+C 信号失败");
 }
