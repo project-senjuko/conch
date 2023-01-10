@@ -10,7 +10,11 @@
 
 use bytes::{Buf, BufMut, Bytes, BytesMut};
 
-pub mod r#struct;
+pub mod t1;
+pub mod t8;
+pub mod t18;
+pub mod t100;
+
 
 pub struct TlvField {
     pub command: u16,
