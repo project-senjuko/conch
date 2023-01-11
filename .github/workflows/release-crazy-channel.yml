@@ -39,7 +39,9 @@ jobs:
         with:
           context: .
           push: true
-          build-args: [ "MAINTAINER_NAME=nobody", "MAINTAINER_EMAIL=<unsupported>" ]
+          build-args: |
+            MAINTAINER_NAME=nobody
+            MAINTAINER_EMAIL=<unsupported>
           tags: |
             qianjunakasumi/senjuko-conch:crazy
             ghcr.io/qianjunakasumi/senjuko-conch:crazy
