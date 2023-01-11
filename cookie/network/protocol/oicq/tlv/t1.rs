@@ -8,26 +8,25 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{BufMut, BytesMut};
 use time::OffsetDateTime;
 
-use super::TlvTStruct;
+use super::TlvField;
 
 struct TlvT1 {
     uin: u32,
 }
 
-impl TlvTStruct for TlvT1 {
-    fn get_command() -> u16 { 1 }
+impl TlvField for TlvT1 {
+    fn tag() -> u16 { 0x1 }
 
-    fn to_tlv_payload(&self) -> Bytes {
-        let mut b = BytesMut::with_capacity(20);
+    fn to_payload(&self, b: &mut BytesMut) {
+        b.reserve(20);
         b.put_u16(1);
         b.put_u32(757575); // 75 = senju
         b.put_u32(self.uin);
         b.put_u32(OffsetDateTime::now_utc().unix_timestamp() as u32);
         b.put_bytes(0, 4);
         b.put_u16(0);
-        b.freeze()
     }
 }

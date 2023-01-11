@@ -8,32 +8,28 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, BufMut, Bytes, BytesMut};
+use bytes::{BufMut, BytesMut};
 
 pub mod t1;
 pub mod t8;
 pub mod t18;
 pub mod t100;
 
+trait TlvField {
+    fn tag() -> u16;
 
-pub struct TlvField {
-    pub command: u16,
-    pub payload: Bytes,
-}
+    fn to_bytes(&self) -> BytesMut {
+        let mut b = BytesMut::with_capacity(4);
 
-impl TlvField {
-    pub fn put_self(self, b: &mut BytesMut) {
-        b.put_u16(self.command);
-        b.put_u16(self.payload.remaining() as u16);
-        b.put(self.payload);
+        b.put_u16(Self::tag());
+        b.put_u16(0); // payload length
+        self.to_payload(&mut b);
+
+        let l = b.len() - 4;
+        b[2..4].swap_with_slice(&mut l.to_be_bytes()); // set payload length
+
+        b
     }
-}
 
-pub trait TlvTStruct {
-    fn get_command() -> u16;
-
-    fn to_tlv_payload(&self) -> Bytes;
-    fn to_tlv_filed(&self) -> TlvField {
-        TlvField { command: Self::get_command(), payload: self.to_tlv_payload() }
-    }
+    fn to_payload(&self, b: &mut BytesMut);
 }

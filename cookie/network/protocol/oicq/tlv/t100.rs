@@ -8,25 +8,24 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, Bytes, BytesMut};
+use bytes::{BufMut, BytesMut};
 
-use super::TlvTStruct;
+use super::TlvField;
 
 struct TlvT100 {
     app_id: u32,
 }
 
-impl TlvTStruct for TlvT100 {
-    fn get_command() -> u16 { 256 }
+impl TlvField for TlvT100 {
+    fn tag() -> u16 { 0x100 }
 
-    fn to_tlv_payload(&self) -> Bytes {
-        let mut b = BytesMut::with_capacity(22);
+    fn to_payload(&self, b: &mut BytesMut) {
+        b.reserve(22);
         b.put_u16(1);
         b.put_u32(18);
         b.put_u32(16);
         b.put_u32(self.app_id);
         b.put_u32(0);
         b.put_u32(16724722);
-        b.freeze()
     }
 }
