@@ -13,6 +13,7 @@ use bytes::Bytes;
 use self::structs::Config;
 use self::types::*;
 
+mod lifecycle;
 mod structs;
 mod config;
 mod types;
