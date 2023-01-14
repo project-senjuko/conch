@@ -1,11 +1,13 @@
-# 查看配置详情，请点击
-# https://senjuko-conch.qianjunakasumi.ren/docs/reference/configuration-parameters
+# 配置详情：https://senjuko-conch.qianjunakasumi.ren/docs/reference/configuration-parameters
 
 eula = ""
 
 [qq.account]
 number = 1145141919
 password = "85b535ee67d0dc327a799d07333a5f78"
+
+[data]
+path = "goconch"
 
 [network]
 enable-ipv6 = false

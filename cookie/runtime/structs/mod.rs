@@ -21,10 +21,16 @@ mod qq;
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub eula: License,
+    pub data: DataTable,
     pub qq: QQTable,
     pub network: NetworkTable,
     pub device: DeviceTable,
     pub misc: MiscTable,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct DataTable {
+    #[serde(default)] pub path: String,
 }
 
 #[derive(Debug, Deserialize)]
