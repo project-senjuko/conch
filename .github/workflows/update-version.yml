@@ -1,9 +1,6 @@
 name: Update version
 
 on:
-  schedule:
-    - cron: '0 1 * * 1'
-    - cron: '0 1 * * 4'
   workflow_dispatch:
 
 jobs:
