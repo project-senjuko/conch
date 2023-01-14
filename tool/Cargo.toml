@@ -8,3 +8,4 @@ name = "conch-tool"
 path = "main.rs"
 
 [dependencies]
+clap = { version = "4.0", features = ["derive", "cargo", "wrap_help", "env"] }
