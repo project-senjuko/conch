@@ -10,20 +10,24 @@
 
 use bytes::Bytes;
 
+use self::secret::Secret;
 use self::structs::Config;
 use self::types::*;
 
 mod lifecycle;
+mod secret;
 mod structs;
 mod config;
 mod types;
 
 /// 全局运行时变量
-static mut RUNTIMEVAR: Option<&mut Runtime> = None;
+static mut RUNTIME: Option<&mut Runtime> = None;
 
 /// 全局运行时
 pub struct Runtime {
     config: Config,
+    secret: Secret,
+
     d2: Bytes,
     d2key: D2Key,
     tgt: Bytes,
@@ -36,9 +40,10 @@ impl Runtime {
     /// 初始化全局运行时变量
     pub fn init() {
         unsafe {
-            RUNTIMEVAR = Some(Box::leak(Box::new(
+            RUNTIME = Some(Box::leak(Box::new(
                 Runtime {
                     config: Config::read_config(),
+                    secret: Secret::default(),
                     d2: Default::default(),
                     d2key: Default::default(),
                     tgt: Default::default(),
@@ -53,19 +58,21 @@ impl Runtime {
     /// # Safety
     ///
     /// 必须确保 [`Runtime::init`] 初始化全局运行时变量函数已被调用。
-    fn get_var() -> &'static Runtime { unsafe { RUNTIMEVAR.as_ref().unwrap() } }
+    fn get_var() -> &'static Runtime { unsafe { RUNTIME.as_ref().unwrap() } }
 
     /// 获取可变的运行时变量
     ///
     /// # Safety
     ///
     /// 必须确保 [`Runtime::init`] 初始化全局运行时变量函数已被调用。
-    fn get_var_mut() -> &'static mut Runtime { unsafe { RUNTIMEVAR.as_mut().unwrap() } }
+    fn get_var_mut() -> &'static mut Runtime { unsafe { RUNTIME.as_mut().unwrap() } }
 }
 
 impl Runtime {
     /// 获取配置文件
     pub fn get_config() -> &'static Config { &Runtime::get_var().config }
+
+    pub fn secret() -> &'static Secret { &Runtime::get_var().secret }
 
     /// 获取 d2
     pub fn get_d2() -> Bytes { Runtime::get_var().d2.clone() }
