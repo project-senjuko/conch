@@ -27,6 +27,15 @@ impl QTeaCipher {
 
     #[inline]
     pub fn with_empty_key() -> Self { Self::new(<K as Default>::default()) }
+
+    pub fn with_16key(k: [u8; 16]) -> Self {
+        Self::new([
+            u32::from_be_bytes([k[0], k[1], k[2], k[3]]),
+            u32::from_be_bytes([k[4], k[5], k[6], k[7]]),
+            u32::from_be_bytes([k[8], k[9], k[10], k[11]]),
+            u32::from_be_bytes([k[12], k[13], k[14], k[15]]),
+        ])
+    }
 }
 
 impl QTeaCipher {
