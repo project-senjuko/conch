@@ -21,6 +21,7 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/qianjunakasumi/senjuko-conch/rust-workspace-test.yml?branch=main&style=for-the-badge&logo=github)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_shield)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6876/badge)](https://bestpractices.coreinfrastructure.org/projects/6876)
+![qianjucommits-v0.1](https://img.shields.io/badge/qianjucommits-v0.1-85f9c7?style=for-the-badge)
 
 ## 为什么海螺
 
