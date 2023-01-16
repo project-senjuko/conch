@@ -10,28 +10,22 @@
 
 use bytes::{BufMut, BytesMut};
 
-pub mod t1;
-pub mod t8;
-pub mod t18;
-pub mod t100;
-pub mod t106;
-pub mod t116;
+use super::TlvField;
 
-trait TlvField: Default {
-    fn tag() -> u16;
+#[derive(Default)]
+struct TlvT116 {
+    ver: u8, // 0
+}
 
-    fn to_payload(&self, b: &mut BytesMut);
+impl TlvField for TlvT116 {
+    fn tag() -> u16 { 0x116 }
 
-    fn to_bytes(&self) -> BytesMut {
-        let mut b = BytesMut::with_capacity(4);
-
-        b.put_u16(Self::tag());
-        b.put_u16(0); // payload length
-        self.to_payload(&mut b);
-
-        let l = b.len() - 4;
-        b[2..4].swap_with_slice(&mut l.to_be_bytes()); // set payload length
-
-        b
+    fn to_payload(&self, b: &mut BytesMut) {
+        b.reserve(0);
+        b.put_u8(self.ver);
+        b.put_u32(184024956); // mMiscBitmap
+        b.put_u32(66560); // mSubSigMap
+        b.put_u8(1); // _sub_appid_list length
+        b.put_u32(1600000226); // _sub_appid_list item
     }
 }
