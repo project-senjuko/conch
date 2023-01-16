@@ -10,10 +10,25 @@
 
 use bytes::{BufMut, BytesMut};
 
+use crate::upstream::app_setting::APP_ID;
+
 use super::TlvField;
 
 struct TlvT100 {
+    db_buf_ver: u16,
+    sso_ver: u32,
+
     app_id: u32,
+}
+
+impl Default for TlvT100 {
+    fn default() -> Self {
+        Self {
+            db_buf_ver: 1,
+            sso_ver: 19,
+            app_id: APP_ID,
+        }
+    }
 }
 
 impl TlvField for TlvT100 {
@@ -21,11 +36,11 @@ impl TlvField for TlvT100 {
 
     fn to_payload(&self, b: &mut BytesMut) {
         b.reserve(22);
-        b.put_u16(1);
-        b.put_u32(18);
-        b.put_u32(16);
+        b.put_u16(self.db_buf_ver);
+        b.put_u32(self.sso_ver);
+        b.put_u32(16); // appid
         b.put_u32(self.app_id);
-        b.put_u32(0);
-        b.put_u32(16724722);
+        b.put_u32(0); // app client version
+        b.put_u32(34869472); // main sigmap = (mDwMainSigMap = 34869344) | 192
     }
 }

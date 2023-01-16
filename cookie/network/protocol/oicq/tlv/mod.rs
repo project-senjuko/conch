@@ -15,8 +15,10 @@ pub mod t8;
 pub mod t18;
 pub mod t100;
 
-trait TlvField {
+trait TlvField: Default {
     fn tag() -> u16;
+
+    fn to_payload(&self, b: &mut BytesMut);
 
     fn to_bytes(&self) -> BytesMut {
         let mut b = BytesMut::with_capacity(4);
@@ -30,6 +32,4 @@ trait TlvField {
 
         b
     }
-
-    fn to_payload(&self, b: &mut BytesMut);
 }

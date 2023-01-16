@@ -12,6 +12,7 @@ use bytes::{BufMut, BytesMut};
 
 use super::TlvField;
 
+#[derive(Default)]
 struct TlvT8 {}
 
 impl TlvField for TlvT8 {
