@@ -13,15 +13,11 @@ use self::password::{Password, PasswordTrait};
 mod password;
 
 pub struct Secret {
-    password: Password,
+    pub password: Password,
 }
 
 impl Default for Secret {
     fn default() -> Self {
         Self { password: Password::read_from_file() }
     }
-}
-
-impl Secret {
-    pub fn password(&self) -> Password { self.password }
 }
