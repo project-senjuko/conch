@@ -8,7 +8,7 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, BufMut, BytesMut};
+use bytes::{BufMut, BytesMut};
 use time::OffsetDateTime;
 
 use crate::cipher::qtea::QTeaCipher;
@@ -78,7 +78,6 @@ impl TlvField for TlvT106 {
         key.put_u32(self.uin as u32);
 
         let p = QTeaCipher::with_16key(md5::compute(key).0).encrypt(bi);
-        b.reserve(p.remaining());
         b.extend_from_slice(p.as_ref());
     }
 }

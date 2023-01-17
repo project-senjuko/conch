@@ -21,7 +21,7 @@ impl TlvField for TlvT116 {
     fn tag() -> u16 { 0x116 }
 
     fn to_payload(&self, b: &mut BytesMut) {
-        b.reserve(0);
+        b.reserve(14);
         b.put_u8(self.ver);
         b.put_u32(184024956); // mMiscBitmap
         b.put_u32(66560); // mSubSigMap
