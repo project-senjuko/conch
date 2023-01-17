@@ -17,3 +17,7 @@ pub const APP_SHORT_VER: &str = "8.9.28";
 /// APP_ID: 版本 | 10155
 /// 源 | com.tencent.common.config.AppSetting.c
 pub const APP_COMMIT: &str = "79a4d4b7";
+
+/// Apk 包名，
+/// 原则上生命周期内不发生变更。
+pub const APK_NAME: &str = "com.tencent.mobileqq";
