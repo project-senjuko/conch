@@ -10,30 +10,22 @@
 
 use bytes::{BufMut, BytesMut};
 
-pub mod t1;
-pub mod t8;
-pub mod t18;
-pub mod t100;
-pub mod t106;
-pub mod t107;
-pub mod t116;
-pub mod t142;
+use crate::upstream::app_setting::APK_NAME;
 
-trait TlvField: Default {
-    fn tag() -> u16;
+use super::TlvField;
 
-    fn to_payload(&self, b: &mut BytesMut);
+#[derive(Default)]
+struct TlvT142 {
+    version: u16, // 0
+}
 
-    fn to_bytes(&self) -> BytesMut {
-        let mut b = BytesMut::with_capacity(4);
+impl TlvField for TlvT142 {
+    fn tag() -> u16 { 0x142 }
 
-        b.put_u16(Self::tag());
-        b.put_u16(0); // payload length
-        self.to_payload(&mut b);
-
-        let l = b.len() - 4;
-        b[2..4].swap_with_slice(&mut l.to_be_bytes()); // set payload length
-
-        b
+    fn to_payload(&self, b: &mut BytesMut) {
+        b.reserve(24);
+        b.put_u16(self.version);
+        b.put_u16(APK_NAME.len() as u16);
+        b.put_slice(APK_NAME.as_ref());
     }
 }
