@@ -22,7 +22,7 @@ axum = "0.6.2"
 cookie = { path = "cookie", package = "conch-cookie" }
 anyhow = "1.0.68"
 shadow-rs = "0.20.0"
-tokio = { version = "1.24.1", features = ["full"] }
+tokio = { version = "1.24.2", features = ["full"] }
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 
