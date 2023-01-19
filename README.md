@@ -35,6 +35,12 @@ Issues 和 PRs 大欢迎。有关如何参与贡献，请阅读 [贡献部分](/
 
 `Conch 海螺` 的发展离不开每个人的支持！请阅读 [鸣谢部分](/ACKNOWLEDGEMENTS.md) 了解更多相关信息。
 
+## 社区
+
+- 钉钉
+
+<img src="https://s2.loli.net/2023/01/19/8mn14hKrIHfd9tx.jpg" width="200">
+
 ## 许可证
 
 `Conch 海螺` ❤ OpenSource，我们提供 [`MPL`](/LICENSE) 或 [`AGPL`](/LICENSE-AGPL) 许可，任君选择。默认情况下以 `MPL` 许可授权。
