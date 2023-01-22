@@ -8,13 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/cookie/network/protocol/jce/frame" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/cookie/network/protocol/jce/frame/target" />
-      <excludeFolder url="file://$MODULE_DIR$/dashboard/.dart_tool" />
-      <excludeFolder url="file://$MODULE_DIR$/dashboard/.pub" />
-      <excludeFolder url="file://$MODULE_DIR$/dashboard/build" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Dart SDK" level="project" />
-    <orderEntry type="library" name="Dart Packages" level="project" />
   </component>
 </module>
