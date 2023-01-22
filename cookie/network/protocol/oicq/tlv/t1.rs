@@ -25,7 +25,7 @@ impl Default for TlvT1 {
     fn default() -> Self {
         Self {
             ip_ver: 1,
-            uin: Runtime::get_config().qq.account.number as u32,
+            uin: Runtime::config().qq.account.number as u32,
         }
     }
 }

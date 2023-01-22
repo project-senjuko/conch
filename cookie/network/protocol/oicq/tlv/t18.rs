@@ -26,7 +26,7 @@ impl Default for TlvT18 {
         Self {
             ping_version: 1,
             sso_version: 1536,
-            uin: Runtime::get_config().qq.account.number as u32,
+            uin: Runtime::config().qq.account.number as u32,
         }
     }
 }

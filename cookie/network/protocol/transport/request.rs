@@ -100,7 +100,7 @@ impl Packet {
         b.put(m);
 
         if self.flag == Flag::Login {
-            b.put_4string(&Runtime::get_config().device.imei);
+            b.put_4string(&Runtime::config().device.imei);
             b.put_u32(4); // ksid
             b.put_2string(&Self::build_ver());
         }
@@ -115,7 +115,7 @@ impl Packet {
 
     #[inline]
     fn build_ver() -> String {
-        "|".to_string() + &Runtime::get_config().device.imsi
+        "|".to_string() + &Runtime::config().device.imsi
             + "|A" + APP_SHORT_VER + "." + APP_COMMIT
     }
 }

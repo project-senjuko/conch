@@ -52,50 +52,53 @@ impl Runtime {
         }
     }
 
-    /// 获取运行时变量
+    /// 运行时变量
     ///
     /// # Safety
     ///
-    /// 必须确保 [`Runtime::init`] 初始化全局运行时变量函数已被调用。
-    fn get_var() -> &'static Runtime { unsafe { RUNTIME.as_ref().unwrap() } }
+    /// 必须确保 [`Runtime::init`] 已被调用。
+    fn rt() -> &'static Runtime { unsafe { RUNTIME.as_ref().unwrap() } }
 
-    /// 获取可变的运行时变量
+    /// 可变运行时变量
     ///
     /// # Safety
     ///
-    /// 必须确保 [`Runtime::init`] 初始化全局运行时变量函数已被调用。
-    fn get_var_mut() -> &'static mut Runtime { unsafe { RUNTIME.as_mut().unwrap() } }
+    /// 必须确保 [`Runtime::init`] 已被调用。
+    fn rt_mut() -> &'static mut Runtime { unsafe { RUNTIME.as_mut().unwrap() } }
 }
 
 impl Runtime {
-    /// 获取配置文件
-    pub fn get_config() -> &'static Config { &Runtime::get_var().config }
+    /// 配置
+    pub fn config() -> &'static Config { &Runtime::rt().config }
 
-    pub fn secret() -> &'static Secret { &Runtime::get_var().secret }
+    /// 机密
+    pub fn secret() -> &'static Secret { &Runtime::rt().secret }
+
+    // 考虑废弃以下特性（组合至其他部分）
 
     /// 获取 d2
-    pub fn get_d2() -> Bytes { Runtime::get_var().d2.clone() }
+    pub fn get_d2() -> Bytes { Runtime::rt().d2.clone() }
 
     /// 获取 d2key
-    pub fn get_d2key() -> D2Key { Runtime::get_var().d2key }
+    pub fn get_d2key() -> D2Key { Runtime::rt().d2key }
 
     /// 获取 tgt
-    pub fn get_tgt() -> Bytes { Runtime::get_var().tgt.clone() }
+    pub fn get_tgt() -> Bytes { Runtime::rt().tgt.clone() }
 
     /// 获取 msg_cookie
-    pub fn get_msg_cookie() -> Bytes { Runtime::get_var().msg_cookie.clone() }
+    pub fn get_msg_cookie() -> Bytes { Runtime::rt().msg_cookie.clone() }
 }
 
 impl Runtime {
     /// 设置 d2
-    pub fn put_d2(b: Bytes) { Runtime::get_var_mut().d2 = b }
+    pub fn put_d2(b: Bytes) { Runtime::rt_mut().d2 = b }
 
     /// 设置 d2key
-    pub fn put_d2key(d: D2Key) { Runtime::get_var_mut().d2key = d }
+    pub fn put_d2key(d: D2Key) { Runtime::rt_mut().d2key = d }
 
     /// 设置 tgt
-    pub fn put_tgt(b: Bytes) { Runtime::get_var_mut().tgt = b }
+    pub fn put_tgt(b: Bytes) { Runtime::rt_mut().tgt = b }
 
     /// 设置 msg_cookie
-    pub fn put_msg_cookie(b: Bytes) { Runtime::get_var_mut().msg_cookie = b }
+    pub fn put_msg_cookie(b: Bytes) { Runtime::rt_mut().msg_cookie = b }
 }

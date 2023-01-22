@@ -20,8 +20,8 @@ use cookie::runtime::Runtime;
 /// 核心服务初始化
 #[instrument]
 pub async fn init_core() -> Result<()> {
-    if Runtime::get_config().misc.startup_delay {
-        info!(dsc = "默认情况下的正式启动前您有⑨秒预览配置文件，欲关闭此功能请在配置文件中设置 `startup-delay = false` 详见文档", cfg = ?Runtime::get_config());
+    if Runtime::config().misc.startup_delay {
+        info!(dsc = "默认情况下的正式启动前您有⑨秒预览配置文件，欲关闭此功能请在配置文件中设置 `startup-delay = false` 详见文档", cfg = ?Runtime::config());
         sleep(Duration::from_secs(9)).await;
     }
 

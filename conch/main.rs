@@ -33,7 +33,7 @@ async fn main() -> Result<()> {
         dsc = "いらっしゃいません～",
         PROJECT = "Project Senjuko - Conch 海螺",
         GITHUB = "https://github.com/qianjunakasumi/senjuko-conch",
-        LICENSE = ?Runtime::get_config().eula,
+        LICENSE = ?Runtime::config().eula,
         COPYRIGHT = "Copyright (C) 2022-2023  qianjunakasumi <i@qianjunakasumi.ren>",
         LogLevel = lev,
         PKGVersion = build::PKG_VERSION,

@@ -30,7 +30,7 @@ impl Default for TlvT106 {
         Self {
             tgtgt_ver: 4,
             sso_ver: 19,
-            uin: Runtime::get_config().qq.account.number,
+            uin: Runtime::config().qq.account.number,
             password: Runtime::secret().password,
         }
     }

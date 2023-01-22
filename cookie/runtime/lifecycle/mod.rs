@@ -13,5 +13,5 @@ use std::path::Path;
 use super::Runtime;
 
 fn is_init() -> bool {
-    Path::new(&Runtime::get_config().data.path).exists()
+    Path::new(&Runtime::config().data.path).exists()
 }
