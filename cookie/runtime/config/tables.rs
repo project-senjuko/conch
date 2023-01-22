@@ -11,6 +11,22 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
+pub struct DataTable {
+    #[serde(default)] pub path: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct QQTable {
+    pub account: QQAccountTable,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct QQAccountTable {
+    pub number: u64,
+    pub password: String,
+}
+
+#[derive(Debug, Deserialize)]
 pub struct NetworkTable {
     #[serde(rename = "enable-ipv6", default)]
     pub enable_ipv6: bool,
@@ -27,4 +43,27 @@ fn network_table_dns_default() -> Vec<NetworkDNSTable> {
 #[derive(Debug, Deserialize)]
 pub struct NetworkDNSTable {
     pub address: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct DeviceTable {
+    #[serde(default)] pub model: String,
+    #[serde(default)] pub manufacturer: String,
+    #[serde(default)] pub board: String,
+    #[serde(default)] pub device: String,
+    #[serde(default)] pub product: String,
+    #[serde(default)] pub ssid: String,
+    #[serde(default)] pub ipv4: String,
+    #[serde(default)] pub ipv6: String,
+    #[serde(default)] pub mac: String,
+    #[serde(default)] pub fingerprint: String,
+    #[serde(default)] pub imei: String,
+    #[serde(default)] pub imsi: String,
+    #[serde(rename = "system-http-ua", default)] pub system_http_ua: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct MiscTable {
+    #[serde(rename = "startup-delay", default)]
+    pub startup_delay: bool,
 }

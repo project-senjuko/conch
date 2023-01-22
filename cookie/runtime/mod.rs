@@ -10,14 +10,13 @@
 
 use bytes::Bytes;
 
+use self::config::Config;
 use self::secret::Secret;
-use self::structs::Config;
 use self::types::*;
 
+mod config;
 mod lifecycle;
 mod secret;
-mod structs;
-mod config;
 mod types;
 
 /// 全局运行时变量

@@ -12,9 +12,24 @@ use std::env::{var, VarError};
 use std::fs::read;
 
 use anyhow::{anyhow, Result};
+use serde::Deserialize;
 use tracing::{debug, error, instrument, trace};
 
-use super::Config;
+use self::fields::*;
+use self::tables::*;
+
+mod fields;
+mod tables;
+
+#[derive(Debug, Deserialize)]
+pub struct Config {
+    pub eula: License,
+    pub data: DataTable,
+    pub qq: QQTable,
+    pub network: NetworkTable,
+    pub device: DeviceTable,
+    pub misc: MiscTable,
+}
 
 impl Config {
     /// 读取配置文件，

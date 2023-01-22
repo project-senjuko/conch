@@ -11,18 +11,8 @@
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-pub struct DeviceTable {
-    #[serde(default)] pub model: String,
-    #[serde(default)] pub manufacturer: String,
-    #[serde(default)] pub board: String,
-    #[serde(default)] pub device: String,
-    #[serde(default)] pub product: String,
-    #[serde(default)] pub ssid: String,
-    #[serde(default)] pub ipv4: String,
-    #[serde(default)] pub ipv6: String,
-    #[serde(default)] pub mac: String,
-    #[serde(default)] pub fingerprint: String,
-    #[serde(default)] pub imei: String,
-    #[serde(default)] pub imsi: String,
-    #[serde(rename = "system-http-ua", default)] pub system_http_ua: String,
+pub enum License {
+    #[serde(rename = "AGPL")] Agpl,
+    #[serde(rename = "MPL")] Mpl,
+    Apache,
 }
