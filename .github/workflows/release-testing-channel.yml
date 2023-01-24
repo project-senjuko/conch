@@ -47,3 +47,5 @@ jobs:
           tags: |
             qianjunakasumi/senjuko-conch:testing
             ghcr.io/qianjunakasumi/senjuko-conch:testing
+            qianjunakasumi/senjuko-conch:crazy
+            ghcr.io/qianjunakasumi/senjuko-conch:crazy

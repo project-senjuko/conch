@@ -2,6 +2,7 @@ name: Release crazy channel
 
 on:
   push:
+    branches-ignore: [ "main" ]
     paths: [ "**.rs" ]
 
   workflow_dispatch:
