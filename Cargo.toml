@@ -19,10 +19,12 @@ members = [
 [dependencies]
 async-graphql = "5.0.5"
 axum = "0.6.4"
+axum-extra = { version = "0.4.2", features = ["spa"] }
 cookie = { path = "cookie", package = "conch-cookie" }
 anyhow = "1.0.68"
 shadow-rs = "0.20.0"
 tokio = { version = "1.24.1", features = ["full"] }
+tower-http = "0.3.5"
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
 

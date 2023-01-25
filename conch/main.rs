@@ -10,15 +10,18 @@
 
 use anyhow::Result;
 use shadow_rs::shadow;
+use tokio::spawn;
 use tracing::{info, instrument};
 
 use cookie::runtime::Runtime;
 
 use self::core::init_core;
+use self::http::dashboard;
 use self::logger::init_logger;
 
 mod logger;
 mod core;
+mod http;
 
 shadow!(build);
 
@@ -52,11 +55,11 @@ async fn main() -> Result<()> {
     );
 
     init_core().await.expect("核心服务初始化失败");
+    spawn(dashboard());
 
+    info!(dsc = "うららか日和でしょでしょ～");
     wait_signal().await;
-
     // 通知停机
-
     info!(dsc = "プログラムは停止しますた、次回をお楽しみなのじゃ");
     Ok(())
 }
