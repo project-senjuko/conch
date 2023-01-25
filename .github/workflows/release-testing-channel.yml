@@ -3,7 +3,7 @@ name: Release testing channel
 on:
   push:
     branches: [ "main" ]
-    paths: [ "**.rs" ]
+    paths: [ "**.rs", "dashboard/src/**", ".github/workflows/**" ]
 
   workflow_dispatch:
 
@@ -13,8 +13,25 @@ jobs:
     name: Build product and upload it
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
     steps:
       - uses: actions/checkout@v3
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Build Dashboard
+        run: |
+          cd dashboard
+          npm install -g pnpm
+          npm install -g @quasar/cli
+          pnpm i
+          quasar build
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
