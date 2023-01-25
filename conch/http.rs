@@ -31,11 +31,11 @@ pub async fn dashboard() {
         )
         .route(
             "/favicon.svg",
-            get_service(ServeFile::new("dashboard/dist/spa/favicon.svg"))
+            get_service(ServeFile::new("dashboard/favicon.svg"))
                 .handle_error(handle_error),
         )
         .merge(
-            SpaRouter::new("/assets", "dashboard/dist/spa/assets")
+            SpaRouter::new("/assets", "dashboard/assets")
                 .index_file("../index.html")
         );
 
