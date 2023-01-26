@@ -29,7 +29,7 @@ shadow!(build);
 #[tokio::main]
 async fn main() -> Result<()> {
     // 准备启动 Conch 前初始化运行时
-    Runtime::init();
+    Runtime::init().await;
 
     let (lev, _h) = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
 

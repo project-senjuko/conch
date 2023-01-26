@@ -8,19 +8,22 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use std::env::{var, VarError};
-use std::fs::read;
+//! 配置文件相关，
+//! 定义配置文件的结构体和读取配置文件的方法。
 
-use anyhow::{anyhow, Result};
-use serde::Deserialize;
-use tracing::{debug, error, instrument, trace};
-
-use self::fields::*;
-use self::tables::*;
+use {
+    self::{fields::*, tables::*},
+    anyhow::{anyhow, Result},
+    serde::Deserialize,
+    std::env::{var, VarError},
+    tokio::fs,
+    tracing::{debug, error, instrument, trace},
+};
 
 mod fields;
 mod tables;
 
+/// 配置文件结构
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub eula: License,
@@ -31,6 +34,7 @@ pub struct Config {
     pub misc: MiscTable,
 }
 
+/// 配置文件读取实现
 impl Config {
     /// 读取配置文件，
     /// 读取文件行为取决于环境变量 `SJKCONCH_CONFIG` 是否设置。
@@ -45,17 +49,17 @@ impl Config {
     /// 读取该环境变量指示的文件，
     /// 若读取失败将抛出错误并导致程序停止。
     #[instrument]
-    pub fn read_config() -> Self {
+    pub async fn read_config() -> Self {
         let r = match var("SJKCONCH_CONFIG") {
             Ok(s) => {
                 trace!(brc = "环境变量");
-                Config::read_config_vanilla(s)
+                Config::read_config_vanilla(s).await
             }
             Err(e) => {
                 match e {
                     VarError::NotPresent => {
                         trace!(brc = "默认位置");
-                        Config::read_config_vanilla("Config.toml".to_string())
+                        Config::read_config_vanilla("Config.toml".to_string()).await
                     }
                     VarError::NotUnicode(_) => {
                         const ERR: &str = "读取环境变量失败";
@@ -72,13 +76,13 @@ impl Config {
 
     /// 读取配置文件
     #[instrument]
-    fn read_config_vanilla(p: String) -> Result<Config> {
-        let b = read(&p);
+    async fn read_config_vanilla(p: String) -> Result<Config> {
+        let b = fs::read_to_string(&p).await;
         if b.is_err() {
             error!(dsc = "读取失败", path = p, err = %b.as_ref().unwrap_err());
         }
 
-        let c = toml::from_slice(&b?);
+        let c = toml::from_str(&b?);
         if c.is_err() {
             error!(dsc = "解析失败", err = %c.as_ref().unwrap_err())
         }

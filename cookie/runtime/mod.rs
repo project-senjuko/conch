@@ -40,12 +40,12 @@ pub struct Runtime {
 
 impl Runtime {
     /// 初始化全局运行时变量
-    pub fn init() {
+    pub async fn init() {
         unsafe {
             RUNTIME = Some(Box::leak(Box::new(
                 Runtime {
                     client: Client::default(),
-                    config: Config::read_config(),
+                    config: Config::read_config().await,
                     secret: Secret::default(),
                     d2: Default::default(),
                     d2key: Default::default(),
