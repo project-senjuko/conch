@@ -8,20 +8,23 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use anyhow::Result;
+use crate::{
+    network::server::ServerManager,
+    runtime::lifecycle,
+};
 
-use super::network::server::ServerManager;
-
+#[derive(Default)]
 pub struct Client {
     server_manager: ServerManager,
 }
 
 impl Client {
-    pub fn new() -> Self {
-        Self { server_manager: Default::default() }
-    }
+    pub async fn boot(&mut self) {
+        self.server_manager.update_server_list().await.expect("更新服务器列表失败");
 
-    pub async fn run(&mut self) -> Result<()> {
-        self.server_manager.update_server_list().await
+        if !lifecycle::is_init() {
+            // 未完成初始化
+            // TODO: 初始化
+        }
     }
 }

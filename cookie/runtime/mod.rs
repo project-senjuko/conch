@@ -10,12 +10,14 @@
 
 use bytes::Bytes;
 
+use crate::client::Client;
+
 use self::config::Config;
 use self::secret::Secret;
 use self::types::*;
 
 mod config;
-mod lifecycle;
+pub mod lifecycle;
 mod secret;
 mod types;
 
@@ -24,6 +26,7 @@ static mut RUNTIME: Option<&mut Runtime> = None;
 
 /// 全局运行时
 pub struct Runtime {
+    client: Client,
     config: Config,
     secret: Secret,
 
@@ -41,6 +44,7 @@ impl Runtime {
         unsafe {
             RUNTIME = Some(Box::leak(Box::new(
                 Runtime {
+                    client: Client::default(),
                     config: Config::read_config(),
                     secret: Secret::default(),
                     d2: Default::default(),
@@ -68,6 +72,12 @@ impl Runtime {
 }
 
 impl Runtime {
+    /// 客户端
+    pub fn client() -> &'static Client { &Runtime::rt().client }
+
+    /// 可变客户端
+    pub fn client_mut() -> &'static mut Client { &mut Runtime::rt_mut().client }
+
     /// 配置
     pub fn config() -> &'static Config { &Runtime::rt().config }
 

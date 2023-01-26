@@ -8,26 +8,27 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
+use std::time::Duration;
+
 use anyhow::Result;
 use shadow_rs::shadow;
-use tokio::spawn;
+use tokio::{spawn, time::sleep};
 use tracing::{info, instrument};
 
 use cookie::runtime::Runtime;
 
-use self::core::init_core;
-use self::http::dashboard;
-use self::logger::init_logger;
+use self::{http::dashboard, logger::init_logger};
 
-mod logger;
-mod core;
 mod http;
+mod logger;
 
 shadow!(build);
 
+/// WELCOME TO CONCH
 #[instrument]
 #[tokio::main]
 async fn main() -> Result<()> {
+    // 准备启动 Conch 前初始化运行时
     Runtime::init();
 
     let (lev, _h) = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
@@ -54,7 +55,12 @@ async fn main() -> Result<()> {
         SJKConchMaintainerEmail = build::SJKCONCH_MAINTAINER_EMAIL,
     );
 
-    init_core().await.expect("核心服务初始化失败");
+    if Runtime::config().misc.startup_delay {
+        info!(dsc = "在正式启动前您有⑨秒预览配置文件～", cfg = ?Runtime::config());
+        sleep(Duration::from_secs(9)).await;
+    }
+
+    Runtime::client_mut().boot().await;
     spawn(dashboard());
 
     info!(dsc = "うららか日和でしょでしょ～");
