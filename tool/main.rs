@@ -8,29 +8,50 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use clap::{Parser, ValueHint};
+use clap::{Parser, ValueHint, Subcommand};
 use std::env;
 use std::path::PathBuf;
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
+#[command(author, about, long_about = None)]
 struct Cli {
     /// 输入文件路径
     #[clap(short = 'i', long = "input")]
-    #[clap(value_name = "INPUT")]
+    #[clap(value_name = "输入文件路径")]
     #[arg(value_hint = ValueHint::FilePath)]
-    input: PathBuf,
+    input: Option<PathBuf>,
     /// 输出文件路径
     #[clap(short = 'o', long = "output")]
-    #[clap(value_name = "OUTPUT")]
+    #[clap(value_name = "输出文件路径")]
     #[arg(value_hint = ValueHint::FilePath)]
     output: Option<PathBuf>,
+    /// 工作目录
+    #[clap(short = 'w', long = "workdir")]
+    #[clap(value_name = "工作目录")]
+    #[arg(value_hint = ValueHint::DirPath)]
+    workdir: Option<PathBuf>,
+    /// 子命令
+    #[command(subcommand)]
+    command: Option<Commands>,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// 输出版本信息
+    Version,
 }
 
 fn main() {
     let cli = Cli::parse();
 
     let work_dir = env::current_dir().expect("Failed to get current workdir");
-    let work_dir = cli.work_dir.unwrap_or(work_dir);
-    println!("当前工作目录为 {}", &work_dir.to_string_lossy())
+    let work_dir = cli.workdir.unwrap_or(work_dir);
+    println!("当前工作目录为 {}", &work_dir.to_string_lossy());
+
+    match &cli.command {
+        Some(Commands::Version) => {
+            // FIXME: 等待弃用 shadow-rs
+        }
+        None => {}
+    }
 }
