@@ -10,24 +10,34 @@ build = "build.rs"
 name = "conch"
 path = "main.rs"
 
+[lib]
+name = "conch"
+
 [workspace]
 members = [
-    "cookie",
-    "cookie/network/protocol/jce/frame",
+    "src/network/protocol/jce/frame",
     "tool",
 ]
 
 [dependencies]
+jce = { path = "src/network/protocol/jce/frame", package = "cookie-jce" }
+anyhow = "1.0.68"
 async-graphql = "5.0.5"
 axum = "0.6.4"
 axum-extra = { version = "0.4.2", features = ["spa"] }
-cookie = { path = "cookie", package = "conch-cookie" }
-anyhow = "1.0.68"
+bytes = "1.3.0"
+md5 = "0.7.0"
+reqwest = { version = "0.11.14", features = ["json", "rustls-tls-manual-roots"], default-features = false }
+serde = { version = "1.0.151", features = ["derive"] }
 shadow-rs = "0.20.0"
+thiserror = "1.0.35"
+time = "0.3.17"
 tokio = { version = "1.24.1", features = ["full"] }
+toml = "0.6.0"
 tower-http = "0.3.5"
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
+trust-dns-resolver = "0.22.0"
 
 [build-dependencies]
 shadow-rs = "0.20.0"

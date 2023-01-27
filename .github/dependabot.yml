@@ -14,7 +14,7 @@ updates:
       prefix: "pref⬆️cargo "
 
   - package-ecosystem: "gomod"
-    directory: "/cookie/network/protocol/jce/generator"
+    directory: "/src/network/protocol/jce/generator"
     schedule:
       interval: "daily"
 
