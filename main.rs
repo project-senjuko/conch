@@ -63,8 +63,7 @@ async fn main() -> Result<()> {
     spawn(dashboard());
 
     info!(dsc = "うららか日和でしょでしょ～");
-    wait_signal().await;
-    // 通知停机
+    Runtime::wait_stop().await;
     info!(dsc = "プログラムは停止しますた、次回をお楽しみなのじゃ");
     Ok(())
 }
@@ -91,6 +90,7 @@ pub async fn dashboard() {
 
     axum::Server::bind(&addr)
         .serve(app.into_make_service())
+        .with_graceful_shutdown(Runtime::rx())
         .await
         .unwrap();
 }
@@ -115,17 +115,4 @@ pub fn init_logger() -> (String, reload::Handle<EnvFilter, layer::Layered<fmt::L
         .init();
 
     (lev, h)
-}
-
-#[cfg(unix)]
-async fn wait_signal() {
-    use tokio::signal::unix::{signal, SignalKind};
-
-    signal(SignalKind::terminate()).expect("监听 SIGTERM 信号失败").recv().await;
-}
-
-#[cfg(windows)]
-async fn wait_signal() {
-    use tokio::signal::ctrl_c;
-    ctrl_c().await.expect("监听 Ctrl+C 信号失败");
 }

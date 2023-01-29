@@ -8,13 +8,14 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use bytes::Bytes;
+//! 全局运行时
 
-use crate::client::Client;
-
-use self::config::Config;
-use self::secret::Secret;
-use self::types::*;
+use {
+    self::{config::Config, secret::Secret, types::*},
+    bytes::Bytes,
+    crate::client::Client,
+    tokio::sync::watch::{channel, Receiver, Sender},
+};
 
 mod config;
 pub mod lifecycle;
@@ -35,15 +36,20 @@ pub struct Runtime {
     tgt: Bytes,
     msg_cookie: Bytes,
 
+    stop_signal_tx: Sender<bool>,
+    stop_signal_rx: Receiver<bool>,
+
     // 计数器等
 }
 
 impl Runtime {
     /// 初始化全局运行时变量
     pub async fn init() {
+        let (tx, rx) = channel::<bool>(false);
+
         unsafe {
             RUNTIME = Some(Box::leak(Box::new(
-                Runtime {
+                Self {
                     client: Client::default(),
                     config: Config::read_config().await,
                     secret: Secret::default(),
@@ -51,6 +57,8 @@ impl Runtime {
                     d2key: Default::default(),
                     tgt: Default::default(),
                     msg_cookie: Default::default(),
+                    stop_signal_tx: tx,
+                    stop_signal_rx: rx,
                 }
             )));
         }
@@ -61,28 +69,42 @@ impl Runtime {
     /// # Safety
     ///
     /// 必须确保 [`Runtime::init`] 已被调用。
-    fn rt() -> &'static Runtime { unsafe { RUNTIME.as_ref().unwrap() } }
+    fn rt() -> &'static Self { unsafe { RUNTIME.as_ref().unwrap() } }
 
     /// 可变运行时变量
     ///
     /// # Safety
     ///
     /// 必须确保 [`Runtime::init`] 已被调用。
-    fn rt_mut() -> &'static mut Runtime { unsafe { RUNTIME.as_mut().unwrap() } }
+    fn rt_mut() -> &'static mut Self { unsafe { RUNTIME.as_mut().unwrap() } }
 }
 
 impl Runtime {
     /// 客户端
-    pub fn client() -> &'static Client { &Runtime::rt().client }
+    pub fn client() -> &'static Client { &Self::rt().client }
 
     /// 可变客户端
-    pub fn client_mut() -> &'static mut Client { &mut Runtime::rt_mut().client }
+    pub fn client_mut() -> &'static mut Client { &mut Self::rt_mut().client }
 
     /// 配置
-    pub fn config() -> &'static Config { &Runtime::rt().config }
+    pub fn config() -> &'static Config { &Self::rt().config }
 
     /// 机密
-    pub fn secret() -> &'static Secret { &Runtime::rt().secret }
+    pub fn secret() -> &'static Secret { &Self::rt().secret }
+
+    /// 停机信号接收器
+    pub async fn rx() {
+        let _ = Self::rt().stop_signal_rx.clone().changed().await;
+    }
+
+    /// 等待停机
+    pub async fn wait_stop() {
+        wait_signal().await;
+        Self::stop();
+    }
+
+    /// 停机
+    pub fn stop() { Self::rt().stop_signal_tx.send(true).unwrap(); }
 
     // 考虑废弃以下特性（组合至其他部分）
 
@@ -111,4 +133,17 @@ impl Runtime {
 
     /// 设置 msg_cookie
     pub fn put_msg_cookie(b: Bytes) { Runtime::rt_mut().msg_cookie = b }
+}
+
+#[cfg(unix)]
+async fn wait_signal() {
+    use tokio::signal::unix::{signal, SignalKind};
+
+    signal(SignalKind::terminate()).expect("监听 SIGTERM 信号失败").recv().await;
+}
+
+#[cfg(windows)]
+async fn wait_signal() {
+    use tokio::signal::ctrl_c;
+    ctrl_c().await.expect("监听 Ctrl+C 信号失败");
 }
