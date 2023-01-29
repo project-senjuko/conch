@@ -12,11 +12,39 @@
 //! 提供 Conch 生命周期内各类数据的持久化管理、读写，
 //! 对上层暴露持久化内容的数据结构和操作方法。
 
-use std::path::Path;
+use {
+    anyhow::Result,
+    std::path::Path,
+    super::Runtime,
+    tokio::fs::{create_dir_all, write},
+    tracing::{debug, instrument},
+};
 
-use super::Runtime;
+/// 激活
+#[instrument]
+pub async fn on_active() -> Result<()> {
+    if !is_init() {
+        init_create().await?;
+        debug!(dsc = "初始化完成");
+    }
+
+    Ok(())
+}
 
 /// 是否已初始化
-pub fn is_init() -> bool {
+fn is_init() -> bool {
     Path::new(&Runtime::config().data.path).join("Initialized").exists()
+}
+
+/// 初始化
+async fn init_create() -> Result<()> {
+    create_dir_all(&Runtime::config().data.path).await?;
+    write(
+        Path::new(&Runtime::config().data.path).join("Initialized"),
+        "",
+    ).await?;
+
+    // TODO: 初始化及随机化数据
+
+    Ok(())
 }

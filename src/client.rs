@@ -8,9 +8,12 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use crate::{
-    network::server::ServerManager,
-    runtime::lifecycle,
+use {
+    crate::{
+        network::server::ServerManager,
+        runtime::lifecycle,
+    },
+    tokio::join,
 };
 
 #[derive(Default)]
@@ -20,11 +23,12 @@ pub struct Client {
 
 impl Client {
     pub async fn boot(&mut self) {
-        self.server_manager.update_server_list().await.expect("更新服务器列表失败");
+        let (lc, srvresp) = join!(
+            lifecycle::on_active(),
+            self.server_manager.update_server_list(),
+        );
 
-        if !lifecycle::is_init() {
-            // 未完成初始化
-            // TODO: 初始化
-        }
+        lc.expect("生命周期函数激活失败");
+        srvresp.expect("更新服务器列表失败");
     }
 }
