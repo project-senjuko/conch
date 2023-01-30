@@ -10,22 +10,42 @@
 
 use serde::Deserialize;
 
+/// 数据表
 #[derive(Debug, Deserialize)]
 pub struct DataTable {
     #[serde(default)] pub path: String,
 }
 
+/// QQ 表
 #[derive(Debug, Deserialize)]
 pub struct QQTable {
     pub account: QQAccountTable,
 }
 
+/// QQ 帐号表
 #[derive(Debug, Deserialize)]
 pub struct QQAccountTable {
     pub number: u64,
     pub password: String,
 }
 
+/// Dashboard 表
+#[derive(Debug, Deserialize)]
+pub struct DashboardTable {
+    #[serde(default = "dashboard::port")] pub port: u16,
+    #[serde(default = "dashboard::cert")] pub cert: String,
+    #[serde(default = "dashboard::key")] pub key: String,
+}
+
+mod dashboard {
+    pub fn port() -> u16 { 1919 }
+
+    pub fn cert() -> String { String::from("certificates/cert.pem") }
+
+    pub fn key() -> String { String::from("certificates/key.pem") }
+}
+
+/// 网络表
 #[derive(Debug, Deserialize)]
 pub struct NetworkTable {
     #[serde(rename = "enable-ipv6", default)]
@@ -40,11 +60,13 @@ fn network_table_dns_default() -> Vec<NetworkDNSTable> {
     ]
 }
 
+/// 网络 DNS 表
 #[derive(Debug, Deserialize)]
 pub struct NetworkDNSTable {
     pub address: String,
 }
 
+/// 设备表
 #[derive(Debug, Deserialize)]
 pub struct DeviceTable {
     #[serde(default)] pub model: String,
@@ -62,6 +84,7 @@ pub struct DeviceTable {
     #[serde(rename = "system-http-ua", default)] pub system_http_ua: String,
 }
 
+/// 通用表
 #[derive(Debug, Deserialize)]
 pub struct MiscTable {
     #[serde(rename = "startup-delay", default)]

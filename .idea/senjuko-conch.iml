@@ -8,6 +8,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/network/protocol/jce/frame" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
       <excludeFolder url="file://$MODULE_DIR$/src/network/protocol/jce/frame/target" />
+      <excludeFolder url="file://$MODULE_DIR$/certificates" />
+      <excludeFolder url="file://$MODULE_DIR$/goconch" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

@@ -1,10 +1,14 @@
 # 配置详情：https://senjuko-conch.qianjunakasumi.ren/docs/reference/configuration-parameters
 
-eula = ""
+eula = "mpl"
 
 [qq.account]
 number = 1145141919
-password = "85b535ee67d0dc327a799d07333a5f78"
+
+[dashboard]
+port = 1919
+cert = "certificates/cert.pem"
+key = "certificates/key.pem"
 
 [data]
 path = "goconch"

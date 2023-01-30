@@ -12,10 +12,11 @@ use {
     anyhow::Result,
     axum::{http::StatusCode, response::IntoResponse, Router, routing::{get, get_service}},
     axum_extra::routing::SpaRouter,
+    axum_server::{Handle, tls_rustls::RustlsConfig},
     conch::runtime::Runtime,
     shadow_rs::shadow,
     std::{io::Error, net::SocketAddr, time::Duration},
-    tokio::{spawn, time::sleep},
+    tokio::time::sleep,
     tower_http::services::ServeFile,
     tracing::{info, instrument},
     tracing_subscriber::{EnvFilter, filter, fmt, layer, prelude::*, Registry, reload},
@@ -60,7 +61,7 @@ async fn main() -> Result<()> {
     }
 
     Runtime::client_mut().boot().await;
-    spawn(dashboard());
+    tokio::spawn(dashboard());
 
     info!(dsc = "うららか日和でしょでしょ～");
     Runtime::wait_stop().await;
@@ -70,6 +71,13 @@ async fn main() -> Result<()> {
 
 /// 启动 Dashboard 服务
 pub async fn dashboard() {
+    let config = RustlsConfig::from_pem_file(
+        Runtime::config().dashboard.cert.clone(),
+        Runtime::config().dashboard.key.clone(),
+    )
+        .await
+        .expect("证书文件错误");
+
     let app = Router::new()
         .route(
             "/conch-cgi/hello",
@@ -85,14 +93,24 @@ pub async fn dashboard() {
                 .index_file("../index.html")
         );
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 1919));
+    let addr = SocketAddr::from(
+        ([0, 0, 0, 0], Runtime::config().dashboard.port)
+    );
     info!(dsc = "Dashboard 服务启用", addr = %addr);
 
-    axum::Server::bind(&addr)
+    let h = Handle::new();
+    let ha = h.clone();
+
+    tokio::spawn(async move {
+        Runtime::wait_stop().await;
+        ha.graceful_shutdown(Some(Duration::from_secs(9)));
+    });
+
+    axum_server::bind_rustls(addr, config)
+        .handle(h)
         .serve(app.into_make_service())
-        .with_graceful_shutdown(Runtime::rx())
         .await
-        .unwrap();
+        .expect("启动 Dashboard 服务失败");
 }
 
 async fn handle_error(err: Error) -> impl IntoResponse {
