@@ -13,9 +13,9 @@
 
 use {
     self::{fields::*, tables::*},
-    anyhow::{anyhow, Result},
+    anyhow::Result,
     serde::Deserialize,
-    std::env::{var, VarError},
+    super::env_or_default,
     tokio::fs,
     tracing::{debug, error, instrument, trace},
 };
@@ -47,36 +47,21 @@ impl Config {
     /// ## 已设置环境变量
     ///
     /// 读取该环境变量指示的文件，
-    /// 若读取失败将抛出错误并导致程序停止。
+    /// 若读取失败将抛出错误并停止程序。
     #[instrument]
-    pub async fn read_config() -> Self {
-        let r = match var("SJKCONCH_CONFIG") {
-            Ok(s) => {
-                trace!(brc = "环境变量");
-                Config::read_config_vanilla(s).await
-            }
-            Err(e) => {
-                match e {
-                    VarError::NotPresent => {
-                        trace!(brc = "默认位置");
-                        Config::read_config_vanilla("Config.toml".to_string()).await
-                    }
-                    VarError::NotUnicode(_) => {
-                        const ERR: &str = "读取环境变量失败";
-                        error!(dsc = ERR, err = %e);
-                        Err(anyhow!(ERR))
-                    }
-                }
-            }
-        };
-        if r.is_ok() { debug!(dsc = "配置内容全局化完成"); }
+    pub async fn read() -> Self {
+        let p = env_or_default("SJKCONCH_CONFIG", "Config.toml");
+        trace!(dsc = "读取配置文件", path = %p);
 
-        r.unwrap()
+        let c = Config::read_vanilla(p).await;
+        if c.is_ok() { debug!(dsc = "配置文件载入成功"); }
+
+        c.expect("配置文件载入失败")
     }
 
     /// 读取配置文件
     #[instrument]
-    async fn read_config_vanilla(p: String) -> Result<Config> {
+    async fn read_vanilla(p: String) -> Result<Config> {
         let b = fs::read_to_string(&p).await;
         if b.is_err() {
             error!(dsc = "读取失败", path = p, err = %b.as_ref().unwrap_err());

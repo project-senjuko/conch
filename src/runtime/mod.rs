@@ -14,6 +14,7 @@ use {
     self::{config::Config, secret::Secret, types::*},
     bytes::Bytes,
     crate::client::Client,
+    std::env,
     tokio::sync::watch::{channel, Receiver, Sender},
 };
 
@@ -51,7 +52,7 @@ impl Runtime {
             RUNTIME = Some(Box::leak(Box::new(
                 Self {
                     client: Client::default(),
-                    config: Config::read_config().await,
+                    config: Config::read().await,
                     secret: Secret::default(),
                     d2: Default::default(),
                     d2key: Default::default(),
@@ -133,6 +134,12 @@ impl Runtime {
 
     /// 设置 msg_cookie
     pub fn put_msg_cookie(b: Bytes) { Runtime::rt_mut().msg_cookie = b }
+}
+
+/// 获取环境变量，
+/// 如果不存在则返回默认值。
+pub fn env_or_default(name: &str, default: &str) -> String {
+    env::var(name).unwrap_or_else(|_| default.to_string())
 }
 
 #[cfg(unix)]
