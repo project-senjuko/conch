@@ -1,38 +1,59 @@
-# 配置详情：https://senjuko-conch.qianjunakasumi.ren/docs/reference/configuration-parameters
+# 欢迎使用 Conch 海螺
 
+# 使用 Conch 海螺 时的许可协议。必须选择一个许可协议。
+# 可选的协议有：AGPL、MPL 和 Apache（含限制 https://github.com/qianjunakasumi/senjuko-conch/issues/101）。
+# 您可以在项目仓库中查看这些许可协议的详细内容。
 eula = "mpl"
 
 [qq.account]
 number = 1145141919
 
 [dashboard]
+# Dashboard 的端口号
 port = 1919
+# Dashboard 的 TLS 证书路径，可以使用 mkcert 生成（https://github.com/FiloSottile/mkcert）
 cert = "certificates/cert.pem"
 key = "certificates/key.pem"
 
 [data]
+# Conch 海螺持久化数据存储路径，默认与此可执行文件同目录。
 path = "goconch"
 
 [network]
+# 是否启用 IPv6。启用后若服务器支持 IPv6 则以此协议连接。
 enable-ipv6 = false
 
 [[network.dns]]
 address = "119.29.29.29"
 
 [device]
+# 设备型号
 model = "Conch 1"
+# 设备制造商
 manufacturer = "Senjuko"
+# 设备主板
 board = "superconch"
+# 设备描述
 device = "conch"
+# 产品名称
 product = "conch"
+# WIFI SSID
 ssid = "海螺YYDS"
+# IPv4 地址
 ipv4 = "1.1.1.1"
+# IPv6 地址
 ipv6 = "fe80::114:514:1919:810"
+# MAC 地址
 mac = "0f:f0:ab:ba:cd:dc"
+# 系统版本指纹
 fingerprint = "Senjuko/conch/conch:13/SJK1.221024.007/V50.6.6.6.WDNMD:user/release-keys"
+# IMEI
 imei = "26148d621ef74844"
+# IMSI
 imsi = "44007"
+# 系统浏览器用户代理
 system_http_ua = "Dalvik/2.1.0 (Linux; U; Android 13; Conch 1 Build/SJK1.221024.007)"
 
 [misc]
-startup-delay = true
+# 是否延迟启动。开启此功能将会在启动前等待 9 秒。在某些情况下可用作等待基础设施初始化完成的临时手段（例 Istio)
+startup-delay = false
