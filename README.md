@@ -37,9 +37,9 @@ Issues 和 PRs 大欢迎。有关如何参与贡献，请阅读 [贡献部分](/
 
 ## 社区
 
-- 钉钉
+[Google Group - Conch 海螺](https://groups.google.com/g/senjuko-conch)
 
-<img src="https://s2.loli.net/2023/01/19/8mn14hKrIHfd9tx.jpg" width="200">
+订阅邮件列表：发送邮件至 senjuko-conch+subscribe@googlegroups.com，收到确认邮件后回复即可。
 
 ## 许可证
 
