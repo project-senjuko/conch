@@ -35,13 +35,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Copy npm package.json
-        run: cp manual/package.json ./package.json
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
 
       - name: Generate Rust documents
         run: cargo doc --no-deps --workspace
@@ -50,7 +47,7 @@ jobs:
 
       - name: Install and generate Docusaurus documents
         working-directory: ./manual
-        run: npm install && npm run build
+        run: npm install -g pnpm && pnpm i && pnpm run build
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
