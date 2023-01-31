@@ -8,44 +8,38 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use std::borrow::Cow;
-use std::env;
-use std::fs::File;
-use std::io::Write;
+use std::{process::Command, time::{SystemTime, UNIX_EPOCH}};
 
-use shadow_rs::SdResult;
+fn main() {
+    println!(
+        "cargo:rustc-env=GIT_HASH={}",
+        String::from_utf8(
+            Command::new("git")
+                .args(["rev-parse", "HEAD"])
+                .output().unwrap().stdout
+        ).unwrap(),
+    );
 
-const MAINTAINER_NAME: &str = "SJKCONCH_MAINTAINER_NAME";
-const MAINTAINER_EMAIL: &str = "SJKCONCH_MAINTAINER_EMAIL";
+    println!(
+        "cargo:rustc-env=GIT_BRANCH={}",
+        String::from_utf8(
+            Command::new("git")
+                .args(["rev-parse", "--abbrev-ref", "HEAD"])
+                .output().unwrap().stdout,
+        ).unwrap(),
+    );
 
-fn main() -> SdResult<()> {
-    shadow_rs::new_hook(hook)
-}
+    println!(
+        "cargo:rustc-env=RUST_VERSION={}",
+        String::from_utf8(
+            Command::new("rustc")
+                .args(["--version"])
+                .output().unwrap().stdout,
+        ).unwrap(),
+    );
 
-fn hook(file: &File) -> SdResult<()> {
-    append_build_info(file)?;
-    Ok(())
-}
-
-fn append_build_info(file: &File) -> SdResult<()> {
-    let maintainer_name: Cow<'static, str> = env::var(MAINTAINER_NAME)
-        .map(Into::into)
-        .unwrap_or_else(|_| "<unknown>".into());
-    let maintainer_email: Cow<'static, str> = env::var(MAINTAINER_EMAIL)
-        .map(Into::into)
-        .unwrap_or_else(|_| "<unknown>".into());
-
-    write_const(file, MAINTAINER_NAME, &maintainer_name)?;
-    write_const(file, MAINTAINER_EMAIL, &maintainer_email)?;
-
-    Ok(())
-}
-
-#[inline]
-fn write_const(mut file: &File, const_name: &str, content: &str) -> std::io::Result<()> {
-    writeln!(
-        file,
-        "{}",
-        (String::from(r#"pub const "#) + const_name + r#": &str = ""# + content + r#"";"#)
-    )
+    println!(
+        "cargo:rustc-env=BUILD_TIME={}",
+        SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs(),
+    );
 }

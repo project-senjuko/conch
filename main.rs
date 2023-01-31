@@ -14,15 +14,12 @@ use {
     axum_extra::routing::SpaRouter,
     axum_server::{Handle, tls_rustls::RustlsConfig},
     conch::runtime::Runtime,
-    shadow_rs::shadow,
     std::{io::Error, net::SocketAddr, time::Duration},
     tokio::time::sleep,
     tower_http::services::ServeFile,
     tracing::{info, instrument},
     tracing_subscriber::{EnvFilter, filter, fmt, layer, prelude::*, Registry, reload},
 };
-
-shadow!(build);
 
 /// WELCOME TO CONCH
 #[instrument]
@@ -35,24 +32,14 @@ async fn main() -> Result<()> {
 
     info!(
         dsc = "いらっしゃいません～",
-        PROJECT = "Project Senjuko - Conch 海螺",
         GITHUB = "https://github.com/qianjunakasumi/senjuko-conch",
         LICENSE = ?Runtime::config().eula,
-        COPYRIGHT = "Copyright (C) 2022-2023  qianjunakasumi <i@qianjunakasumi.ren>",
         LogLevel = lev,
-        PKGVersion = build::PKG_VERSION,
-        Branch = build::BRANCH,
-        CommitHash = build::COMMIT_HASH,
-        CommitDate = build::COMMIT_DATE_3339,
-        CommitAuthor = build::COMMIT_AUTHOR,
-        CommitEmail = build::COMMIT_EMAIL,
-        BuildOS = build::BUILD_OS,
-        BuildTarget = build::BUILD_TARGET,
-        RustVersion = build::RUST_VERSION,
-        BuildTime = build::BUILD_TIME_3339,
-        BuildRustChannel = build::BUILD_RUST_CHANNEL,
-        SJKConchMaintainerName = build::SJKCONCH_MAINTAINER_NAME,
-        SJKConchMaintainerEmail = build::SJKCONCH_MAINTAINER_EMAIL,
+        PKGVersion = env!("CARGO_PKG_VERSION"),
+        Branch = env!("GIT_BRANCH"),
+        CommitHash = env!("GIT_HASH"),
+        RustVersion = env!("RUST_VERSION"),
+        BuildTime = env!("BUILD_TIME"),
     );
 
     if Runtime::config().misc.startup_delay {
