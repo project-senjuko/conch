@@ -18,7 +18,6 @@ use {
     tokio::time::sleep,
     tower_http::services::ServeFile,
     tracing::{info, instrument},
-    tracing_subscriber::{EnvFilter, filter, fmt, layer, prelude::*, Registry, reload},
 };
 
 /// WELCOME TO CONCH
@@ -49,6 +48,7 @@ async fn main() -> Result<()> {
 
     info!(dsc = "うららか日和でしょでしょ～");
     Runtime::wait_stop().await;
+    Runtime::client_mut().stop().await;
     info!(dsc = "プログラムは停止しますた、次回をお楽しみなのじゃ");
     Ok(())
 }
@@ -99,22 +99,4 @@ pub async fn dashboard() {
 
 async fn handle_error(err: Error) -> impl IntoResponse {
     (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
-}
-
-/// 日志记录器初始化
-#[instrument]
-pub fn init_logger() -> (String, reload::Handle<EnvFilter, layer::Layered<fmt::Layer<Registry>, Registry>>) {
-    let e = EnvFilter::builder()
-        .with_default_directive(filter::LevelFilter::INFO.into())
-        .with_env_var("SJKCONCH_LOG")
-        .from_env_lossy();
-    let lev = e.to_string();
-    let (lay, h) = reload::Layer::new(e);
-
-    tracing_subscriber::registry()
-        .with(fmt::layer())
-        .with(lay)
-        .init();
-
-    (lev, h)
 }
