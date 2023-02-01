@@ -8,11 +8,24 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use serde::Deserialize;
+use {
+    serde::Deserialize,
+    std::fmt::{Display, Formatter, Result},
+};
 
 #[derive(Debug, Deserialize)]
 pub enum License {
     #[serde(rename = "AGPL")] Agpl,
     #[serde(rename = "MPL")] Mpl,
     Apache,
+}
+
+impl Display for License {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result {
+        match self {
+            License::Agpl => write!(f, "AGPL"),
+            License::Mpl => write!(f, "MPL"),
+            License::Apache => write!(f, "Apache"),
+        }
+    }
 }

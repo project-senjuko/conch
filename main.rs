@@ -30,7 +30,7 @@ async fn main() -> Result<()> {
     info!(
         dsc = "いらっしゃいません～",
         GITHUB = "https://github.com/qianjunakasumi/senjuko-conch",
-        LICENSE = ?Runtime::config().eula,
+        LICENSE = %Runtime::config().eula,
         PKGVersion = env!("CARGO_PKG_VERSION"),
         Branch = env!("GIT_BRANCH"),
         CommitHash = env!("GIT_HASH"),
