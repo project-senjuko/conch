@@ -28,13 +28,10 @@ async fn main() -> Result<()> {
     // 准备启动 Conch 前初始化运行时
     Runtime::init().await;
 
-    let (lev, _h) = init_logger(); // _h 用于 dashboard 和 gRPC 动态切换日志等级
-
     info!(
         dsc = "いらっしゃいません～",
         GITHUB = "https://github.com/qianjunakasumi/senjuko-conch",
         LICENSE = ?Runtime::config().eula,
-        LogLevel = lev,
         PKGVersion = env!("CARGO_PKG_VERSION"),
         Branch = env!("GIT_BRANCH"),
         CommitHash = env!("GIT_HASH"),

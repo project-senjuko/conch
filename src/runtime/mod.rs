@@ -15,7 +15,17 @@ use {
     bytes::Bytes,
     crate::client::Client,
     std::env,
+    std::str::FromStr,
     tokio::sync::watch::{channel, Receiver, Sender},
+    tracing::error,
+    tracing_subscriber::{
+        filter::LevelFilter,
+        fmt::Layer as FmtLayer,
+        prelude::*,
+        Registry,
+        registry,
+        reload::{Handle, Layer as ReloadLayer},
+    },
 };
 
 mod config;
@@ -37,6 +47,8 @@ pub struct Runtime {
     tgt: Bytes,
     msg_cookie: Bytes,
 
+    logger_handle: Handle<LevelFilter, Registry>,
+
     stop_signal_tx: Sender<bool>,
     stop_signal_rx: Receiver<bool>,
 
@@ -46,6 +58,13 @@ pub struct Runtime {
 impl Runtime {
     /// 初始化全局运行时变量
     pub async fn init() {
+        let (reload_layer, handle) = ReloadLayer::new(
+            LevelFilter::from_str(
+                &env_or_default("SJKCONCH_LOG_LEVEL", "info"),
+            ).expect("日志等级解析失败"),
+        );
+        registry().with(reload_layer).with(FmtLayer::default()).init();
+
         let (tx, rx) = channel::<bool>(false);
 
         unsafe {
@@ -58,6 +77,7 @@ impl Runtime {
                     d2key: Default::default(),
                     tgt: Default::default(),
                     msg_cookie: Default::default(),
+                    logger_handle: handle,
                     stop_signal_tx: tx,
                     stop_signal_rx: rx,
                 }
@@ -92,6 +112,13 @@ impl Runtime {
 
     /// 机密
     pub fn secret() -> &'static Secret { &Self::rt().secret }
+
+    /// 日志等级
+    pub fn log_level(level: LevelFilter) {
+        let r = Self::rt().logger_handle
+            .modify(|filter| *filter = level);
+        if r.is_err() { error!("日志等级修改失败"); }
+    }
 
     /// 停机信号接收器
     pub async fn rx() {
