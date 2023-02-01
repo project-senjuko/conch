@@ -27,7 +27,6 @@ mod tables;
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub eula: License,
-    pub qq: QQTable,
     pub dashboard: DashboardTable,
     pub data: DataTable,
     pub device: DeviceTable,

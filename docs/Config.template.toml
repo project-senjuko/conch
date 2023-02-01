@@ -5,9 +5,6 @@
 # 您可以在项目仓库中查看这些许可协议的详细内容。
 eula = "mpl"
 
-[qq.account]
-number = 1145141919
-
 [dashboard]
 # Dashboard 的端口号
 port = 1919

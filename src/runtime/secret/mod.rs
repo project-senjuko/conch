@@ -13,11 +13,15 @@ use self::password::{Password, PasswordTrait};
 mod password;
 
 pub struct Secret {
+    pub account: u32,
     pub password: Password,
 }
 
 impl Default for Secret {
     fn default() -> Self {
-        Self { password: Password::read_from_file() }
+        Self {
+            account: 0, // TODO 从持久化文件中读取
+            password: Password::read_from_file(),
+        }
     }
 }

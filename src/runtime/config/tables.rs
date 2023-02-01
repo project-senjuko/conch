@@ -16,19 +16,6 @@ pub struct DataTable {
     #[serde(default)] pub path: String,
 }
 
-/// QQ 表
-#[derive(Debug, Deserialize)]
-pub struct QQTable {
-    pub account: QQAccountTable,
-}
-
-/// QQ 帐号表
-#[derive(Debug, Deserialize)]
-pub struct QQAccountTable {
-    pub number: u64,
-    pub password: String,
-}
-
 /// Dashboard 表
 #[derive(Debug, Deserialize)]
 pub struct DashboardTable {
