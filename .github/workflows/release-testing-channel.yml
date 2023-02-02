@@ -3,14 +3,14 @@ name: Release testing channel
 on:
   push:
     branches: [ "main" ]
-    paths: [ "**.rs", "dashboard/src/**", ".github/workflows/**" ]
+    paths: [ "**.rs", "dashboard/src/**", ".github/workflows/release-testing-channel" ]
 
   workflow_dispatch:
 
 jobs:
 
   build:
-    name: Build product and upload it
+    name: Build product and upload
     runs-on: ubuntu-latest
 
     strategy:
@@ -61,5 +61,3 @@ jobs:
           tags: |
             qianjunakasumi/senjuko-conch:testing
             ghcr.io/qianjunakasumi/senjuko-conch:testing
-            qianjunakasumi/senjuko-conch:crazy
-            ghcr.io/qianjunakasumi/senjuko-conch:crazy
