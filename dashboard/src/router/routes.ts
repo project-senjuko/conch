@@ -11,6 +11,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/BaseLayout.vue'),
     children: [{path: '', component: () => import('pages/TotpLogin.vue')}],
   },
+  {
+    path: '/init',
+    component: () => import('layouts/BaseLayout.vue'),
+    children: [{path: '', component: () => import('pages/ConchInit.vue')}],
+  },
 
   // Always leave this as last one,
   // but you can also remove it
