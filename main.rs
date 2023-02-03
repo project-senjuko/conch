@@ -10,10 +10,11 @@
 
 use {
     anyhow::Result,
-    axum::{http::StatusCode, response::IntoResponse, Router, routing::{get, get_service}},
+    async_graphql::{EmptyMutation, EmptySubscription, Schema},
+    axum::{Extension, http::StatusCode, response::IntoResponse, Router, routing::{get, get_service}},
     axum_extra::routing::SpaRouter,
     axum_server::{Handle, tls_rustls::RustlsConfig},
-    conch::runtime::Runtime,
+    conch::{apis::{graphiql, graphql_handler, QueryRoot}, runtime::Runtime},
     std::{io::Error, net::SocketAddr, time::Duration},
     tokio::time::sleep,
     tower_http::services::ServeFile,
@@ -68,10 +69,19 @@ pub async fn dashboard() {
             get(|| async { "Conch 海螺 Dashboard 服务已正确运行" }),
         )
         .route(
+            "/apis",
+            get(graphiql).post(graphql_handler),
+        )
+        .route(
             "/favicon.svg",
             get_service(ServeFile::new("dashboard/favicon.svg"))
                 .handle_error(handle_error),
         )
+        .layer(Extension(Schema::build(
+            QueryRoot,
+            EmptyMutation,
+            EmptySubscription,
+        ).finish()))
         .merge(
             SpaRouter::new("/assets", "dashboard/assets")
                 .index_file("../index.html")
