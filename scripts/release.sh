@@ -1,3 +1,3 @@
 ﻿cd ..
 
-cargo clean && cargo build --release
+cargo clean && cargo build --bin conch --release
