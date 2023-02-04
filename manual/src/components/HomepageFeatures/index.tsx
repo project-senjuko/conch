@@ -33,9 +33,11 @@ const FeatureList: FeatureItem[] = [
     title: '社区共治',
     description: (
       <>
-        Conch 海螺 是社区治理项目，我们高度重视项目的社区化，以吸纳更多建设性意见与批评。任何人都能积极参与至本项目，而不论贡献的何种或大小，
-        推动 Conch 海螺的可持续化发展。如果您有意愿，请积极参与！访问 <a href={"https://github.com/qianjunakasumi/senjuko-conch/blob/main/CONTRIBUTING.md"}> GitHub 上的贡献部分说明 </a>
-        以了解我们对您贡献的期望。目前 Conch 海螺 还是初生项目，众多功能丞待实现与完善，您的任何贡献都将推动我们大进步！
+          Conch 海螺 是社区治理项目，我们高度重视项目的社区化，以吸纳更多建设性意见与批评。任何人都能积极参与至本项目，而不论贡献的何种或大小，
+          推动 Conch 海螺的可持续化发展。如果您有意愿，请积极参与！访问 <a
+          href={"https://github.com/qianjunakasumi/senjuko-conch/blob/main/CONTRIBUTING.md"}> GitHub
+          上的贡献部分说明 </a>
+          以了解我们对您贡献的期望。目前 Conch 海螺 还是新生项目，众多功能丞待实现与完善，您的任何贡献都将推动我们大进步！
       </>
     ),
   },

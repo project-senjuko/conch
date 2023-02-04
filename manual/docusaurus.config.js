@@ -49,9 +49,9 @@ const config = {
         title: 'Conch 海螺',
         logo: {
           alt: 'Conch Logo',
-          src: 'img/conch.png',
-          width: 32,
-          height: 32,
+          src: 'img/conch.svg',
+          width: 24,
+          height: 24,
         },
         items: [
           {
@@ -78,6 +78,10 @@ const config = {
                 label: '指南',
                 to: '/docs/quick-start',
               },
+              {
+                label: '源代码文档',
+                to: 'pathname:///rust-docs/conch/index.html',
+              },
             ],
           },
           {
@@ -86,6 +90,10 @@ const config = {
               {
                 label: 'GitHub Discussions',
                 href: 'https://github.com/qianjunakasumi/senjuko-conch/discussions',
+              },
+              {
+                label: 'Google Group',
+                href: 'https://groups.google.com/g/senjuko-conch',
               },
             ],
           },
