@@ -8,19 +8,13 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-//use std::fs;
+use serde::{Deserialize, Serialize};
 
-pub type Password = [u8; 16];
+type B16 = [u8; 16];
 
-pub trait PasswordTrait {
-    fn read_from_file() -> Password;
-}
-
-impl PasswordTrait for Password {
-    fn read_from_file() -> Password {
-        //fs::read("")
-        // 不存在时退出
-        //todo!()
-        Password::default()
-    }
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Secret {
+    pub account: u32,
+    pub password: B16,
+    pub tgtgt: B16,
 }
