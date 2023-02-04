@@ -1,9 +1,8 @@
-name: Rust workspace test
+name: Rust test control
 
 on:
   push:
-    branches: [ "main", "pref/bump-version" ]
-    paths: [ "**.rs", "**/Cargo.toml", "**/Cargo.lock" ]
+    paths: [ "**.rs", "**/Cargo.toml", "**/Cargo.lock", ".github/workflows/rust-test-control.yml" ]
 
   pull_request:
     branches: [ "main" ]
@@ -18,10 +17,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+        # Rust Beta 测试门禁，提早发现问题
       - name: Install Rust Beta
         run: |
-          rustup toolchain install beta --profile minimal --no-self-update
+          rustup toolchain install beta --profile minimal
           rustup default beta
+
       - uses: Swatinem/rust-cache@v2
+
       - name: Run tests
         run: cargo test --workspace --verbose
