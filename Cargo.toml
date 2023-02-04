@@ -13,10 +13,13 @@ path = "main.rs"
 [lib]
 name = "conch"
 
+[[bin]]
+name = "conch-tool"
+path = "tool/main.rs"
+
 [workspace]
 members = [
     "src/network/protocol/jce/frame",
-    "tool",
 ]
 
 [dependencies]
@@ -28,6 +31,7 @@ axum = "0.6.4"
 axum-extra = { version = "0.4.2", features = ["spa"] }
 axum-server = { version = "0.4.4", features = ["tls-rustls"] }
 bytes = "1.3.0"
+clap = { version = "4.0", features = ["derive", "cargo", "wrap_help", "env"] }
 md5 = "0.7.0"
 reqwest = { version = "0.11.14", features = ["json", "rustls-tls-manual-roots"], default-features = false }
 serde = { version = "1.0.151", features = ["derive"] }
