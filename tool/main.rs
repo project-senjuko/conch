@@ -12,19 +12,12 @@ use clap::{Parser, ValueHint, Subcommand};
 use std::env;
 use std::path::PathBuf;
 
+mod commands;
+use crate::commands::version::print_version_info;
+
 #[derive(Parser)]
 #[command(author, about, long_about = None)]
 struct Cli {
-    /// 输入文件路径
-    #[clap(short = 'i', long = "input")]
-    #[clap(value_name = "输入文件路径")]
-    #[arg(value_hint = ValueHint::FilePath)]
-    input: Option<PathBuf>,
-    /// 输出文件路径
-    #[clap(short = 'o', long = "output")]
-    #[clap(value_name = "输出文件路径")]
-    #[arg(value_hint = ValueHint::FilePath)]
-    output: Option<PathBuf>,
     /// 工作目录
     #[clap(short = 'w', long = "workdir")]
     #[clap(value_name = "工作目录")]
@@ -36,7 +29,7 @@ struct Cli {
 }
 
 #[derive(Subcommand)]
-enum Commands {
+pub enum Commands {
     /// 输出版本信息
     Version,
 }
@@ -50,7 +43,7 @@ fn main() {
 
     match &cli.command {
         Some(Commands::Version) => {
-            // FIXME: 等待弃用 shadow-rs
+            print_version_info();
         }
         None => {}
     }
