@@ -72,7 +72,7 @@ impl Runtime {
                 Self {
                     client: Client::default(),
                     config: Config::read().await,
-                    secret: Secret::default(),
+                    secret: Secret::read().await,
                     d2: Default::default(),
                     d2key: Default::default(),
                     tgt: Default::default(),

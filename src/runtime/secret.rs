@@ -18,3 +18,15 @@ pub struct Secret {
     pub password: B16,
     pub tgtgt: B16,
 }
+
+impl Secret {
+    pub async fn read() -> Self {
+
+        // TODO 删除以下实现，利用 Lifecycle 模块读取数据并解序列化
+        Self {
+            account: 0,
+            password: [0; 16],
+            tgtgt: [0; 16],
+        }
+    }
+}
