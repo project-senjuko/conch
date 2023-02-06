@@ -1101,6 +1101,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "paste"
+version = "1.0.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d01a5bd0424d00070b0098dd17ebca6f961a959dead1dbcbbbc1d1cd8d3deeba"
+
+[[package]]
 name = "percent-encoding"
 version = "2.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1228,7 +1234,7 @@ version = "1.0.51"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5d727cae5b39d21da60fa540906919ad737832fe0b1c165da3a34d6548c849d6"
 dependencies = [
-    "unicode-ident",
+ "unicode-ident",
 ]
 
 [[package]]
@@ -1384,6 +1390,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "rmp"
+version = "0.8.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "44519172358fd6d58656c86ab8e7fbc9e1490c3e8f14d35ed78ca0dd07403c9f"
+dependencies = [
+ "byteorder",
+ "num-traits",
+ "paste",
+]
+
+[[package]]
+name = "rmp-serde"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c5b13be192e0220b8afb7222aa5813cb62cc269ebb5cac346ca6487681d2913e"
+dependencies = [
+ "byteorder",
+ "rmp",
+ "serde",
+]
+
+[[package]]
 name = "rustc-hash"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1456,27 +1484,28 @@ dependencies = [
 name = "senjuko-conch"
 version = "0.1.0"
 dependencies = [
-    "anyhow",
-    "async-graphql",
-    "async-graphql-axum",
-    "axum",
-    "axum-extra",
-    "axum-server",
-    "bytes",
-    "clap",
-    "cookie-jce",
-    "md5",
-    "rand",
-    "reqwest",
-    "serde",
-    "thiserror",
-    "time",
-    "tokio",
-    "toml",
-    "tower-http",
-    "tracing",
-    "tracing-subscriber",
-    "trust-dns-resolver",
+ "anyhow",
+ "async-graphql",
+ "async-graphql-axum",
+ "axum",
+ "axum-extra",
+ "axum-server",
+ "bytes",
+ "clap",
+ "cookie-jce",
+ "md5",
+ "rand",
+ "reqwest",
+ "rmp-serde",
+ "serde",
+ "thiserror",
+ "time",
+ "tokio",
+ "toml",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber",
+ "trust-dns-resolver",
 ]
 
 [[package]]
@@ -1505,9 +1534,9 @@ version = "1.0.92"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7434af0dc1cbd59268aa98b4c22c131c0584d2232f6fb166efb993e2832e896a"
 dependencies = [
-    "itoa",
-    "ryu",
-    "serde",
+ "itoa",
+ "ryu",
+ "serde",
 ]
 
 [[package]]

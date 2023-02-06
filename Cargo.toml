@@ -36,6 +36,7 @@ clap = { version = "4.0", features = ["derive", "cargo", "wrap_help", "env"] }
 md5 = "0.7.0"
 rand = "0.8.5"
 reqwest = { version = "0.11.14", features = ["json", "rustls-tls-manual-roots"], default-features = false }
+rmp-serde = "1.1.1"
 serde = { version = "1.0.151", features = ["derive"] }
 thiserror = "1.0.35"
 time = { version = "0.3.17", features = ["formatting", "local-offset"] }
