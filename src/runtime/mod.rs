@@ -11,11 +11,10 @@
 //! 全局运行时
 
 use {
-    self::{config::Config, secret::Secret, types::*},
+    self::{config::Config, lifecycle::life_start, secret::Secret, types::*},
     bytes::Bytes,
     crate::client::Client,
-    std::env,
-    std::str::FromStr,
+    std::{env, str::FromStr},
     tokio::sync::watch::{channel, Receiver, Sender},
     tracing::error,
     tracing_subscriber::{
@@ -58,6 +57,8 @@ pub struct Runtime {
 impl Runtime {
     /// 初始化全局运行时变量
     pub async fn init() {
+        life_start().await;
+
         let (reload_layer, handle) = ReloadLayer::new(
             LevelFilter::from_str(
                 &env_or_default("SJKCONCH_LOG_LEVEL", "info"),

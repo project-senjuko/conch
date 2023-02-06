@@ -13,12 +13,10 @@
 //! 对上层暴露持久化内容的数据结构和操作方法。
 
 use {
-    anyhow::Result,
     once_cell::sync::Lazy,
     std::path::{Path, PathBuf},
     super::env_or_default,
-    tokio::fs::{create_dir_all, write},
-    tracing::{debug, instrument},
+    tokio::fs::create_dir_all,
 };
 
 /// 数据目录，
@@ -27,33 +25,9 @@ static DATA_PATH: Lazy<String> = Lazy::new(
     || env_or_default("SJKCONCH_DATA_PATH", "goconch"),
 );
 
-/// 激活
-#[instrument]
-pub async fn on_active() -> Result<()> {
-    if !is_init() {
-        init_create().await?;
-        debug!(dsc = "初始化完成");
-    }
-
-    Ok(())
-}
-
-/// 是否已初始化
-fn is_init() -> bool {
-    Path::new(&*DATA_PATH).join("Initialized").exists()
-}
-
-/// 初始化
-async fn init_create() -> Result<()> {
-    create_dir_all(&*DATA_PATH).await?;
-    write(
-        Path::new(&*DATA_PATH).join("Initialized"),
-        "",
-    ).await?;
-
-    // TODO: 初始化及随机化数据
-
-    Ok(())
+/// 生命周期开始
+pub async fn life_start() {
+    create_dir_all(&*DATA_PATH).await.expect("创建数据目录失败");
 }
 
 /// 机密

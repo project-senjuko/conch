@@ -10,13 +10,7 @@
 
 //! 客户端，
 
-use {
-    crate::{
-        network::server::ServerManager,
-        runtime::lifecycle,
-    },
-    tokio::join,
-};
+use crate::network::server::ServerManager;
 
 /// 客户端
 #[derive(Default)]
@@ -28,13 +22,7 @@ pub struct Client {
 impl Client {
     /// 启动
     pub async fn boot(&mut self) {
-        let (lc, srvresp) = join!(
-            lifecycle::on_active(),
-            self.server_manager.update_server_list(),
-        );
-
-        lc.expect("生命周期函数激活失败");
-        srvresp.expect("更新服务器列表失败");
+        self.server_manager.update_server_list().await.expect("更新服务器列表失败");
     }
 
     /// 停止
