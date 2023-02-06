@@ -1494,6 +1494,7 @@ dependencies = [
  "clap",
  "cookie-jce",
  "md5",
+ "once_cell",
  "rand",
  "reqwest",
  "rmp-serde",
