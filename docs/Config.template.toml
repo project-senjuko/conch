@@ -13,8 +13,6 @@ cert = "certificates/cert.pem"
 key = "certificates/key.pem"
 
 [data]
-# Conch 海螺持久化数据存储路径，默认与此可执行文件同目录。
-path = "goconch"
 
 [network]
 # 是否启用 IPv6。启用后若服务器支持 IPv6 则以此协议连接。

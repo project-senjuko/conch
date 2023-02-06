@@ -14,11 +14,18 @@
 
 use {
     anyhow::Result,
+    once_cell::sync::Lazy,
     std::path::{Path, PathBuf},
-    super::Runtime,
+    super::env_or_default,
     tokio::fs::{create_dir_all, write},
     tracing::{debug, instrument},
 };
+
+/// 数据目录，
+/// 默认为当前目录下的 goconch 文件夹，可通过环境变量 SJKCONCH_DATA_PATH 修改。
+static DATA_PATH: Lazy<String> = Lazy::new(
+    || env_or_default("SJKCONCH_DATA_PATH", "goconch"),
+);
 
 /// 激活
 #[instrument]
@@ -33,14 +40,14 @@ pub async fn on_active() -> Result<()> {
 
 /// 是否已初始化
 fn is_init() -> bool {
-    Path::new(&Runtime::config().data.path).join("Initialized").exists()
+    Path::new(&*DATA_PATH).join("Initialized").exists()
 }
 
 /// 初始化
 async fn init_create() -> Result<()> {
-    create_dir_all(&Runtime::config().data.path).await?;
+    create_dir_all(&*DATA_PATH).await?;
     write(
-        Path::new(&Runtime::config().data.path).join("Initialized"),
+        Path::new(&*DATA_PATH).join("Initialized"),
         "",
     ).await?;
 
@@ -49,6 +56,7 @@ async fn init_create() -> Result<()> {
     Ok(())
 }
 
+/// 机密
 pub fn secret() -> PathBuf {
-    Path::new(&Runtime::config().data.path).join("secret")
+    Path::new(&*DATA_PATH).join("secret")
 }

@@ -17,3 +17,4 @@ sidebar_position: 1
 |--------------------|-----------|:---:|------------------|
 | SJKCONCH_CONFIG    | 指向配置文件的路径 |  √  | 默认：`Config.toml` |
 | SJKCONCH_LOG_LEVEL | 日志输出等级    |  √  | 默认：`info`        |
+| SJKCONCH_DATA_PATH | 指向数据目录的路径 |  √  | 默认：`goconch`     |

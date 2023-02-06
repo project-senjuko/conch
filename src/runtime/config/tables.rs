@@ -12,9 +12,7 @@ use serde::Deserialize;
 
 /// 数据表
 #[derive(Debug, Deserialize)]
-pub struct DataTable {
-    #[serde(default)] pub path: String,
-}
+pub struct DataTable {}
 
 /// Dashboard 表
 #[derive(Debug, Deserialize)]
