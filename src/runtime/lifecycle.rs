@@ -14,7 +14,7 @@
 
 use {
     anyhow::Result,
-    std::path::Path,
+    std::path::{Path, PathBuf},
     super::Runtime,
     tokio::fs::{create_dir_all, write},
     tracing::{debug, instrument},
@@ -47,4 +47,8 @@ async fn init_create() -> Result<()> {
     // TODO: 初始化及随机化数据
 
     Ok(())
+}
+
+pub fn secret() -> PathBuf {
+    Path::new(&Runtime::config().data.path).join("secret")
 }

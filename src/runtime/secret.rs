@@ -8,25 +8,44 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use serde::{Deserialize, Serialize};
+use {
+    serde::{Deserialize, Serialize},
+    super::lifecycle::secret,
+    tokio::fs::read_to_string,
+    tracing::{error, instrument},
+};
 
 type B16 = [u8; 16];
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, /*临时*/ Default)]
 pub struct Secret {
-    pub account: u32,
-    pub password: B16,
-    pub tgtgt: B16,
+    #[serde(default)] pub account: u32,
+    #[serde(default)] pub password: B16,
+
+    #[serde(default = "default::rand_b16")] pub tgtgt: B16,
+
+    #[serde(default = "default::rand_b16")] pub android_id_md5: B16,
+    #[serde(default = "default::rand_b16")] pub guid: B16,
+}
+
+mod default {
+    use {
+        rand::{Rng, thread_rng},
+        super::B16,
+    };
+
+    pub fn rand_b16() -> B16 { thread_rng().gen::<u128>().to_be_bytes() }
 }
 
 impl Secret {
+    #[instrument]
     pub async fn read() -> Self {
-
-        // TODO 删除以下实现，利用 Lifecycle 模块读取数据并解序列化
-        Self {
-            account: 0,
-            password: [0; 16],
-            tgtgt: [0; 16],
+        let b = read_to_string(secret()).await;
+        if b.is_err() {
+            error!(dsc = "读取失败", err = %b.as_ref().unwrap_err());
         }
+
+        // TODO 接入 msgpack
+        Self::default()
     }
 }
