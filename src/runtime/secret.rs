@@ -9,43 +9,68 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use {
+    anyhow::Result,
+    rand::{Rng, thread_rng},
+    rmp_serde::{Deserializer, Serializer},
     serde::{Deserialize, Serialize},
+    std::fs::File,
     super::lifecycle::secret,
-    tokio::fs::read_to_string,
-    tracing::{error, instrument},
+    tracing::{debug, instrument},
 };
 
 type B16 = [u8; 16];
 
-#[derive(Debug, Serialize, Deserialize, /*临时*/ Default)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Secret {
-    #[serde(default)] pub account: u32,
-    #[serde(default)] pub password: B16,
+    pub account: u32,
+    pub password: B16,
 
-    #[serde(default = "default::rand_b16")] pub tgtgt: B16,
+    pub tgtgt: B16,
 
-    #[serde(default = "default::rand_b16")] pub android_id_md5: B16,
-    #[serde(default = "default::rand_b16")] pub guid: B16,
+    #[serde(rename = "android-id-md5")]  pub android_id_md5: B16,
+    pub guid: B16,
 }
 
-mod default {
-    use {
-        rand::{Rng, thread_rng},
-        super::B16,
-    };
-
-    pub fn rand_b16() -> B16 { thread_rng().gen::<u128>().to_be_bytes() }
+impl Default for Secret {
+    fn default() -> Self {
+        Self {
+            account: 0,
+            password: Default::default(),
+            tgtgt: rand_b16(),
+            android_id_md5: rand_b16(),
+            guid: rand_b16(),
+        }
+    }
 }
+
+/// 随机生成 16 字节
+pub fn rand_b16() -> B16 { thread_rng().gen::<u128>().to_be_bytes() }
 
 impl Secret {
+    /// 读取机密信息
     #[instrument]
     pub async fn read() -> Self {
-        let b = read_to_string(secret()).await;
-        if b.is_err() {
-            error!(dsc = "读取失败", err = %b.as_ref().unwrap_err());
-        }
+        let s = match secret().exists() {
+            true => Secret::deserialize(&mut Deserializer::new(
+                &File::open(secret()).expect("机密信息读取失败"),
+            )).expect("机密信息解析失败"),
+            false => {
+                debug!(dsc = "机密信息不存在，新建机密信息");
+                let s = Secret::default();
+                s.flash().await.expect("机密信息保存失败");
+                s
+            }
+        };
 
-        // TODO 接入 msgpack
-        Self::default()
+        debug!(dsc = "机密信息载入成功", sec = ?s);
+        s
+    }
+
+    /// 保存机密信息
+    pub async fn flash(&self) -> Result<()> {
+        self.serialize(&mut Serializer::new(
+            &mut File::create(secret()).expect("机密信息文件句柄获取失败"),
+        ).with_struct_map())?;
+        Ok(())
     }
 }
