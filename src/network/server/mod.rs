@@ -8,19 +8,27 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-use std::str::FromStr;
+//! # 服务器管理器
+//!
+//! 发现、提供、更新服务器地址、协议。
 
-use anyhow::{bail, Result};
-use tokio::{join, try_join};
-use tracing::{debug, error, instrument, trace, warn};
-use trust_dns_resolver::config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts};
-use trust_dns_resolver::TokioAsyncResolver;
-
-pub use crate::network::protocol;
-
-use self::info::ServerInfo;
-use self::protocol::server::fetch_server_list;
+use {
+    self::{info::ServerInfo, protocol::server::fetch_server_list},
+    anyhow::{bail, Result},
+    crate::network::protocol,
+    std::{
+        net::{IpAddr, Ipv4Addr, SocketAddr},
+        str::FromStr,
+        thread::sleep,
+        time::Duration,
+    },
+    tokio::{join, try_join},
+    tracing::{debug, error, instrument, trace, warn},
+    trust_dns_resolver::{
+        config::{NameServerConfig, Protocol, ResolverConfig, ResolverOpts},
+        TokioAsyncResolver,
+    },
+};
 
 mod info;
 mod r#static;
@@ -28,11 +36,10 @@ mod r#static;
 /// 服务器管理器
 #[derive(Debug)]
 pub struct ServerManager {
+    /// 服务器列表
     server_list: Vec<ServerInfo>,
+    /// 当前服务器索引
     current_index: usize,
-
-    quality_disabled: bool,
-    quality_threshold: f32,
 }
 
 impl ServerManager {
@@ -40,24 +47,13 @@ impl ServerManager {
     pub fn get_server_addr(&self) -> SocketAddr { self.server_list[self.current_index].socket_addr }
 
     pub fn next_server(&mut self) {
-        if self.server_list.len() - 1 == self.current_index {
-            warn!(dsc = "所有服务器资源已耗尽，服务器质量评分功能已被禁用");
-            self.quality_disabled = true;
+        if self.current_index == self.server_list.len() - 1 {
+            warn!(dsc = "服务器列表索引值达到上限，触发冷却");
+            // 冷却 9 秒，避免因重试服务器导致高 CPU 占用
+            // 后续可以考虑异步刷新服务器列表
+            sleep(Duration::from_secs(9));
             self.current_index = 0;
         }
-
-        if !self.quality_disabled {
-            let s = &self.server_list[self.current_index + 1];
-            // todo 动态计算服务器评分 [0,1]
-            let r = 1f32;
-            if r < self.quality_threshold {
-                debug!(dsc = "已忽略评分低于阈值的服务器");
-                self.current_index += 1;
-                self.next_server();
-                return;
-            }
-        }
-
         self.current_index += 1;
     }
 }
