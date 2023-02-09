@@ -8,6 +8,11 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
+//! # 机密信息
+//!
+//! 提供有关机密的初始化、读取、刷写等操作。
+//! 存储于数据路径下 `secret` 文件中。
+
 use {
     anyhow::Result,
     rand::{Rng, thread_rng},
@@ -20,15 +25,21 @@ use {
 
 type B16 = [u8; 16];
 
+/// 机密结构
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Secret {
-    pub account: u32,
-    pub password: B16,
+    /// 帐号
+    #[serde(default)] pub account: u32,
+    /// 密码
+    #[serde(default)] pub password: B16,
 
-    pub tgtgt: B16,
+    /// TGTGT
+    #[serde(default = "rand_b16")] pub tgtgt: B16,
 
-    #[serde(rename = "android-id-md5")]  pub android_id_md5: B16,
-    pub guid: B16,
+    /// Android ID MD5
+    #[serde(rename = "android-id-md5", default = "rand_b16")] pub android_id_md5: B16,
+    /// GUID
+    #[serde(default = "rand_b16")] pub guid: B16,
 }
 
 impl Default for Secret {
@@ -46,6 +57,7 @@ impl Default for Secret {
 /// 随机生成 16 字节
 pub fn rand_b16() -> B16 { thread_rng().gen::<u128>().to_be_bytes() }
 
+/// 提供机密信息方法
 impl Secret {
     /// 读取机密信息
     #[instrument]
@@ -56,12 +68,12 @@ impl Secret {
             )).expect("机密信息解析失败"),
             false => {
                 debug!(dsc = "机密信息不存在，新建机密信息");
-                let s = Secret::default();
-                s.flash().await.expect("机密信息保存失败");
-                s
+                Secret::default()
             }
         };
 
+        // 当向后兼容时，新增字段将持久化
+        s.flash().await.expect("机密信息保存失败");
         debug!(dsc = "机密信息载入成功", sec = ?s);
         s
     }
