@@ -8,34 +8,36 @@
 //     file, You can obtain one at http://mozilla.org/MPL/2.0/.                /
 ////////////////////////////////////////////////////////////////////////////////
 
-//! # 客户端
+//! # 连接管理器
+//!
+//! 管理连接生命周期，处理连接的创建、监听、断开、重连等。
 
 use {
-    crate::network::connection::ConnectionManager,
+    anyhow::Result,
     crate::network::server::ServerManager,
+    self::stream::ConnectionStream,
+    tracing::info,
 };
 
-/// 客户端
+mod stream;
+
 #[derive(Default)]
-pub struct Client {
-    server_manager: ServerManager,
-    connection_manager: ConnectionManager,
+pub struct ConnectionManager {
+    connection: Option<ConnectionStream>,
 }
 
-/// 客户端
-impl Client {
-    /// 启动
-    pub async fn boot(&mut self) {
-        self.server_manager.update_server_list().await.expect("更新服务器列表失败");
+impl ConnectionManager {
+    pub async fn connect(&mut self, sm: &mut ServerManager) -> Result<()> {
+        let sa = sm.get_server_addr();
+        match ConnectionStream::new(sa).await {
+            Ok(c) => {
+                self.connection = Some(c);
+                info!(dsc = "连接到服务器", addr = %sa);
+                Ok(())
+            }
+            Err(e) => Err(e),
+        }
     }
 
-    /// 连接
-    pub async fn connect(&mut self) {
-        self.connection_manager.connect(&mut self.server_manager).await.expect("连接失败");
-    }
-
-    /// 停止
-    pub async fn stop(&mut self) {
-        //self.connection_manager.disconnect(&mut self.server_manager).await.expect("停止连接失败");
-    }
+    // 读取连接信息等
 }
