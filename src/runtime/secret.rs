@@ -38,6 +38,7 @@ pub struct Secret {
 
     /// Android ID MD5
     #[serde(rename = "android-id-md5", default = "rand_b16")] pub android_id_md5: B16,
+    #[serde(rename = "mac-md5", default = "rand_b16")] pub mac_md5: B16,
     /// GUID
     #[serde(default = "rand_b16")] pub guid: B16,
 }
@@ -49,6 +50,7 @@ impl Default for Secret {
             password: Default::default(),
             tgtgt: rand_b16(),
             android_id_md5: rand_b16(),
+            mac_md5: rand_b16(),
             guid: rand_b16(),
         }
     }
