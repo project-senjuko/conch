@@ -9,14 +9,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 use {
-    async_graphql::{EmptyMutation, EmptySubscription, http::GraphiQLSource, Object, Schema},
+    async_graphql::{EmptySubscription, http::GraphiQLSource, Object, Schema},
     async_graphql_axum::{GraphQLRequest, GraphQLResponse},
     axum::{Extension, response::{Html, IntoResponse}},
+    self::dashboard::MutDashboard,
 };
 
-pub type ConchSchema = Schema<QueryRoot, EmptyMutation, EmptySubscription>;
+mod dashboard;
+
+pub type ConchSchema = Schema<QueryRoot, MutationRoot, EmptySubscription>;
 
 pub struct QueryRoot;
+
+pub struct MutationRoot;
 
 pub async fn graphql_handler(schema: Extension<ConchSchema>, req: GraphQLRequest)
                              -> GraphQLResponse
@@ -28,10 +33,14 @@ pub async fn graphiql() -> impl IntoResponse {
     Html(GraphiQLSource::build().endpoint("/apis").finish())
 }
 
-
 #[Object]
 impl QueryRoot {
-    async fn hello(&self) -> &str {
-        "Hello World!"
-    }
+    async fn greeting(&self) -> &str { "Hello welcome from Conch QueryRoot!" }
+}
+
+#[Object]
+impl MutationRoot {
+    async fn greeting(&self) -> &str { "Hello welcome from Conch MutationRoot!" }
+
+    async fn dashboard(&self) -> MutDashboard { MutDashboard }
 }

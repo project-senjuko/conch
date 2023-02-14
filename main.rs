@@ -14,7 +14,7 @@ use {
     axum::{Extension, http::StatusCode, response::IntoResponse, Router, routing::{get, get_service}},
     axum_extra::routing::SpaRouter,
     axum_server::{Handle, tls_rustls::RustlsConfig},
-    conch::{apis::{graphiql, graphql_handler, QueryRoot}, runtime::Runtime},
+    conch::{apis::{graphiql, graphql_handler, MutationRoot, QueryRoot}, runtime::Runtime},
     std::{io::Error, net::SocketAddr, time::Duration},
     tokio::time::sleep,
     tower_http::services::ServeFile,
@@ -79,7 +79,7 @@ pub async fn dashboard() {
         )
         .layer(Extension(Schema::build(
             QueryRoot,
-            EmptyMutation,
+            MutationRoot,
             EmptySubscription,
         ).finish()))
         .merge(
