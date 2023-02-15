@@ -1,4 +1,4 @@
-module github.com/qianjunakasumi/senjuko-conch/actions/stepper
+module project-senjuko/conch/stepper
 
 go 1.18
 

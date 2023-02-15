@@ -28,11 +28,11 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl: 'https://github.com/qianjunakasumi/senjuko-conch/tree/main/manual/',
+          editUrl: 'https://github.com/project-senjuko/conch/tree/main/manual/',
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/qianjunakasumi/senjuko-conch/tree/main/manual/',
+          editUrl: 'https://github.com/project-senjuko/conch/tree/main/manual/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -62,7 +62,7 @@ const config = {
           },
           {to: '/blog', label: '博客', position: 'left'},
           {
-            href: 'https://github.com/qianjunakasumi/senjuko-conch',
+            href: 'https://github.com/project-senjuko/conch',
             position: 'right',
             className: 'header-github-link',
             'aria-label': 'GitHub 仓库',
@@ -89,7 +89,7 @@ const config = {
             items: [
               {
                 label: 'GitHub Discussions',
-                href: 'https://github.com/qianjunakasumi/senjuko-conch/discussions',
+                href: 'https://github.com/project-senjuko/conch/discussions',
               },
               {
                 label: 'Google Group',
@@ -106,7 +106,7 @@ const config = {
               },
               {
                 label: 'GitHub',
-                href: 'https://github.com/qianjunakasumi/senjuko-conch',
+                href: 'https://github.com/project-senjuko/conch',
               },
             ],
           },

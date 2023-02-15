@@ -1,7 +1,7 @@
 # 欢迎使用 Conch 海螺
 
 # 使用 Conch 海螺 时的许可协议。必须选择一个许可协议。
-# 可选的协议有：AGPL、MPL 和 Apache（含限制 https://github.com/qianjunakasumi/senjuko-conch/issues/101）。
+# 可选的协议有：AGPL、MPL 和 Apache（含限制 https://github.com/project-senjuko/conch/issues/101）。
 # 您可以在项目仓库中查看这些许可协议的详细内容。
 eula = "mpl"
 

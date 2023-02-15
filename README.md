@@ -18,7 +18,7 @@
 
 ## 监视器和标准化
 
-![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/qianjunakasumi/senjuko-conch/rust-test-control.yml?branch=main&style=for-the-badge&logo=github)
+![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/project-senjuko/conch/rust-test-control.yml?branch=main&style=for-the-badge&logo=github)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_shield)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6876/badge)](https://bestpractices.coreinfrastructure.org/projects/6876)
 ![qianjucommits-v0.1](https://img.shields.io/badge/qianjucommits-v0.1-85f9c7?style=for-the-badge)
@@ -84,7 +84,7 @@ along with this program.  If not, see https://www.gnu.org/licenses/agpl-3.0.html
 
 ### 面向非商业的学术用途 Apache 2.0 通知
 
-有关学术用途的定义，请参见 [`#101 📄 针对非商业的学术用途许可`](https://github.com/qianjunakasumi/senjuko-conch/issues/101)。
+有关学术用途的定义，请参见 [`#101 📄 针对非商业的学术用途许可`](https://github.com/project-senjuko/conch/issues/101)。
 只有将 `Conch 海螺` 用于非商业的学术才能在 `Apache License 2.0` 许可下被授权，而不是 `Conch 海螺` 的 Apache 2.0 许可被限制为
 非商业的学术用途。若此许可模式下的衍生项目采用开源许可证，请考虑善意提醒 `Conch 海螺` 的授权范围，一切逾越非商业的学术用途即代表
 授权终止，即使您的衍生作品采用更宽松的许可模式。

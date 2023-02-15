@@ -1,4 +1,4 @@
-module qianjunakasumi/senjuko-conch/jce-generator
+module project-senjuko/conch/jce-generator
 
 go 1.18
 

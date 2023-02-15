@@ -14,8 +14,8 @@ authors: qianjunakasumi
 
 ## 了解更多
 
-[GitHub 仓库](https://github.com/qianjunakasumi/senjuko-conch)
+[GitHub 仓库](https://github.com/project-senjuko/conch)
 
 ## 参与进来
 
-我们鼓励社区参与、社区共治。有关更多信息，请参阅 [贡献部分](https://github.com/qianjunakasumi/senjuko-conch/blob/main/CONTRIBUTING.md) 。
+我们鼓励社区参与、社区共治。有关更多信息，请参阅 [贡献部分](https://github.com/project-senjuko/conch/blob/main/CONTRIBUTING.md) 。

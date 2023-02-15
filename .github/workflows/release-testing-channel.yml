@@ -59,5 +59,4 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64
           tags: |
-            qianjunakasumi/senjuko-conch:testing
-            ghcr.io/qianjunakasumi/senjuko-conch:testing
+            ghcr.io/project-senjuko/conch:testing
