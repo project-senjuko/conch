@@ -1,0 +1,3 @@
+[submodule "dashboard"]
+	path = dashboard
+	url = https://github.com/project-senjuko/conch-dashboard.git
