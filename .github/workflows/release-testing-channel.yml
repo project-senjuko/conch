@@ -55,11 +55,11 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-arm64  
 
-      - name: Build and push ARM64 Version
+      - name: Build ARM64 Version
         uses: docker/build-push-action@v3
         with:
           platforms: linux/arm64
-          push: true
+          push: false
           provenance: false
           sbom: false
           tags: ghcr.io/project-senjuko/conch:testing-arm64
@@ -117,7 +117,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           platforms: linux/amd64
-          push: true
+          push: false
           provenance: false
           sbom: false
           tags: ghcr.io/project-senjuko/conch:testing-amd64
