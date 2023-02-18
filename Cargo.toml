@@ -41,7 +41,7 @@ reqwest = { version = "0.11.14", features = ["json", "rustls-tls-manual-roots"],
 rmp-serde = "1.1.1"
 serde = { version = "1.0.151", features = ["derive"] }
 thiserror = "1.0.35"
-time = { version = "0.3.18", features = ["formatting", "local-offset"] }
+time = { version = "0.3.19", features = ["formatting", "local-offset"] }
 tokio = { version = "1.25.0", features = ["full"] }
 toml = "0.7.2"
 tower-http = "0.3.5"
