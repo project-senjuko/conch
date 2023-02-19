@@ -10,9 +10,16 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use std::{process::Command, time::{SystemTime, UNIX_EPOCH}};
+use {
+    std::{io::Result, process::Command, time::{SystemTime, UNIX_EPOCH}}
+};
 
-fn main() {
+fn main() -> Result<()> {
+    prost_build::compile_protos(
+        &["src/network/protocol/protobuf/oicq/device_report.proto"],
+        &["src/network/protocol/protobuf/"],
+    )?;
+
     println!(
         "cargo:rustc-env=GIT_HASH={}",
         String::from_utf8(
@@ -44,4 +51,6 @@ fn main() {
         "cargo:rustc-env=BUILD_TIME={}",
         SystemTime::now().duration_since(UNIX_EPOCH).unwrap().as_secs(),
     );
+
+    Ok(())
 }

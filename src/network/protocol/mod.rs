@@ -16,3 +16,9 @@ pub mod transport;
 
 pub mod server;
 pub mod keyrotate;
+
+mod protobuf {
+    mod oicq {
+        include!(concat!(env!("OUT_DIR"), "/oicq.rs"));
+    }
+}
