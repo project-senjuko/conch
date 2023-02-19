@@ -1,3 +1,6 @@
 [submodule "dashboard"]
 	path = dashboard
 	url = https://github.com/project-senjuko/conch-dashboard.git
+[submodule "src/network/protocol/protobuf"]
+	path = src/network/protocol/protobuf
+	url = https://github.com/project-senjuko/conch-protobuf.git
