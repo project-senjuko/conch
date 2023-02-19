@@ -17,6 +17,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: 'true'
 
         # Rust Beta 测试门禁，提早发现问题
       - name: Install Rust Beta

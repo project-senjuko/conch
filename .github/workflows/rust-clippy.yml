@@ -30,6 +30,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          submodules: 'true'
 
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
