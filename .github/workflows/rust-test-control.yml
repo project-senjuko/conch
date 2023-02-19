@@ -20,7 +20,7 @@ jobs:
         with:
           submodules: 'true'
 
-      - uses: qianjunakasumi/use-protoc@v0.1
+      - uses: qianjunakasumi/use-protoc@v0.1.1
 
         # Rust Beta 测试门禁，提早发现问题
       - name: Install Rust Beta
