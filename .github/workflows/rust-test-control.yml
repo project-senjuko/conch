@@ -26,7 +26,15 @@ jobs:
           rustup toolchain install beta --profile minimal
           rustup default beta
 
-      - uses: Swatinem/rust-cache@v2
+      - name: Cache Crates
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./target
+            ~/.cargo
+          key: test-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            test-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}  
 
       - name: Run tests
         run: cargo test --workspace --verbose
