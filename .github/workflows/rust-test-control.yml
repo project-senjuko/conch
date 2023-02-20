@@ -20,7 +20,7 @@ jobs:
         with:
           submodules: 'true'
 
-      - uses: qianjunakasumi/use-protoc@v0.1.1
+      - uses: Noelware/setup-protoc@1.0.2
 
         # Rust Beta 测试门禁，提早发现问题
       - name: Install Rust Beta
