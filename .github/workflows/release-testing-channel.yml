@@ -35,8 +35,26 @@ jobs:
           pnpm i
           quasar build
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      - name: Install Rust Beta
+        run: |
+          rustup toolchain install beta --profile minimal
+          rustup default beta    
+
+      - name: Setup Protoc
+        uses: Noelware/setup-protoc@1.0.2
+
+      - name: Cache Crates
+        uses: actions/cache@v3
+        with:
+          path: |
+            ./target
+            ~/.cargo
+          key: conch-testing-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: |
+            conch-testing-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}   
+
+      - name: Build Conch
+        run: cargo build --bin conch --release
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -53,6 +71,6 @@ jobs:
         with:
           context: .
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: |
             ghcr.io/project-senjuko/conch:testing
