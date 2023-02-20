@@ -26,6 +26,9 @@ jobs:
           rustup toolchain install beta --profile minimal
           rustup default beta
 
+      - name: Setup Protoc
+        uses: Noelware/setup-protoc@1.0.2
+
       - name: Cache Crates
         uses: actions/cache@v3
         with:
