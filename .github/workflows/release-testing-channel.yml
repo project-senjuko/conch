@@ -18,9 +18,7 @@ jobs:
         node-version: [ 18.x ]
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: 'true'
+      - uses: project-senjuko/setup-conch-actionkit-rust@v0.1
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -34,24 +32,6 @@ jobs:
           npm install -g @quasar/cli
           pnpm i
           quasar build
-
-      - name: Install Rust Beta
-        run: |
-          rustup toolchain install beta --profile minimal
-          rustup default beta    
-
-      - name: Setup Protoc
-        uses: Noelware/setup-protoc@1.0.2
-
-      - name: Cache Crates
-        uses: actions/cache@v3
-        with:
-          path: |
-            ./target
-            ~/.cargo
-          key: conch-testing-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
-          restore-keys: |
-            conch-testing-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}   
 
       - name: Build Conch
         run: cargo build --bin conch --release
