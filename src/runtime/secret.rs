@@ -23,6 +23,7 @@ use {
     std::fs::File,
     super::lifecycle::secret,
     tracing::{debug, instrument},
+    uuid::Uuid,
 };
 
 type B16 = [u8; 16];
@@ -41,6 +42,10 @@ pub struct Secret {
     /// Android ID MD5
     #[serde(rename = "android-id-md5", default = "rand_b16")] pub android_id_md5: B16,
     #[serde(rename = "mac-md5", default = "rand_b16")] pub mac_md5: B16,
+
+    /// Boot ID
+    #[serde(rename = "boot-id", default = "rand_uuid")] pub boot_id: String,
+
     /// GUID
     #[serde(default = "rand_b16")] pub guid: B16,
 }
@@ -53,6 +58,7 @@ impl Default for Secret {
             tgtgt: rand_b16(),
             android_id_md5: rand_b16(),
             mac_md5: rand_b16(),
+            boot_id: rand_uuid(),
             guid: rand_b16(),
         }
     }
@@ -60,6 +66,9 @@ impl Default for Secret {
 
 /// 随机生成 16 字节
 pub fn rand_b16() -> B16 { thread_rng().gen::<u128>().to_be_bytes() }
+
+/// 随机生成 UUID
+pub fn rand_uuid() -> String { Uuid::new_v4().to_string() }
 
 /// 提供机密信息方法
 impl Secret {

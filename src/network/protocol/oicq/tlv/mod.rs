@@ -25,6 +25,7 @@ pub mod t145;
 pub mod t187;
 pub mod t188;
 pub mod t511;
+pub mod t52d;
 
 trait TlvField: Default {
     fn tag() -> u16;

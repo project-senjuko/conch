@@ -10,15 +10,35 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub mod jce;
-pub mod oicq;
-pub mod transport;
+use {
+    bytes::BytesMut,
+    crate::{network::protocol::protobuf::oicq::DeviceReport, runtime::Runtime},
+    prost::Message,
+    super::TlvField,
+};
 
-pub mod server;
-pub mod keyrotate;
+#[derive(Default)]
+struct TlvT52d {}
 
-pub mod protobuf {
-    pub mod oicq {
-        include!(concat!(env!("OUT_DIR"), "/oicq.rs"));
+impl TlvField for TlvT52d {
+    fn tag() -> u16 { 0x52d }
+
+    fn to_payload(&self, b: &mut BytesMut) {
+        let secret = Runtime::secret();
+        let ver = Vec::from("221024.007");
+
+        let device_report = DeviceReport {
+            bootloader: Vec::from("unknown"),
+            version: Default::default(),
+            codename: Vec::from("REL"),
+            incremental: ver.clone(),
+            fingerprint: Vec::from(Runtime::config().device.fingerprint.clone()),
+            boot_id: Vec::from(secret.boot_id.clone()),
+            android_id: Vec::from(secret.android_id_md5),
+            baseband: Default::default(),
+            inner_ver: ver,
+        };
+        b.reserve(device_report.encoded_len());
+        device_report.encode(b).unwrap();
     }
 }
