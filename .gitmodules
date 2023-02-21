@@ -4,3 +4,6 @@
 [submodule "src/network/protocol/protobuf"]
 	path = src/network/protocol/protobuf
 	url = https://github.com/project-senjuko/conch-protobuf.git
+[submodule "manual"]
+	path = manual
+	url = https://github.com/project-senjuko/conch-manual.git
