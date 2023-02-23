@@ -10,11 +10,12 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use anyhow::{bail, Result};
-use bytes::{Buf, BufMut, BytesMut};
-use tracing::error;
-
-use crate::util::bytes::{Bytes2String, GetSized};
+use {
+    anyhow::{bail, Result},
+    bytes::{Buf, BufMut, BytesMut},
+    tracing::error,
+    crate::utils::bytes::{Bytes2String, GetSized},
+};
 
 mod request;
 mod respond;

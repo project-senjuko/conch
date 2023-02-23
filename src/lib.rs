@@ -15,6 +15,6 @@ pub mod cipher;
 pub mod network;
 pub mod runtime;
 pub mod upstream;
-pub mod util;
+pub mod utils;
 
 pub mod client;
