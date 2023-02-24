@@ -10,14 +10,16 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{Buf, BufMut, BytesMut};
-use tracing::{instrument, warn};
-
-use crate::cipher::qtea::QTeaCipher;
-use crate::runtime::Runtime;
-use crate::upstream::app_setting::{APP_COMMIT, APP_ID, APP_SHORT_VER};
-
-use super::{EncryptionMethod, Flag, Packet, PacketBytes};
+use {
+    bytes::{Buf, BufMut, BytesMut},
+    tracing::{instrument, warn},
+    crate::{
+        cipher::qtea::QTeaCipher,
+        runtime::Runtime,
+        common::upstream::{APP_COMMIT, APP_ID, APP_SHORT_VER},
+    },
+    super::{EncryptionMethod, Flag, Packet, PacketBytes},
+};
 
 impl Packet {
     pub fn to_bytes(mut self) -> BytesMut {

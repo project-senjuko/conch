@@ -10,11 +10,11 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, BytesMut};
-
-use crate::upstream::app_setting::APP_ID;
-
-use super::TlvField;
+use {
+    bytes::{BufMut, BytesMut},
+    crate::common::upstream::APP_ID,
+    super::TlvField,
+};
 
 struct TlvT100 {
     db_buf_ver: u16,

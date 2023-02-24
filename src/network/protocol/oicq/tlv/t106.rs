@@ -10,14 +10,16 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, BytesMut};
-use time::OffsetDateTime;
-
-use crate::cipher::qtea::QTeaCipher;
-use crate::runtime::Runtime;
-use crate::upstream::app_setting::APP_ID;
-
-use super::TlvField;
+use {
+    bytes::{BufMut, BytesMut},
+    time::OffsetDateTime,
+    crate::{
+        cipher::qtea::QTeaCipher,
+        runtime::Runtime,
+        common::upstream::APP_ID,
+    },
+    super::TlvField,
+};
 
 struct TlvT106 {
     tgtgt_ver: u16,

@@ -10,9 +10,10 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, BytesMut};
-
-use crate::upstream::app_setting::APK_NAME;
+use {
+    bytes::{BufMut, BytesMut},
+    crate::common::upstream::APK_NAME,
+};
 
 use super::TlvField;
 

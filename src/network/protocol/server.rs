@@ -10,16 +10,18 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use anyhow::Result;
-use bytes::BytesMut;
-use tracing::{error, instrument};
-
-use jce::field::{JceFieldErr, JLong};
-
-use crate::cipher::qtea;
-use crate::network::protocol::jce::r#struct::{HttpServerListReq, HttpServerListRes};
-use crate::network::protocol::jce::r#struct::UniPacket;
-use crate::upstream::app_setting::APP_ID;
+use {
+    anyhow::Result,
+    bytes::BytesMut,
+    tracing::{error, instrument},
+    jce::field::{JceFieldErr, JLong},
+    crate::{
+        cipher::qtea,
+        network::protocol::jce::r#struct::{HttpServerListReq, HttpServerListRes},
+        network::protocol::jce::r#struct::UniPacket,
+        common::upstream::APP_ID,
+    },
+};
 
 const KEY: qtea::K = [4030996319, 4096632207, 3707212954, 3127038993];
 
