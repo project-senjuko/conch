@@ -34,7 +34,7 @@ jobs:
           quasar build
 
       - name: Build Conch
-        run: cargo build --bin conch --release
+        run: cargo build --bin senjuko-conch --release
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
