@@ -3,7 +3,7 @@ name: Deploy to pages
 on:
   push:
     branches: [ "main" ]
-    paths: [ "manual/**", "**.rs" ]
+    paths: [ "manual/**", "**.rs", ".github/workflows/pages.yml" ]
 
   workflow_dispatch:
 
@@ -40,7 +40,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Generate Rust documents
-        run: cargo doc --no-deps --workspace
+        run: cargo doc --no-deps --document-private-items --workspace
       - name: Move to Docusaurus
         run: mv target/doc manual/static/rust-docs
 
