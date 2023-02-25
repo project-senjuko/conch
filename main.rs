@@ -12,12 +12,12 @@
 
 use {
     anyhow::Result,
-    async_graphql::{EmptyMutation, EmptySubscription, Schema},
-    axum::{Extension, http::StatusCode, response::IntoResponse, Router, routing::{get, get_service}},
+    async_graphql::{EmptySubscription, Schema},
+    axum::{Extension, Router, routing::get},
     axum_extra::routing::SpaRouter,
     axum_server::{Handle, tls_rustls::RustlsConfig},
     conch::{apis::{graphiql, graphql_handler, MutationRoot, QueryRoot}, runtime::Runtime},
-    std::{io::Error, net::SocketAddr, time::Duration},
+    std::{net::SocketAddr, time::Duration},
     tokio::time::sleep,
     tower_http::services::ServeFile,
     tracing::{info, instrument},
@@ -74,10 +74,9 @@ pub async fn dashboard() {
             "/apis",
             get(graphiql).post(graphql_handler),
         )
-        .route(
-            "/favicon.svg",
-            get_service(ServeFile::new("dashboard/favicon.svg"))
-                .handle_error(handle_error),
+        .nest_service(
+            "/favicon.svg", 
+            ServeFile::new("dashboard/favicon.svg")
         )
         .layer(Extension(Schema::build(
             QueryRoot,
@@ -107,8 +106,4 @@ pub async fn dashboard() {
         .serve(app.into_make_service())
         .await
         .expect("启动 Dashboard 服务失败");
-}
-
-async fn handle_error(err: Error) -> impl IntoResponse {
-    (StatusCode::INTERNAL_SERVER_ERROR, err.to_string())
 }
