@@ -13,12 +13,13 @@
 //! 全局运行时
 
 use {
-    self::{config::Config, lifecycle::life_start, secret::Secret, types::*},
+    rand::Rng,
+    self::{sequence::MSF_SSO_SEQ, config::Config, lifecycle::life_start, secret::Secret, types::*},
     bytes::Bytes,
     crate::client::Client,
-    std::{env, str::FromStr},
+    std::{env, str::FromStr, sync::atomic::Ordering},
     tokio::sync::watch::{channel, Receiver, Sender},
-    tracing::error,
+    tracing::{error, trace},
     tracing_subscriber::{
         filter::LevelFilter,
         fmt::Layer as FmtLayer,
@@ -32,6 +33,7 @@ use {
 mod config;
 pub mod lifecycle;
 mod secret;
+pub mod sequence;
 mod types;
 
 /// 全局运行时变量
@@ -86,6 +88,10 @@ impl Runtime {
                 }
             )));
         }
+
+        MSF_SSO_SEQ.fetch_add(rand::thread_rng().gen(), Ordering::Relaxed);
+
+        trace!(dsc = "MSF SSO SEQ", num = ?MSF_SSO_SEQ);
     }
 
     /// 运行时变量
