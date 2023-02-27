@@ -18,7 +18,7 @@ use {
 impl PutStrWith16Len for BytesMut {
     fn put_string_with_16len(&mut self, s: &str) {
         let l = s.len();
-        self.reserve(l);
+        self.reserve(2 + l);
         self.put_u16(l as u16);
         self.extend(s.as_bytes());
     }
