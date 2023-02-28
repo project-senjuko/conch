@@ -39,6 +39,9 @@ pub struct Secret {
     /// TGTGT
     #[serde(default = "rand_b16")] pub tgtgt: B16,
 
+    /// QIMEI
+    #[serde(rename = "qimei", default = "rand_qimei")] pub rand_qimei: String,
+
     /// Android ID MD5
     #[serde(rename = "android-id-md5", default = "rand_b16")] pub android_id_md5: B16,
     #[serde(rename = "mac-md5", default = "rand_b16")] pub mac_md5: B16,
@@ -56,6 +59,7 @@ impl Default for Secret {
             account: 0,
             password: Default::default(),
             tgtgt: rand_b16(),
+            rand_qimei: rand_qimei(),
             android_id_md5: rand_b16(),
             mac_md5: rand_b16(),
             boot_id: rand_uuid(),
@@ -69,6 +73,14 @@ pub fn rand_b16() -> B16 { thread_rng().gen::<u128>().to_be_bytes() }
 
 /// 随机生成 UUID
 pub fn rand_uuid() -> String { Uuid::new_v4().to_string() }
+
+/// 随机生成 QIMEI
+pub fn rand_qimei() -> String {
+    const CHARSET: [char; 16] = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'];
+    (0..36).map(
+        |_| { CHARSET[thread_rng().gen_range(0..CHARSET.len())] }
+    ).collect()
+}
 
 /// 提供机密信息方法
 impl Secret {
