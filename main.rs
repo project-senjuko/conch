@@ -14,12 +14,11 @@ use {
     anyhow::Result,
     async_graphql::{EmptySubscription, Schema},
     axum::{Extension, Router, routing::get},
-    axum_extra::routing::SpaRouter,
     axum_server::{Handle, tls_rustls::RustlsConfig},
     conch::{apis::{graphiql, graphql_handler, MutationRoot, QueryRoot}, runtime::Runtime},
     std::{net::SocketAddr, time::Duration},
     tokio::time::sleep,
-    tower_http::services::ServeFile,
+    tower_http::services::{ServeFile, ServeDir},
     tracing::{info, instrument},
 };
 
@@ -83,9 +82,10 @@ pub async fn dashboard() {
             MutationRoot,
             EmptySubscription,
         ).finish()))
-        .merge(
-            SpaRouter::new("/assets", "dashboard/assets")
-                .index_file("../index.html")
+        .nest_service(
+            "/assets",
+            ServeDir::new("dashboard/assets")
+                .not_found_service(ServeFile::new("../index.html")),
         );
 
     let addr = SocketAddr::from(
