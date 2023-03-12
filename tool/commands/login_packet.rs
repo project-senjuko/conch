@@ -10,5 +10,11 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-pub mod version;
-pub mod login_packet;
+use std::{path::PathBuf, fs::{File, self}};
+
+pub fn parse_login_packet(input: &PathBuf, shareKey: &Option<String>) {
+    let f = File::open(input).expect("读取文件失败");
+    let content = fs::read_to_string(input).expect("读取文件失败");
+
+    // TODO
+}

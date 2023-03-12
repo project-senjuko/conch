@@ -14,6 +14,7 @@ use std::env;
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand, ValueHint};
+use crate::commands::login_packet::parse_login_packet;
 
 use crate::commands::version::print_version_info;
 
@@ -36,6 +37,14 @@ struct Cli {
 pub enum Commands {
     /// 输出版本信息
     Version,
+    /// 解析登录包
+    LoginPacket {
+        #[arg(value_name = "输入文件路径")]
+        #[arg(value_hint = ValueHint::DirPath)]
+        input: PathBuf,
+        #[arg(value_name = "ShareKey")]
+        shareKey: Option<String>,
+    },
 }
 
 fn main() {
@@ -48,6 +57,9 @@ fn main() {
     match &cli.command {
         Some(Commands::Version) => {
             print_version_info();
+        }
+        Some(Commands::LoginPacket { input, shareKey }) => {
+            parse_login_packet(input, shareKey);
         }
         None => {}
     }
