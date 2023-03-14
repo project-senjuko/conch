@@ -16,12 +16,12 @@ use {
 };
 
 #[derive(Default)]
-struct TlvT144 {
-    t109: BytesMut,
-    t52d: BytesMut,
-    t124: BytesMut,
-    t128: BytesMut,
-    t16e: BytesMut,
+pub struct TlvT144 {
+    pub t109: BytesMut,
+    pub t52d: BytesMut,
+    pub t124: BytesMut,
+    pub t128: BytesMut,
+    pub t16e: BytesMut,
 }
 
 impl TlvField for TlvT144 {

@@ -10,12 +10,13 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, BytesMut};
-
-use super::TlvField;
+use {
+    bytes::{BufMut, BytesMut},
+    super::TlvField,
+};
 
 #[derive(Default)]
-struct TlvT8 {}
+pub struct TlvT8 {}
 
 impl TlvField for TlvT8 {
     fn tag() -> u16 { 0x8 }

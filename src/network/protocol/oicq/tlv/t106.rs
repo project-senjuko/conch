@@ -13,20 +13,16 @@
 use {
     bytes::{BufMut, BytesMut},
     time::OffsetDateTime,
-    crate::{
-        cipher::qtea::QTeaCipher,
-        runtime::Runtime,
-        common::upstream::APP_ID,
-    },
+    crate::{cipher::qtea::QTeaCipher, runtime::Runtime, common::upstream::APP_ID},
     super::TlvField,
 };
 
-struct TlvT106 {
-    tgtgt_ver: u16,
-    sso_ver: u32,
+pub struct TlvT106 {
+    pub tgtgt_ver: u16,
+    pub sso_ver: u32,
 
-    uin: u64,
-    password: [u8; 16],
+    pub uin: u64,
+    pub password: [u8; 16],
 }
 
 impl Default for TlvT106 {

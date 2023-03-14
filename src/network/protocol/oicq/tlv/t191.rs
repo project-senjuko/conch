@@ -18,7 +18,7 @@ use {
 };
 
 #[derive(Default)]
-struct TlvT191 {}
+pub struct TlvT191 {}
 
 impl TlvField for TlvT191 {
     fn tag() -> u16 { 0x191 }

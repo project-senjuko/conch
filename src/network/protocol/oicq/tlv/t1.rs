@@ -10,17 +10,17 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, BytesMut};
-use time::OffsetDateTime;
+use {
+    bytes::{BufMut, BytesMut},
+    time::OffsetDateTime,
+    crate::runtime::Runtime,
+    super::TlvField,
+};
 
-use crate::runtime::Runtime;
+pub struct TlvT1 {
+    pub ip_ver: u16,
 
-use super::TlvField;
-
-struct TlvT1 {
-    ip_ver: u16,
-
-    uin: u32,
+    pub uin: u32,
 }
 
 impl Default for TlvT1 {

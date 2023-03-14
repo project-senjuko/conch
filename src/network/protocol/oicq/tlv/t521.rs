@@ -16,8 +16,8 @@ use {
 };
 
 #[derive(Default)]
-struct TlvT521 {
-    product_type: u32, // default 0
+pub struct TlvT521 {
+    pub product_type: u32, // default 0
 }
 
 impl TlvField for TlvT521 {

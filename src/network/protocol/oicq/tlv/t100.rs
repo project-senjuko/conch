@@ -16,11 +16,11 @@ use {
     super::TlvField,
 };
 
-struct TlvT100 {
-    db_buf_ver: u16,
-    sso_ver: u32,
+pub struct TlvT100 {
+    pub db_buf_ver: u16,
+    pub sso_ver: u32,
 
-    app_id: u32,
+    pub app_id: u32,
 }
 
 impl Default for TlvT100 {

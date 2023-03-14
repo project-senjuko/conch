@@ -16,11 +16,11 @@ use {
     crate::{runtime::Runtime, utils::bytes::PutStrWith16Len},
 };
 
-struct TlvT128 {
-    guid_from_file_null: u8,
-    generate_guid_null: u8,
-    generate_guid_equal_guid_from_file: u8,
-    wtf: u32,
+pub struct TlvT128 {
+    pub guid_from_file_null: u8,
+    pub generate_guid_null: u8,
+    pub generate_guid_equal_guid_from_file: u8,
+    pub wtf: u32,
 }
 
 impl Default for TlvT128 {

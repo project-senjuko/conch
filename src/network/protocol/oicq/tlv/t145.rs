@@ -16,8 +16,8 @@ use {
     super::TlvField,
 };
 
-struct TlvT145 {
-    guid: [u8; 16],
+pub struct TlvT145 {
+    pub guid: [u8; 16],
 }
 
 impl Default for TlvT145 {

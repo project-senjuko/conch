@@ -10,17 +10,17 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, BytesMut};
+use {
+    bytes::{BufMut, BytesMut},
+    crate::runtime::Runtime,
+    super::TlvField,
+};
 
-use crate::runtime::Runtime;
+pub struct TlvT18 {
+    pub ping_version: u16,
+    pub sso_version: u32,
 
-use super::TlvField;
-
-struct TlvT18 {
-    ping_version: u16,
-    sso_version: u32,
-
-    uin: u32,
+    pub uin: u32,
 }
 
 impl Default for TlvT18 {

@@ -16,8 +16,8 @@ use {
     super::TlvField,
 };
 
-struct TlvT187 {
-    mac_md5: [u8; 16],
+pub struct TlvT187 {
+    pub mac_md5: [u8; 16],
 }
 
 impl Default for TlvT187 {

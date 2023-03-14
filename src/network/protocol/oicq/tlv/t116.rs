@@ -10,13 +10,14 @@
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use bytes::{BufMut, BytesMut};
-
-use super::TlvField;
+use {
+    bytes::{BufMut, BytesMut},
+    super::TlvField,
+};
 
 #[derive(Default)]
-struct TlvT116 {
-    ver: u8, // 0
+pub struct TlvT116 {
+    pub ver: u8, // 0
 }
 
 impl TlvField for TlvT116 {

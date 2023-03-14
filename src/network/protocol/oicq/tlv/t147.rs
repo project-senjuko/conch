@@ -19,10 +19,10 @@ use {
     },
 };
 
-struct TlvT147 {
-    app_id: u32,
-    apk_v: String,
-    pkg_sig_from_apk_name: [u8; 16],
+pub struct TlvT147 {
+    pub app_id: u32,
+    pub apk_v: String,
+    pub pkg_sig_from_apk_name: [u8; 16],
 }
 
 impl Default for TlvT147 {

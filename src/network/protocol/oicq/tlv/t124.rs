@@ -16,13 +16,13 @@ use {
     crate::utils::bytes::PutStrWith16Len,
 };
 
-struct TlvT124 {
-    os_type: String,
-    os_version: String,
-    network_type: u16,
-    sim_operator_name: String,
-    wtf: String,
-    apn_string: String,
+pub struct TlvT124 {
+    pub os_type: String,
+    pub os_version: String,
+    pub network_type: u16,
+    pub sim_operator_name: String,
+    pub wtf: String,
+    pub apn_string: String,
 }
 
 impl Default for TlvT124 {

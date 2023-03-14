@@ -16,8 +16,8 @@ use {
     super::TlvField,
 };
 
-struct TlvT109 {
-    android_id_md5: [u8; 16],
+pub struct TlvT109 {
+    pub android_id_md5: [u8; 16],
 }
 
 impl Default for TlvT109 {

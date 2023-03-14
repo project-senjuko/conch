@@ -13,13 +13,12 @@
 use {
     bytes::{BufMut, BytesMut},
     crate::common::upstream::APK_NAME,
+    super::TlvField,
 };
 
-use super::TlvField;
-
 #[derive(Default)]
-struct TlvT142 {
-    version: u16, // 0
+pub struct TlvT142 {
+    pub version: u16, // 0
 }
 
 impl TlvField for TlvT142 {
