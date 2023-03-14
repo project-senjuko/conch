@@ -51,22 +51,26 @@ Issues 和 PRs 大欢迎。有关如何参与贡献，请阅读 [贡献部分](/
 ### MPL 通知
 
 ```
-Copyright (c) 2022-2023 qianjunakasumi <i@qianjunakasumi.ren>
-                    qianjunakasumi <qianjunakasumi@outlook.com>
-                    https://github.com/qianjunakasumi
+Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>
+                           project-senjuko/conch Contributors
 
-    This Source Code Form is subject to the terms of the Mozilla Public
-    License, v. 2.0. If a copy of the MPL was not distributed with this
-    file, You can obtain one at http://mozilla.org/MPL/2.0/.
+          https://github.com/qianjunakasumi
+          https://github.com/project-senjuko/conch/graphs/contributors
+
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ```
 
 ### AGPL 通知
 
 ```
-Conch: A basic micro-service, as the publisher of QQ for Android events.
-Copyright (C) 2022-2023  qianjunakasumi <i@qianjunakasumi.ren>
-                     qianjunakasumi <qianjunakasumi@outlook.com>
-                     https://github.com/qianjunakasumi
+Conch: A basic micro-service, as the publisher of QQ events.
+Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>
+                           project-senjuko/conch Contributors
+
+          https://github.com/qianjunakasumi
+          https://github.com/project-senjuko/conch/graphs/contributors
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as published
@@ -85,14 +89,16 @@ along with this program.  If not, see https://www.gnu.org/licenses/agpl-3.0.html
 ### 面向非商业的学术用途 Apache 2.0 通知
 
 有关学术用途的定义，请参见 [`#101 📄 针对非商业的学术用途许可`](https://github.com/project-senjuko/conch/issues/101)。
-只有将 `Conch 海螺` 用于非商业的学术才能在 `Apache License 2.0` 许可下被授权，而不是 `Conch 海螺` 的 Apache 2.0 许可被限制为
-非商业的学术用途。若此许可模式下的衍生项目采用开源许可证，请考虑善意提醒 `Conch 海螺` 的授权范围，一切逾越非商业的学术用途即代表
+只有将 `Conch 海螺` 用于非商业的学术才能在 `Apache License 2.0` 许可下被授权。
+若此许可模式下的衍生项目采用开源许可证，请考虑善意提醒 `Conch 海螺` 的授权范围，一切逾越非商业的学术用途即代表
 授权终止，即使您的衍生作品采用更宽松的许可模式。
 
 ```
-Copyright 2022-2023 qianjunakasumi <i@qianjunakasumi.ren>
-                qianjunakasumi <qianjunakasumi@outlook.com>
-                https://github.com/qianjunakasumi
+Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>
+                           project-senjuko/conch Contributors
+
+          https://github.com/qianjunakasumi
+          https://github.com/project-senjuko/conch/graphs/contributors
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
