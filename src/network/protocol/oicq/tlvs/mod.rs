@@ -14,34 +14,51 @@
 
 use bytes::{Buf, BufMut, BytesMut};
 
-pub mod t1;
-pub mod t8;
-pub mod t18;
-pub mod t100;
-pub mod t106;
-pub mod t107;
-pub mod t109;
-pub mod t116;
-pub mod t124;
-pub mod t128;
-pub mod t141;
-pub mod t142;
-pub mod t144;
-pub mod t145;
-pub mod t147;
-pub mod t154;
-pub mod t16e;
-pub mod t177;
-pub mod t187;
-pub mod t188;
-pub mod t191;
-pub mod t511;
-pub mod t516;
-pub mod t521;
-pub mod t525;
-pub mod t545;
-pub mod t52d;
-pub mod t548;
+pub use {
+    t1::*, t8::*,
+    t18::*,
+    t100::*, t106::*, t107::*, t109::*,
+    t116::*,
+    t124::*, t128::*,
+    t141::*, t142::*, t144::*, t145::*, t147::*,
+    t154::*,
+    t16e::*,
+    t177::*,
+    t187::*, t188::*,
+    t191::*,
+    t511::*, t516::*,
+    t521::*, t525::*, t52d::*,
+    t545::*, t548::*,
+};
+
+mod t1;
+mod t8;
+mod t18;
+mod t100;
+mod t106;
+mod t107;
+mod t109;
+mod t116;
+mod t124;
+mod t128;
+mod t141;
+mod t142;
+mod t144;
+mod t145;
+mod t147;
+mod t154;
+mod t16e;
+mod t177;
+mod t187;
+mod t188;
+mod t191;
+mod t511;
+mod t516;
+mod t521;
+mod t525;
+mod t52d;
+mod t545;
+mod t548;
 
 trait TlvField: Default {
     fn tag() -> u16;
