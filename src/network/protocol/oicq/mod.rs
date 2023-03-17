@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.ren>                                /
+// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>                                /
 //                            project-senjuko/conch Contributors                                   /
 //                                                                                                 /
 //           https://github.com/qianjunakasumi                                                     /
@@ -8,6 +8,7 @@
 //   This Source Code Form is subject to the terms of the Mozilla Public                           /
 //   License, v. 2.0. If a copy of the MPL was not distributed with this                           /
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
+//   More information at https://github.com/project-senjuko/conch.                                 /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use {
@@ -15,25 +16,30 @@ use {
     tracing::{error, instrument},
 };
 
+pub mod request;
 pub mod tlvs;
-//pub mod request;
 
-pub struct Packet {
+/// OICQ Message Struct
+pub struct Message {
+    uin: u32,
     cmd: u16,
     encryption_method: EncryptionMethod,
 }
 
-/// 加密模式
+/// # Encryption Method
 #[derive(Debug, Default, Eq, PartialEq)]
 pub enum EncryptionMethod {
     /// ECDH 加密
-    #[default] Ecdh,
+    #[default]
+    Ecdh,
 
     /// ST 加密
     St,
 }
 
+/// # Encryption Method Impl
 impl EncryptionMethod {
+    /// # Convert Method To U8
     fn to_u8(&self) -> u8 {
         match self {
             EncryptionMethod::Ecdh => 135, // 有个 7 不知道什么东西
@@ -41,6 +47,7 @@ impl EncryptionMethod {
         }
     }
 
+    /// # Try Convert U8 To Method
     #[instrument]
     fn try_from_u8(o: u8) -> Result<Self> {
         match o {
