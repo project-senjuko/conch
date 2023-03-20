@@ -45,6 +45,8 @@ pub struct Secret {
     /// SSAID also named Android ID
     #[serde(rename = "ssaid", default = "rand_ssaid")]
     pub ssaid: String,
+    #[serde(rename = "ssaid-md5", default)]
+    pub ssaid_md5: B16,
 
     #[serde(rename = "mac-md5", default = "rand_b16")]
     pub mac_md5: B16,
@@ -52,7 +54,7 @@ pub struct Secret {
     #[serde(rename = "boot-id", default = "rand_uuid")]
     pub boot_id: String,
 
-    #[serde(default = "rand_b16")]
+    #[serde(default)]
     pub guid: B16,
 }
 
@@ -64,9 +66,10 @@ impl Default for Secret {
             tgtgt: rand_b16(),
             rand_qimei: rand_qimei(),
             ssaid: rand_ssaid(),
+            ssaid_md5: Default::default(),
             mac_md5: rand_b16(),
             boot_id: rand_uuid(),
-            guid: rand_b16(),
+            guid: Default::default(),
         }
     }
 }
@@ -104,21 +107,28 @@ impl Secret {
     /// 读取机密信息
     #[instrument]
     pub async fn read() -> Self {
-        let s = match secret().exists() {
+        let mut s = match secret().exists() {
             true => Secret::deserialize(&mut Deserializer::new(
                 &File::open(secret()).expect("机密信息读取失败"),
             ))
-            .expect("机密信息解析失败"),
+                .expect("机密信息解析失败"),
             false => {
                 debug!(dsc = "机密信息不存在，新建机密信息");
                 Secret::default()
             }
         };
 
+        s.compute();
+
         // 当向后兼容时，新增字段将持久化
         s.flash().await.expect("机密信息保存失败");
         debug!(dsc = "机密信息载入成功", sec = ?s);
         s
+    }
+
+    fn compute(&mut self) {
+        self.ssaid_md5 = md5::compute(&self.ssaid).0;
+        self.guid = md5::compute(self.ssaid.clone() + "02:00:00:00:00:00").0;
     }
 
     /// 保存机密信息
