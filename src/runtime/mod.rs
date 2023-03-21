@@ -12,23 +12,24 @@
 
 //! 全局运行时
 
-use {
-    rand::Rng,
-    self::{sequence::MSF_SSO_SEQ, config::Config, lifecycle::life_start, secret::Secret, types::*},
-    bytes::Bytes,
-    crate::client::Client,
-    std::{env, str::FromStr, sync::atomic::Ordering},
-    tokio::sync::watch::{channel, Receiver, Sender},
-    tracing::{error, trace},
-    tracing_subscriber::{
-        filter::LevelFilter,
-        fmt::Layer as FmtLayer,
-        prelude::*,
-        Registry,
-        registry,
-        reload::{Handle, Layer as ReloadLayer},
-    },
-};
+use {self::{config::Config,
+            lifecycle::life_start,
+            secret::Secret,
+            sequence::MSF_SSO_SEQ,
+            types::*},
+     crate::client::Client,
+     bytes::Bytes,
+     rand::Rng,
+     std::{cmp::min, env, str::FromStr, sync::atomic::Ordering},
+     tokio::sync::watch::{channel, Receiver, Sender},
+     tracing::{error, trace, Level},
+     tracing_subscriber::{filter::LevelFilter,
+                          fmt::Layer as FmtLayer,
+                          prelude::*,
+                          registry,
+                          reload::{Handle, Layer as ReloadLayer},
+                          EnvFilter,
+                          Registry}};
 
 mod config;
 pub mod lifecycle;
@@ -50,11 +51,10 @@ pub struct Runtime {
     tgt: Bytes,
     msg_cookie: Bytes,
 
-    logger_handle: Handle<LevelFilter, Registry>,
+    logger_handle: Handle<EnvFilter, Registry>,
 
     stop_signal_tx: Sender<bool>,
     stop_signal_rx: Receiver<bool>,
-
     // 计数器等
 }
 
@@ -63,30 +63,47 @@ impl Runtime {
     pub async fn init() {
         life_start().await;
 
+        let log_level = Level::from_str(&env_or_default("SJKCONCH_LOG_LEVEL", "info"))
+            .expect("解析日志等级失败");
+
+        let full_trace: bool = env_or_default("SJKCONCH_FULL_TRACE", "false")
+            .parse()
+            .expect("解析完整日志选项失败");
+
         let (reload_layer, handle) = ReloadLayer::new(
-            LevelFilter::from_str(
-                &env_or_default("SJKCONCH_LOG_LEVEL", "info"),
-            ).expect("日志等级解析失败"),
+            EnvFilter::builder()
+                .with_default_directive(LevelFilter::from_level(log_level).into())
+                .parse(format!(
+                    "RUST_LOG={global_level},conch={conch_level},senjuko-conch={conch_level}",
+                    global_level = if full_trace {
+                        log_level.as_str().to_lowercase()
+                    } else {
+                        min(Level::INFO, log_level).as_str().to_lowercase()
+                    },
+                    conch_level = log_level.as_str().to_lowercase()
+                )).unwrap(),
         );
-        registry().with(reload_layer).with(FmtLayer::default()).init();
+
+        registry()
+            .with(reload_layer)
+            .with(FmtLayer::default())
+            .init();
 
         let (tx, rx) = channel::<bool>(false);
 
         unsafe {
-            RUNTIME = Some(Box::leak(Box::new(
-                Self {
-                    client: Client::default(),
-                    config: Config::read().await,
-                    secret: Secret::read().await,
-                    d2: Default::default(),
-                    d2key: Default::default(),
-                    tgt: Default::default(),
-                    msg_cookie: Default::default(),
-                    logger_handle: handle,
-                    stop_signal_tx: tx,
-                    stop_signal_rx: rx,
-                }
-            )));
+            RUNTIME = Some(Box::leak(Box::new(Self {
+                client: Client::default(),
+                config: Config::read().await,
+                secret: Secret::read().await,
+                d2: Default::default(),
+                d2key: Default::default(),
+                tgt: Default::default(),
+                msg_cookie: Default::default(),
+                logger_handle: handle,
+                stop_signal_tx: tx,
+                stop_signal_rx: rx,
+            })));
         }
 
         MSF_SSO_SEQ.fetch_add(rand::thread_rng().gen(), Ordering::Relaxed);
@@ -99,34 +116,47 @@ impl Runtime {
     /// # Safety
     ///
     /// 必须确保 [`Runtime::init`] 已被调用。
-    fn rt() -> &'static Self { unsafe { RUNTIME.as_ref().unwrap() } }
+    fn rt() -> &'static Self {
+        unsafe { RUNTIME.as_ref().unwrap() }
+    }
 
     /// 可变运行时变量
     ///
     /// # Safety
     ///
     /// 必须确保 [`Runtime::init`] 已被调用。
-    fn rt_mut() -> &'static mut Self { unsafe { RUNTIME.as_mut().unwrap() } }
+    fn rt_mut() -> &'static mut Self {
+        unsafe { RUNTIME.as_mut().unwrap() }
+    }
 }
 
 impl Runtime {
     /// 客户端
-    pub fn client() -> &'static Client { &Self::rt().client }
+    pub fn client() -> &'static Client {
+        &Self::rt().client
+    }
 
     /// 可变客户端
-    pub fn client_mut() -> &'static mut Client { &mut Self::rt_mut().client }
+    pub fn client_mut() -> &'static mut Client {
+        &mut Self::rt_mut().client
+    }
 
     /// 配置
-    pub fn config() -> &'static Config { &Self::rt().config }
+    pub fn config() -> &'static Config {
+        &Self::rt().config
+    }
 
     /// 机密
-    pub fn secret() -> &'static Secret { &Self::rt().secret }
+    pub fn secret() -> &'static Secret {
+        &Self::rt().secret
+    }
 
     /// 日志等级
-    pub fn log_level(level: LevelFilter) {
-        let r = Self::rt().logger_handle
-            .modify(|filter| *filter = level);
-        if r.is_err() { error!("日志等级修改失败"); }
+    pub fn log_level(env: EnvFilter) {
+        let r = Self::rt().logger_handle.modify(|filter| *filter = env);
+        if r.is_err() {
+            error!("日志等级修改失败");
+        }
     }
 
     /// 停机信号接收器
@@ -141,35 +171,53 @@ impl Runtime {
     }
 
     /// 停机
-    pub fn stop() { Self::rt().stop_signal_tx.send(true).unwrap(); }
+    pub fn stop() {
+        Self::rt().stop_signal_tx.send(true).unwrap();
+    }
 
     // 考虑废弃以下特性（组合至其他部分）
 
     /// 获取 d2
-    pub fn get_d2() -> Bytes { Runtime::rt().d2.clone() }
+    pub fn get_d2() -> Bytes {
+        Runtime::rt().d2.clone()
+    }
 
     /// 获取 d2key
-    pub fn get_d2key() -> D2Key { Runtime::rt().d2key }
+    pub fn get_d2key() -> D2Key {
+        Runtime::rt().d2key
+    }
 
     /// 获取 tgt
-    pub fn get_tgt() -> Bytes { Runtime::rt().tgt.clone() }
+    pub fn get_tgt() -> Bytes {
+        Runtime::rt().tgt.clone()
+    }
 
     /// 获取 msg_cookie
-    pub fn get_msg_cookie() -> Bytes { Runtime::rt().msg_cookie.clone() }
+    pub fn get_msg_cookie() -> Bytes {
+        Runtime::rt().msg_cookie.clone()
+    }
 }
 
 impl Runtime {
     /// 设置 d2
-    pub fn put_d2(b: Bytes) { Runtime::rt_mut().d2 = b }
+    pub fn put_d2(b: Bytes) {
+        Runtime::rt_mut().d2 = b
+    }
 
     /// 设置 d2key
-    pub fn put_d2key(d: D2Key) { Runtime::rt_mut().d2key = d }
+    pub fn put_d2key(d: D2Key) {
+        Runtime::rt_mut().d2key = d
+    }
 
     /// 设置 tgt
-    pub fn put_tgt(b: Bytes) { Runtime::rt_mut().tgt = b }
+    pub fn put_tgt(b: Bytes) {
+        Runtime::rt_mut().tgt = b
+    }
 
     /// 设置 msg_cookie
-    pub fn put_msg_cookie(b: Bytes) { Runtime::rt_mut().msg_cookie = b }
+    pub fn put_msg_cookie(b: Bytes) {
+        Runtime::rt_mut().msg_cookie = b
+    }
 }
 
 /// 获取环境变量，
@@ -182,7 +230,10 @@ pub fn env_or_default(name: &str, default: &str) -> String {
 async fn wait_signal() {
     use tokio::signal::unix::{signal, SignalKind};
 
-    signal(SignalKind::terminate()).expect("监听 SIGTERM 信号失败").recv().await;
+    signal(SignalKind::terminate())
+        .expect("监听 SIGTERM 信号失败")
+        .recv()
+        .await;
 }
 
 #[cfg(windows)]
