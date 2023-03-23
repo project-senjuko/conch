@@ -15,7 +15,7 @@ jobs:
       pull-requests: write
 
     steps:
-    - uses: actions/stale@v7
+    - uses: actions/stale@v8
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: '此 Issue 近期内无任何活动，若持续无响应将在数日后自动关闭'
