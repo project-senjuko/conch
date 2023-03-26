@@ -11,59 +11,9 @@
 //   More information at https://github.com/project-senjuko/conch.                                 /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-use {
-    self::common::*,
-    anyhow::{bail, Result},
-    tracing::{error, instrument},
-};
-
-mod common;
-pub mod request;
-pub mod tlvs;
-
-/// OICQ Message Struct
-pub struct Message {
-    uin: u32,
-    cmd: u16,
-    encryption_method: EncryptionMethod,
-}
-
-/// # Encryption Method
-#[derive(Debug, Default, Eq, PartialEq)]
-pub enum EncryptionMethod {
-    /// ECDH 加密
-    #[default]
-    Ecdh,
-
-    /// ST 加密
-    St,
-}
-
-/// # Encryption Method Impl
-impl EncryptionMethod {
-    /// # Convert Method To U8
-    fn to_u8(&self) -> u8 {
-        match self {
-            EncryptionMethod::Ecdh => 135, // 有个 7 不知道什么东西
-            EncryptionMethod::St => 69,
-        }
-    }
-
-    /// # Try Convert U8 To Method
-    #[instrument]
-    fn try_from_u8(o: u8) -> Result<Self> {
-        match o {
-            135 => Ok(EncryptionMethod::Ecdh),
-            69 => Ok(EncryptionMethod::St),
-            7 => {
-                error!(dsc = "意外的加密模式");
-                Ok(EncryptionMethod::Ecdh)
-            }
-            _ => {
-                const DSC: &str = "识别加密模式失败";
-                error!(dsc = DSC, emn = o);
-                bail!(DSC);
-            }
-        }
-    }
-}
+pub(super) const APP_ID: u32 = 16;
+pub(super) const APP_CLIENT_VERSION: u32 = 0;
+pub(super) const IP_ADDR: [u8; 4] = [0, 0, 0, 0];
+pub(super) const MISC_BIT_MAP: u32 = 150470524;
+pub(super) const SUB_SIG_MAP: u32 = 66560;
+pub(super) const DW_MAIN_SIG_MAP: u32 = 34869344;
