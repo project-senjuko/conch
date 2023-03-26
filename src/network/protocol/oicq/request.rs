@@ -14,7 +14,7 @@
 //! OICQ Request Message
 
 use {
-    super::{EncryptionMethod, Message},
+    super::{EncryptionMethod, Message, APP_CLIENT_VERSION},
     bytes::{Buf, BufMut, BytesMut},
     rand::{thread_rng, Rng},
 };
@@ -40,7 +40,7 @@ impl Message {
         b.put_u8(self.encryption_method.to_u8());
         b.put_u8(0);
         b.put_u32(2);
-        b.put_u32(0);
+        b.put_u32(APP_CLIENT_VERSION);
         b.put_u32(0);
         b.put(self.to_body());
 
