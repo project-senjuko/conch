@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.ren>                                /
+// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>                                /
 //                            project-senjuko/conch Contributors                                   /
 //                                                                                                 /
 //           https://github.com/qianjunakasumi                                                     /
@@ -8,12 +8,13 @@
 //   This Source Code Form is subject to the terms of the Mozilla Public                           /
 //   License, v. 2.0. If a copy of the MPL was not distributed with this                           /
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
+//   More information at https://github.com/project-senjuko/conch.                                 /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use {
-    bytes::{BufMut, BytesMut},
     super::TlvField,
     crate::utils::bytes::PutStrWith16Len,
+    bytes::{BufMut, BytesMut},
 };
 
 pub struct TlvT124 {
@@ -39,7 +40,9 @@ impl Default for TlvT124 {
 }
 
 impl TlvField for TlvT124 {
-    fn tag() -> u16 { 0x124 }
+    fn tag(&self) -> u16 {
+        0x124
+    }
 
     fn to_payload(&self, b: &mut BytesMut) {
         b.reserve(25);

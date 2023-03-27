@@ -50,14 +50,14 @@ mod t545;
 mod t548;
 mod t8;
 
-trait TlvField {
-    fn tag() -> u16;
+pub trait TlvField {
+    fn tag(&self) -> u16;
 
     fn to_payload(&self, b: &mut BytesMut);
 
     fn put_bytes(&self, b: &mut BytesMut) {
         b.reserve(4);
-        b.put_u16(Self::tag());
+        b.put_u16(self.tag());
         let lenp = b.remaining();
 
         b.put_u16(0); // payload length

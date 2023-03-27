@@ -36,7 +36,7 @@ pub struct TlvT106 {
 }
 
 impl TlvField for TlvT106 {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x106
     }
 

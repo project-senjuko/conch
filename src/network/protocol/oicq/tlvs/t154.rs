@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.ren>                                /
+// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>                                /
 //                            project-senjuko/conch Contributors                                   /
 //                                                                                                 /
 //           https://github.com/qianjunakasumi                                                     /
@@ -8,20 +8,23 @@
 //   This Source Code Form is subject to the terms of the Mozilla Public                           /
 //   License, v. 2.0. If a copy of the MPL was not distributed with this                           /
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
+//   More information at https://github.com/project-senjuko/conch.                                 /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use {
-    bytes::{BytesMut, BufMut},
-    std::sync::atomic::Ordering,
     super::TlvField,
     crate::runtime::sequence::MSF_SSO_SEQ,
+    bytes::{BufMut, BytesMut},
+    std::sync::atomic::Ordering,
 };
 
 #[derive(Default)]
 pub struct TlvT154 {}
 
 impl TlvField for TlvT154 {
-    fn tag() -> u16 { 0x154 }
+    fn tag(&self) -> u16 {
+        0x154
+    }
 
     fn to_payload(&self, b: &mut BytesMut) {
         b.reserve(4);

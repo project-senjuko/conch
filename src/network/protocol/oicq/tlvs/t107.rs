@@ -19,7 +19,7 @@ use {
 pub struct TlvT107 {}
 
 impl TlvField for TlvT107 {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x107
     }
 

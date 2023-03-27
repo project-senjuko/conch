@@ -22,7 +22,7 @@ use {
 pub struct TlvT52d {}
 
 impl TlvField for TlvT52d {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x52d
     }
 

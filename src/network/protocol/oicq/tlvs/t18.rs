@@ -27,7 +27,7 @@ pub struct TlvT18 {
 }
 
 impl TlvField for TlvT18 {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x18
     }
 

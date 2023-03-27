@@ -26,7 +26,7 @@ impl Default for TlvT188 {
 }
 
 impl TlvField for TlvT188 {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x188
     }
 

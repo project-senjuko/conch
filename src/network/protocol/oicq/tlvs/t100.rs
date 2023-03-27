@@ -26,7 +26,7 @@ const SSO_VER: u32 = 19;
 pub struct TlvT100 {}
 
 impl TlvField for TlvT100 {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x100
     }
 

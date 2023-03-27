@@ -22,7 +22,7 @@ const VERSION: u16 = 0;
 pub struct TlvT142 {}
 
 impl TlvField for TlvT142 {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x142
     }
 

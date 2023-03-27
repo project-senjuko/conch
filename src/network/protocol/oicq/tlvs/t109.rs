@@ -26,7 +26,7 @@ impl Default for TlvT109 {
 }
 
 impl TlvField for TlvT109 {
-    fn tag() -> u16 {
+    fn tag(&self) -> u16 {
         0x109
     }
 
