@@ -21,7 +21,6 @@ use {
 
 const VER: u8 = 0;
 
-#[derive(Default)]
 pub struct TlvT116 {}
 
 impl TlvField for TlvT116 {

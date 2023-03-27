@@ -23,7 +23,6 @@ use {
 const DB_BUF_VER: u16 = 1;
 const SSO_VER: u32 = 19;
 
-#[derive(Default)]
 pub struct TlvT100 {}
 
 impl TlvField for TlvT100 {

@@ -24,15 +24,6 @@ pub struct TlvT1 {
     pub server_cur_time: u32,
 }
 
-impl TlvT1 {
-    pub fn new(uin: u32, server_cur_time: u32) -> Self {
-        Self {
-            uin,
-            server_cur_time,
-        }
-    }
-}
-
 impl TlvField for TlvT1 {
     fn tag() -> u16 {
         0x1

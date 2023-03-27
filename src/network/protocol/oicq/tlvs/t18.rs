@@ -26,12 +26,6 @@ pub struct TlvT18 {
     pub uin: u32,
 }
 
-impl TlvT18 {
-    pub fn new(uin: u32) -> Self {
-        Self { uin }
-    }
-}
-
 impl TlvField for TlvT18 {
     fn tag() -> u16 {
         0x18

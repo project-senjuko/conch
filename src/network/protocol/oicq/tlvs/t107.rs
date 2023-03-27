@@ -16,7 +16,6 @@ use {
     bytes::{BufMut, BytesMut},
 };
 
-#[derive(Default)]
 pub struct TlvT107 {}
 
 impl TlvField for TlvT107 {

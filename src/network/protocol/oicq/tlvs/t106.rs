@@ -35,24 +35,6 @@ pub struct TlvT106 {
     pub guid: [u8; 16],
 }
 
-impl TlvT106 {
-    pub fn new(
-        uin: u64,
-        request_init_time: u32,
-        password: [u8; 16],
-        tgtgt_key: [u8; 16],
-        guid: [u8; 16],
-    ) -> Self {
-        Self {
-            uin,
-            request_init_time,
-            password,
-            tgtgt_key,
-            guid,
-        }
-    }
-}
-
 impl TlvField for TlvT106 {
     fn tag() -> u16 {
         0x106
