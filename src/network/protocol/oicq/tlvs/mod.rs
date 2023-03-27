@@ -81,7 +81,10 @@ mod tests {
         bytes::BytesMut,
     };
 
-    const T1: TlvT1 = TlvT1 { ip_ver: 1, uin: 114514 };
+    const T1: TlvT1 = TlvT1 {
+        uin: 114514,
+        server_cur_time: 1919810,
+    };
 
     #[test]
     fn put_bytes() {

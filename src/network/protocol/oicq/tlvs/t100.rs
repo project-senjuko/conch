@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.ren>                                /
+// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>                                /
 //                            project-senjuko/conch Contributors                                   /
 //                                                                                                 /
 //           https://github.com/qianjunakasumi                                                     /
@@ -8,41 +8,36 @@
 //   This Source Code Form is subject to the terms of the Mozilla Public                           /
 //   License, v. 2.0. If a copy of the MPL was not distributed with this                           /
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
+//   More information at https://github.com/project-senjuko/conch.                                 /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use {
-    bytes::{BufMut, BytesMut},
+    super::{
+        super::{APP_CLIENT_VERSION, APP_ID as OICQ_APP_ID, DW_MAIN_SIG_MAP},
+        TlvField,
+    },
     crate::common::upstream::APP_ID,
-    super::TlvField,
+    bytes::{BufMut, BytesMut},
 };
 
-pub struct TlvT100 {
-    pub db_buf_ver: u16,
-    pub sso_ver: u32,
+const DB_BUF_VER: u16 = 1;
+const SSO_VER: u32 = 19;
 
-    pub app_id: u32,
-}
-
-impl Default for TlvT100 {
-    fn default() -> Self {
-        Self {
-            db_buf_ver: 1,
-            sso_ver: 19,
-            app_id: APP_ID,
-        }
-    }
-}
+#[derive(Default)]
+pub struct TlvT100 {}
 
 impl TlvField for TlvT100 {
-    fn tag() -> u16 { 0x100 }
+    fn tag() -> u16 {
+        0x100
+    }
 
     fn to_payload(&self, b: &mut BytesMut) {
         b.reserve(22);
-        b.put_u16(self.db_buf_ver);
-        b.put_u32(self.sso_ver);
-        b.put_u32(16); // appid
-        b.put_u32(self.app_id);
-        b.put_u32(0); // app client version
-        b.put_u32(34869472); // main sigmap = (mDwMainSigMap = 34869344) | 192
+        b.put_u16(DB_BUF_VER);
+        b.put_u32(SSO_VER);
+        b.put_u32(OICQ_APP_ID);
+        b.put_u32(APP_ID);
+        b.put_u32(APP_CLIENT_VERSION);
+        b.put_u32(DW_MAIN_SIG_MAP | 192); // const | 192 at GetStWithPasswd
     }
 }

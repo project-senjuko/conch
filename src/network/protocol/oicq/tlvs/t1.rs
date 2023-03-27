@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.ren>                                /
+// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>                                /
 //                            project-senjuko/conch Contributors                                   /
 //                                                                                                 /
 //           https://github.com/qianjunakasumi                                                     /
@@ -8,40 +8,43 @@
 //   This Source Code Form is subject to the terms of the Mozilla Public                           /
 //   License, v. 2.0. If a copy of the MPL was not distributed with this                           /
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
+//   More information at https://github.com/project-senjuko/conch.                                 /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use {
+    super::{super::IP_ADDR, TlvField},
     bytes::{BufMut, BytesMut},
-    time::OffsetDateTime,
-    crate::runtime::Runtime,
-    super::TlvField,
+    rand::{thread_rng, Rng},
 };
 
-pub struct TlvT1 {
-    pub ip_ver: u16,
+const IP_VER: u16 = 1;
 
+pub struct TlvT1 {
     pub uin: u32,
+    pub server_cur_time: u32,
 }
 
-impl Default for TlvT1 {
-    fn default() -> Self {
+impl TlvT1 {
+    pub fn new(uin: u32, server_cur_time: u32) -> Self {
         Self {
-            ip_ver: 1,
-            uin: Runtime::secret().account,
+            uin,
+            server_cur_time,
         }
     }
 }
 
 impl TlvField for TlvT1 {
-    fn tag() -> u16 { 0x1 }
+    fn tag() -> u16 {
+        0x1
+    }
 
     fn to_payload(&self, b: &mut BytesMut) {
         b.reserve(20);
-        b.put_u16(self.ip_ver);
-        b.put_u32(0x75757575); // rand, 75 = senju
+        b.put_u16(IP_VER);
+        b.put_u32(thread_rng().gen());
         b.put_u32(self.uin);
-        b.put_u32(OffsetDateTime::now_utc().unix_timestamp() as u32);
-        b.put_bytes(0, 4);
-        b.put_u16(0);
+        b.put_u32(self.server_cur_time);
+        b.extend_from_slice(&IP_ADDR);
+        b.put_u16(0); // pinned
     }
 }
