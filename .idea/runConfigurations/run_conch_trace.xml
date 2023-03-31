@@ -10,7 +10,7 @@
     <option name="buildTarget" value="REMOTE" />
     <option name="backtrace" value="SHORT" />
     <envs>
-      <env name="SJKCONCH_LOG_LEVEL" value="conch=trace,senjuko_conch=trace" />
+      <env name="SJKCONCH_LOG_LEVEL" value="senjuko_conch=trace" />
     </envs>
     <option name="isRedirectInput" value="false" />
     <option name="redirectInputPath" value="" />

@@ -5,15 +5,6 @@ edition = "2021"
 rust-version = "1.67"
 build = "build.rs"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[[bin]]
-name = "senjuko-conch"
-path = "main.rs"
-
-[lib]
-name = "conch"
-
 [[bin]]
 name = "conch-tool"
 path = "tool/main.rs"

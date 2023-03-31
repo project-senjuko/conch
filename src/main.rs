@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.ren>                                /
+// Copyright (c) 2022-present qianjunakasumi <i@qianjunakasumi.moe>                                /
 //                            project-senjuko/conch Contributors                                   /
 //                                                                                                 /
 //           https://github.com/qianjunakasumi                                                     /
@@ -8,19 +8,31 @@
 //   This Source Code Form is subject to the terms of the Mozilla Public                           /
 //   License, v. 2.0. If a copy of the MPL was not distributed with this                           /
 //   file, You can obtain one at http://mozilla.org/MPL/2.0/.                                      /
+//   More information at https://github.com/project-senjuko/conch.                                 /
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 use {
+    crate::{
+        apis::{graphiql, graphql_handler, MutationRoot, QueryRoot},
+        runtime::Runtime,
+    },
     anyhow::Result,
     async_graphql::{EmptySubscription, Schema},
-    axum::{Extension, Router, routing::get},
-    axum_server::{Handle, tls_rustls::RustlsConfig},
-    conch::{apis::{graphiql, graphql_handler, MutationRoot, QueryRoot}, runtime::Runtime},
+    axum::{routing::get, Extension, Router},
+    axum_server::{tls_rustls::RustlsConfig, Handle},
     std::{net::SocketAddr, time::Duration},
     tokio::time::sleep,
-    tower_http::services::{ServeFile, ServeDir},
+    tower_http::services::{ServeDir, ServeFile},
     tracing::{info, instrument},
 };
+
+mod apis;
+mod cipher;
+mod client;
+mod common;
+mod network;
+mod runtime;
+mod utils;
 
 /// WELCOME TO CONCH
 #[instrument]
@@ -61,36 +73,25 @@ pub async fn dashboard() {
         Runtime::config().dashboard.cert.clone(),
         Runtime::config().dashboard.key.clone(),
     )
-        .await
-        .expect("证书文件错误");
+    .await
+    .expect("证书文件错误");
 
     let app = Router::new()
         .route(
             "/conch-cgi/hello",
             get(|| async { "Conch 海螺 Dashboard 服务已正确运行" }),
         )
-        .route(
-            "/apis",
-            get(graphiql).post(graphql_handler),
-        )
-        .nest_service(
-            "/favicon.svg", 
-            ServeFile::new("dashboard/favicon.svg")
-        )
-        .layer(Extension(Schema::build(
-            QueryRoot,
-            MutationRoot,
-            EmptySubscription,
-        ).finish()))
+        .route("/apis", get(graphiql).post(graphql_handler))
+        .nest_service("/favicon.svg", ServeFile::new("dashboard/favicon.svg"))
+        .layer(Extension(
+            Schema::build(QueryRoot, MutationRoot, EmptySubscription).finish(),
+        ))
         .nest_service(
             "/assets",
-            ServeDir::new("dashboard/assets")
-                .not_found_service(ServeFile::new("../index.html")),
+            ServeDir::new("dashboard/assets").not_found_service(ServeFile::new("../index.html")),
         );
 
-    let addr = SocketAddr::from(
-        ([0, 0, 0, 0], Runtime::config().dashboard.port)
-    );
+    let addr = SocketAddr::from(([0, 0, 0, 0], Runtime::config().dashboard.port));
     info!(dsc = "Dashboard 服务启用", addr = %addr);
 
     let h = Handle::new();
