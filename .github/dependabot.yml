@@ -18,7 +18,7 @@ updates:
     schedule:
       interval: "daily"
 
-    reviewers: [ "qianjunakasumi" ]
+    reviewers: [ "qianjunaka`sumi" ]
     assignees: [ "qianjunakasumi" ]
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
@@ -36,3 +36,15 @@ updates:
     rebase-strategy: "disabled"
     commit-message:
       prefix: "pref⬆️action "
+
+  - package-ecosystem: "gitsubmodule"
+    directory: "/"
+    schedule:
+      interval: "daily"
+
+    reviewers: [ "qianjunakasumi" ]
+    assignees: [ "qianjunakasumi" ]
+    open-pull-requests-limit: 114
+    rebase-strategy: "disabled"
+    commit-message:
+      prefix: "pref⬆️gitsubmodule "
