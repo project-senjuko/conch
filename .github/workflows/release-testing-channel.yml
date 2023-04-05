@@ -28,9 +28,9 @@ jobs:
       - name: Build Dashboard
         run: |
           cd dashboard
-          npm install -g pnpm
+          npm install -g yarn
           npm install -g @quasar/cli
-          pnpm i
+          yarn
           quasar build
 
       - name: Build Conch
