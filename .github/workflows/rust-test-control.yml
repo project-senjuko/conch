@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: project-senjuko/setup-conch-actionkit-rust@v0.1
+      - uses: project-senjuko/setup-conch-actionkit-rust@v0.1.3
 
       - name: Run tests
         run: cargo test --workspace --verbose
