@@ -18,9 +18,6 @@ key = "certificates/key.pem"
 # 是否启用 IPv6。启用后若服务器支持 IPv6 则以此协议连接。
 enable-ipv6 = false
 
-[[network.dns]]
-address = "119.29.29.29"
-
 [device]
 # 设备型号
 model = "Conch 1"
