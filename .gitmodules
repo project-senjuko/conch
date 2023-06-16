@@ -1,9 +1,6 @@
 [submodule "ci"]
 	path = ci
 	url = https://github.com/project-senjuko/conch-ci.git
-[submodule "dashboard"]
-	path = dashboard
-	url = https://github.com/project-senjuko/conch-dashboard.git
 [submodule "manual"]
 	path = manual
 	url = https://github.com/project-senjuko/conch-manual.git
