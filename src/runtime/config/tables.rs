@@ -82,7 +82,4 @@ pub struct DeviceTable {
 
 /// 通用表
 #[derive(Debug, Deserialize)]
-pub struct MiscTable {
-    #[serde(rename = "startup-delay", default)]
-    pub startup_delay: bool,
-}
+pub struct MiscTable {}

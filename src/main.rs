@@ -51,11 +51,6 @@ async fn main() -> Result<()> {
         BuildTime = env!("BUILD_TIME"),
     );
 
-    if Runtime::config().misc.startup_delay {
-        info!(dsc = "在正式启动前您有⑨秒预览配置文件～", cfg = ?Runtime::config());
-        sleep(Duration::from_secs(9)).await;
-    }
-
     Runtime::client_mut().boot().await;
     tokio::spawn(api());
 
