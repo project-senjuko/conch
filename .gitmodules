@@ -1,9 +1,3 @@
-[submodule "ci"]
-	path = ci
-	url = https://github.com/project-senjuko/conch-ci.git
-[submodule "manual"]
-	path = manual
-	url = https://github.com/project-senjuko/conch-manual.git
 [submodule "src/network/protocol/protobuf"]
 	path = src/network/protocol/protobuf
 	url = https://github.com/project-senjuko/conch-protobuf.git

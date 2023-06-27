@@ -11,19 +11,7 @@ updates:
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
     commit-message:
-      prefix: "pref⬆️cargo "
-
-  - package-ecosystem: "gomod"
-    directory: "/src/network/protocol/jce/generator"
-    schedule:
-      interval: "daily"
-
-    reviewers: [ "qianjunakasumi" ]
-    assignees: [ "qianjunakasumi" ]
-    open-pull-requests-limit: 114
-    rebase-strategy: "disabled"
-    commit-message:
-      prefix: "pref⬆️gomod "
+      prefix: "chore:arrow_up::cargo "
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -32,19 +20,6 @@ updates:
 
     reviewers: [ "qianjunakasumi" ]
     assignees: [ "qianjunakasumi" ]
-    open-pull-requests-limit: 114
     rebase-strategy: "disabled"
     commit-message:
-      prefix: "pref⬆️action "
-
-  - package-ecosystem: "gitsubmodule"
-    directory: "/"
-    schedule:
-      interval: "daily"
-
-    reviewers: [ "qianjunakasumi" ]
-    assignees: [ "qianjunakasumi" ]
-    open-pull-requests-limit: 114
-    rebase-strategy: "disabled"
-    commit-message:
-      prefix: "pref⬆️gitsubmodule "
+      prefix: "chore:arrow_up::actions "
