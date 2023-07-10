@@ -1,5 +1,3 @@
-<img src="assets/conch.png" alt="Conch Logo" align="right" width="200">
-
 # Conch 海螺
 
 `Conch 海螺` 是「Project Senjuko」子项目之一，作为事件发布者的基础微服务，提供基于 `QQ for Android*` 的通讯封装和实现，基于
@@ -12,7 +10,7 @@
 
 ## 快速上手
 
-良好的文档是一个不错的开始，请点击下方徽标查看。内含源代码文档。
+请点击下方徽标查看。内含源代码文档。
 
 [![Docs](https://img.shields.io/badge/docs-Conch%20海螺-success?style=for-the-badge&logo=readthedocs)](https://qianjunakasumi.github.io/senjuko-conch/)
 
@@ -21,7 +19,6 @@
 ![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/project-senjuko/conch/rust-test-control.yml?branch=main&style=for-the-badge&logo=github)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fqianjunakasumi%2Fsenjuko-conch?ref=badge_shield)
 [![OpenSSF Best Practices](https://bestpractices.coreinfrastructure.org/projects/6876/badge)](https://bestpractices.coreinfrastructure.org/projects/6876)
-![qianjucommits-v0.1](https://img.shields.io/badge/qianjucommits-v0.1-85f9c7?style=for-the-badge)
 
 ## 为什么海螺
 
@@ -112,5 +109,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
-
-*注： [1] Android 是 Google LLC 的商标。
