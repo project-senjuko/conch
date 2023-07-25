@@ -11,7 +11,7 @@ updates:
     open-pull-requests-limit: 114
     rebase-strategy: "disabled"
     commit-message:
-      prefix: "chore:arrow_up::cargo "
+      prefix: "chore:arrow_up:cargo "
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -22,4 +22,4 @@ updates:
     assignees: [ "qianjunakasumi" ]
     rebase-strategy: "disabled"
     commit-message:
-      prefix: "chore:arrow_up::actions "
+      prefix: "chore:arrow_up:actions "
