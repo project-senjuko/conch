@@ -24,7 +24,7 @@ axum-extra = { version = "0.6.0", features = ["spa"] }
 axum-server = { version = "0.5.1", features = ["tls-rustls"] }
 bytes = "1.5.0"
 clap = { version = "4.4", features = ["derive", "cargo", "wrap_help", "env"] }
-jsonwebtoken = "8.3.0"
+jsonwebtoken = "9.1.0"
 md5 = "0.7.0"
 once_cell = "1.18.0"
 prost = "0.12.1"
