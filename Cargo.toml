@@ -36,7 +36,7 @@ thiserror = "1.0.49"
 time = { version = "0.3.29", features = ["formatting", "local-offset"] }
 tokio = { version = "1.33.0", features = ["full"] }
 toml = "0.8.6"
-tower-http = { version = "0.4.4", features = ["fs"] }
+tower-http = { version = "0.5.0", features = ["fs"] }
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
 trust-dns-resolver = "0.22.0"
