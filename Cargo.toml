@@ -21,7 +21,7 @@ async-graphql = "5.0.10"
 async-graphql-axum = "6.0.10"
 axum = "0.6.20"
 axum-extra = { version = "0.6.0", features = ["spa"] }
-axum-server = { version = "0.5.1", features = ["tls-rustls"] }
+axum-server = { version = "0.6.0", features = ["tls-rustls"] }
 bytes = "1.5.0"
 clap = { version = "4.4", features = ["derive", "cargo", "wrap_help", "env"] }
 jsonwebtoken = "8.3.0"
