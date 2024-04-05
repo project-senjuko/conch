@@ -1444,12 +1444,12 @@ dependencies = [
 
 [[package]]
 name = "prost"
-version = "0.12.1"
+version = "0.12.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f4fdd22f3b9c31b53c060df4a0613a1c7f062d4115a2b984dd15b1858f7e340d"
+checksum = "d0f5d036824e4761737860779c906171497f6d55681139d8312388f8fe398922"
 dependencies = [
  "bytes",
- "prost-derive 0.12.1",
+ "prost-derive 0.12.4",
 ]
 
 [[package]]
@@ -1489,9 +1489,9 @@ dependencies = [
 
 [[package]]
 name = "prost-derive"
-version = "0.12.1"
+version = "0.12.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "265baba7fabd416cf5078179f7d2cbeca4ce7a9041111900675ea7c4cb8a4c32"
+checksum = "19de2de2a00075bf566bee3bd4db014b11587e84184d3f7a791bc17f1a8e9e48"
 dependencies = [
  "anyhow",
  "itertools",
@@ -1783,7 +1783,7 @@ dependencies = [
  "jsonwebtoken",
  "md5",
  "once_cell",
- "prost 0.12.1",
+ "prost 0.12.4",
  "prost-build",
  "rand",
  "reqwest",
