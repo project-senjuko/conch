@@ -16,7 +16,7 @@ members = [
 
 [dependencies]
 jce = { path = "src/network/protocol/jce/frame", package = "cookie-jce" }
-anyhow = "1.0.75"
+anyhow = "1.0.90"
 async-graphql = "6.0.10"
 async-graphql-axum = "6.0.10"
 axum = "0.6.20"
