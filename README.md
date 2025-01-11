@@ -4,9 +4,9 @@
 [`NATS`](https://nats.io/) 的消息队列和基于 [`GraphQL`](https://graphql.org/) 的 API 查询语言，
 致力为微服务及普通开发者打造优良的 QQBot 开发体验。
 
-### WIP 警告
+## 生命周期停止 End of Lifecycle
 
-此项目还在早期快速开发中，不代表所述功能已经完成。
+该项目因缺乏维护，其他因素等，不再维护。
 
 ## 快速上手
 
